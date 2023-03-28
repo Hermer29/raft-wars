@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level"));
+        SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level", 1));
     }
 
     public void Failed()
