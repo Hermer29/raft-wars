@@ -3,6 +3,7 @@ using InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -18,16 +19,16 @@ public class Player : MonoBehaviour
     [SerializeField] private TextMeshPro nickname;
 
     private float damageClear = 10;
-    private float platformHP = 0;
+    private float platformHp = 0;
 
     private float hpAdditive = 0;
     private float damageAdditive = 0;
 
-    public float fullHp;
-    public float fullDamage;
+    [FormerlySerializedAs("fullHp")] public float maximumHp;
+    [FormerlySerializedAs("fullDamage")] public float maximumDamage;
 
-    [SerializeField] private float hpIncrease = 5;
-    [SerializeField] private float damageIncrease = 5;
+    [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncome = 5;
+    [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncome = 5;
     [SerializeField] private float speed;
 
     private bool battle = false;
@@ -87,21 +88,23 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (battle)
+        if (!battle) return;
+        if (!enemyForBattle.isDead && enemyForBattle != null) return;
+        battle = false;
+        PutInIdleAnimation();
+    }
+
+    private void PutInIdleAnimation()
+    {
+        foreach (People people in warriors)
         {
-            if (enemyForBattle.isDead || enemyForBattle == null)
-            {
-                battle = false;
-                for (int i = 0; i < warriors.Count; i++)
-                {
-                    warriors[i].IdleAnim();
-                }
-                for (int i = 0; i < turrets.Count; i++)
-                {
-                    turrets[i].IdleAnim();
-                }
-            }
-        } 
+            people.IdleAnim();
+        }
+
+        foreach (Turret turret in turrets)
+        {
+            turret.IdleAnim();
+        }
     }
 
     public void AddCoins(int coins)
@@ -110,6 +113,11 @@ public class Player : MonoBehaviour
         coinsText.text = this.coins.ToString();
     }
 
+    public void SpendCoins(int coins)
+    {
+        this.coins -= coins;
+        coinsText.text = this.coins.ToString();
+    }
 
     public void AddGems(int gems)
     {
@@ -120,31 +128,24 @@ public class Player : MonoBehaviour
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        fullHp += hpIncrease * (1 + hpAdditive);
-        fullDamage += damageIncrease * (1 + damageAdditive);
-        RecountStats();
-    }
-
-    public void AddTurret(Turret tur, float damageIncrease)
-    {
-        turrets.Add(tur);
-        fullDamage += damageIncrease * (1 + damageAdditive);
+        maximumHp += hpIncome * (1 + hpAdditive);
+        maximumDamage += damageIncome * (1 + damageAdditive);
         RecountStats();
     }
 
     public void AddHealTurret(float healthIncrease)
     {
-        platformHP += healthIncrease;
-        fullHp += healthIncrease * (1 + hpAdditive);
+        platformHp += healthIncrease;
+        maximumHp += healthIncrease * (1 + hpAdditive);
         RecountStats();
     }
 
     public void AddTurret(Turret tur, float damageIncrease, float healthIncrease)
     {
         turrets.Add(tur);
-        platformHP += healthIncrease;
-        fullHp += healthIncrease * (1 + hpAdditive);
-        fullDamage += damageIncrease * (1 + damageAdditive);
+        platformHp += healthIncrease;
+        maximumHp += healthIncrease * (1 + hpAdditive);
+        maximumDamage += damageIncrease * (1 + damageAdditive);
         RecountStats();
     }
     
@@ -157,23 +158,28 @@ public class Player : MonoBehaviour
 
     private void RecountStats()
     {
-        hpText.text = Mathf.RoundToInt(fullHp).ToString();
-        damageText.text = Mathf.RoundToInt(fullDamage).ToString();
+        hpText.text = Mathf.RoundToInt(maximumHp).ToString();
+        damageText.text = Mathf.RoundToInt(maximumDamage).ToString();
         warriorsCount = warriors.Count;
     }
 
-    private void CheckHP()
+    private void CheckHp()
     {
+        bool Something()
+        {
+            return maximumHp - platformHp * (1 + hpAdditive) <= (warriors.Count - 1) * hpIncome * (1 + hpAdditive);
+        }
+        
         if (warriorsCount > 0)
         {
-            if (fullHp - platformHP * (1 + hpAdditive) <= (warriors.Count - 1) * hpIncrease * (1 + hpAdditive))
+            if (Something())
             {
                 if (warriors.Count > 0)
                 {
                     People warrior = warriors[Random.Range(0, warriors.Count)];
                     warrior.DeathAnim();
                     warriors.Remove(warrior);
-                    fullDamage -= damageIncrease * (1 + damageAdditive);
+                    maximumDamage -= damageIncome * (1 + damageAdditive);
                 }
             }
         }
@@ -184,77 +190,87 @@ public class Player : MonoBehaviour
     {
         if (_input == null)
             return;
-        
-        if (canPlay)
-        {
-            if (!battle)
-            {
-                rb.velocity = new Vector3(_input.Horizontal, 0, _input.Vertical) * speed;
-            }
-            else
-            {
-                rb.velocity = Vector3.zero;
-                enemyDmg = enemyForBattle.fullDamage * battleKoef * Time.fixedDeltaTime * tempKoef;
-                GetDamage(enemyDmg);
 
-            }
+        if (!canPlay)
+        {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+        
+        if (!battle)
+        {
+            rb.velocity = new Vector3(_input.Horizontal, 0, _input.Vertical) * speed;
+        }
+        else
+        {
+            rb.velocity = Vector3.zero;
+            enemyDmg = enemyForBattle.fullDamage * battleKoef * Time.fixedDeltaTime * tempKoef;
+            GetDamage(enemyDmg);
         }
     }
 
     public void StartBattle(Enemy enemy)
     {
-        if (!battle)
+        if (battle) return;
+        enemyForBattle = enemy;
+        battle = true;
+        MakeWarriorsShot(enemy);
+        MakeTurretsShot(enemy);
+        rb.AddForce((transform.position - enemy.transform.position).normalized * 2, ForceMode.Impulse);
+
+        float dmg1 = 0, dmg2 = 0;
+        float enDmg = enemy.fullDamage, enHp = enemy.fullHp;
+        while (true)
         {
-            enemyForBattle = enemy;
-            battle = true;
-            for (int i = 0; i < warriors.Count; i++)
-            {
-                warriors[i].ShootAnim(enemy.transform);
-            }
-            for (int i = 0; i < turrets.Count; i++)
-            {
-                turrets[i].ShootAnim(enemy.transform);
-            }
-            rb.AddForce((transform.position - enemy.transform.position).normalized * 2, ForceMode.Impulse);
+            dmg1 += battleKoef * maximumDamage * Time.fixedDeltaTime;
+            dmg2 += battleKoef * enDmg * Time.fixedDeltaTime;
 
-            float dmg1 = 0, dmg2 = 0;
-            float enDmg = enemy.fullDamage, enHP = enemy.fullHp;
-            while (true)
+            if (dmg1 >= enHp && dmg2 >= maximumHp)
             {
-                dmg1 += battleKoef * fullDamage * Time.fixedDeltaTime;
-                dmg2 += battleKoef * enDmg * Time.fixedDeltaTime;
-
-                if (dmg1 >= enHP && dmg2 >= fullHp)
-                {
-                    if (dmg1 >= dmg2)
-                    {
-                        tempKoef = 0.8f;
-                        enemyDmg = enDmg * battleKoef * tempKoef * Time.fixedDeltaTime;
-                        enemy.GetBattlePrefs(fullDamage * battleKoef * Time.fixedDeltaTime, this);
-                    }
-                    else
-                    {
-                        tempKoef = 1;
-                        enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime;
-                        enemy.GetBattlePrefs(fullDamage * battleKoef * Time.fixedDeltaTime * 0.8f, this);
-                    }
-                    break;
-                }
-                else if (dmg1 > enHP)
+                if (dmg1 >= dmg2)
                 {
                     tempKoef = 0.8f;
-                    enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime * tempKoef;
-                    enemy.GetBattlePrefs(fullDamage * battleKoef * Time.fixedDeltaTime, this);
-                    break;
+                    enemyDmg = enDmg * battleKoef * tempKoef * Time.fixedDeltaTime;
+                    enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime, this);
                 }
-                else if (dmg2 >= fullHp)
+                else
                 {
                     tempKoef = 1;
                     enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime;
-                    enemy.GetBattlePrefs(fullDamage * battleKoef * Time.fixedDeltaTime, this);
-                    break;
+                    enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime * 0.8f, this);
                 }
+                break;
             }
+
+            if (dmg1 > enHp)
+            {
+                tempKoef = 0.8f;
+                enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime * tempKoef;
+                enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime, this);
+                break;
+            }
+
+            if (!(dmg2 >= maximumHp)) continue;
+            tempKoef = 1;
+            enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime;
+            enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime, this);
+            break;
+        }
+    }
+
+    private void MakeTurretsShot(Enemy enemy)
+    {
+        foreach (Turret turret in turrets)
+        {
+            turret.ShootAnim(enemy.transform);
+        }
+    }
+
+    private void MakeWarriorsShot(Enemy enemy)
+    {
+        foreach (People warrior in warriors)
+        {
+            warrior.PlayShotAnimation(enemy.transform);
         }
     }
 
@@ -262,11 +278,16 @@ public class Player : MonoBehaviour
     {
         isDead = true;
         canPlay = false;
-        for (int i = 0; i < turrets.Count; i++)
-        {
-            turrets[i].IdleAnim();
-        }
+        PutTurretsInIdleAnimation();
         GameManager.instance.Failed();
+    }
+
+    private void PutTurretsInIdleAnimation()
+    {
+        foreach (Turret turret in turrets)
+        {
+            turret.IdleAnim();
+        }
     }
 
     public Platform GetPlatformWithoutTurret()
@@ -290,11 +311,11 @@ public class Player : MonoBehaviour
 
     public void GetDamage(float damage)
     {
-        fullHp -= damage;
-        CheckHP();
-        if (fullHp <= 0)
+        maximumHp -= damage;
+        CheckHp();
+        if (maximumHp <= 0)
         {
-            fullHp = 0;
+            maximumHp = 0;
             Dead();
         }
     }
@@ -307,15 +328,15 @@ public class Player : MonoBehaviour
         platforms.Add(platform);
     }
 
-    public void AddDamageBonus(float bonus)
+    public void AmplifyDamage(float percent)
     {
-        fullDamage += fullDamage * (bonus - damageAdditive);
-        damageAdditive = bonus;
+        maximumDamage += maximumDamage * (percent - damageAdditive);
+        damageAdditive = percent;
     }
 
-    public void AddHpBonus(float bonus)
+    public void IncreaseHealth(float bonus)
     {
-        fullHp += fullHp * (bonus - hpAdditive);
+        maximumHp += maximumHp * (bonus - hpAdditive);
         hpAdditive = bonus;
     }
 }

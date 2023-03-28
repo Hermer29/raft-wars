@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTakeCoins, ICanTakeGems, ICanTakeBarrel
 {
@@ -11,6 +13,12 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     public bool isTurret = false;
     public bool isWind = false;
     public bool ishospital = false;
+    private Enemy _relatedEnemy;
+
+    private void Start()
+    {
+        _relatedEnemy = GetComponentInParent<Enemy>();
+    }
 
     public void TakePeople(GameObject warrior)
     {
@@ -127,16 +135,17 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isEnemy)
+        bool IsNotInBattle()
         {
-            if (collision.gameObject.GetComponent<Player>() != null)
-            {
-                if (!GetComponentInParent<Enemy>().battle)
-                {
-                    collision.gameObject.GetComponent<Player>().StartBattle(GetComponentInParent<Enemy>());
-                    //GetComponentInParent<Enemy>().StartBattle(collision.gameObject.GetComponent<Player>());
-                }
-            }
+            return !_relatedEnemy.battle;
+        }
+        
+        if (!isEnemy) return;
+        if (collision.gameObject.GetComponent<Player>() == null) return;
+        if (IsNotInBattle())
+        {
+            collision.gameObject.GetComponent<Player>()
+                .StartBattle(_relatedEnemy);
         }
     }
 

@@ -47,8 +47,6 @@ public class MapGenerator : MonoBehaviour
 
     private int stage = 1;
 
-
-
     public void Generate(int stage)
     {
         this.stage = stage;

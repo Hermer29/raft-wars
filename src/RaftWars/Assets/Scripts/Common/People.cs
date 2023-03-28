@@ -7,7 +7,7 @@ public class People : MonoBehaviour
     public bool isAdditive;
 
     public SkinnedMeshRenderer matRenderer;
-    private Animator anim;
+    private Animator animator;
 
     public Bullet bullet;
     public Transform shootPoint;
@@ -24,43 +24,45 @@ public class People : MonoBehaviour
 
     private void Update()
     {
-        if (battle && !isDead)
+        if (!battle || isDead) return;
+        if (timer >= Random.Range(0.6f, 1f))
         {
-            if (timer >= Random.Range(0.6f, 1f))
+            timer = 0;
+            animator.Play("Shoot");
+            if (!isFlamer)
             {
-
-                    timer = 0;
-
-                    anim.Play("Shoot");
-                    if (!isFlamer)
-                    {
-                        Destroy(Instantiate(shootEffect, shootPoint.position, Quaternion.identity), 2);
-                        Bullet _bullet = Instantiate(bullet, shootPoint.position, Quaternion.identity).GetComponent<Bullet>();
-                        _bullet.SetPrefs(targetShoot);
-                        audio.Play();
-                    }
-                    else
-                    {
-                        flame.SetActive(true);
-                        StartCoroutine(Coroutines.WaitFor(1.3f, delegate ()
-                        {
-                            flame.SetActive(false);
-                        }));
-                    }
-                
+                PerformShot();
             }
             else
-                timer += Time.deltaTime;
+            {
+                EnableFlamethrower();
+            }
         }
+        else
+            timer += Time.deltaTime;
+    }
+
+    private void EnableFlamethrower()
+    {
+        flame.SetActive(true);
+        StartCoroutine(Coroutines.WaitFor(1.3f, () => { flame.SetActive(false); }));
+    }
+
+    private void PerformShot()
+    {
+        Destroy(Instantiate(shootEffect, shootPoint.position, Quaternion.identity), 2);
+        Bullet _bullet = Instantiate(bullet, shootPoint.position, Quaternion.identity);
+        _bullet.MoveTowards(targetShoot);
+        audio.Play();
     }
 
     private void Start()
     {
-        anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
-        if (anim != null && isAdditive)
+        if (animator != null && isAdditive)
         {
-            anim.Play("Hold");
+            animator.Play("Hold");
         }
     }
 
@@ -69,27 +71,26 @@ public class People : MonoBehaviour
         matRenderer.material = mat;
     }
 
-    public void ShootAnim(Transform target)
+    public void PlayShotAnimation(Transform target)
     {
         this.target = target.position;
         this.target.y = transform.position.y;
         targetShoot = this.target + new Vector3(0, 1, 0);
         transform.LookAt(this.target, Vector3.up);
         battle = true;
-        anim.Play("Idle Aiming");
+        animator.Play("Idle Aiming");
     }
 
     public void IdleAnim()
     {
-        anim.Play("Idle");
+        animator.Play("Idle");
         battle = false;
     }
 
     public void DeathAnim()
     {
         isDead = true;
-        anim.Play("Death");
+        animator.Play("Death");
         Destroy(gameObject, 2.5f);
     }
-
 }

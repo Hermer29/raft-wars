@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -8,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager instance;
-    private bool started = false;
+    private bool _started;
     
     [Header("UI")]
     [SerializeField] private GameObject tapToPlay;
@@ -29,108 +28,155 @@ public class GameManager : MonoBehaviour
     private int warriorsCountOnStart = 2;
     private int powerCountOnStart = 10;
     private int healthCountOnStart = 10;
-
-
+    
     [Header("Managers")]
     [SerializeField] private MapGenerator map;
-    private List<Enemy> enemies = new List<Enemy>();
+    private readonly List<Enemy> _enemies = new List<Enemy>();
 
-    private int stage = 1;
+    private int _stage = 1;
     public Enemy boss;
 
-    private double damagePercent = 0.2f, hpPercent = 0.2f;
-    private int damageCost = 10, hpCost = 10;
+    private float buyableDamagePercent = 0.2f, buyableHealthPercent = 0.2f;
+    private int damageCost = 10, healthAmplificationCost = 10;
 
 
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+        }
         else
         {
             Destroy(instance);
             instance = this;
         }
 
-        map.Generate(stage);
+        map.Generate(_stage);
         map.GenerateBoss();
     }
-
-
+    
     private void Update()
     {
-        if (!started)
+        if (!_started)
         {
-            if (Input.GetMouseButtonUp(0))
-            {
-                started = true;
-                tapToPlay.SetActive(false);
-                Player.instance.canPlay = true;
-            }
+            StartGameOnClick();
         }
-        else if(stage == 5 && boss == null && !stagePanel.activeSelf)
+        else if(_stage == 5 && boss == null && !stagePanel.activeSelf)
         {
-            Player.instance.canPlay = false;
-            blackBG.SetActive(true);
-            winPanel.SetActive(true);
-            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") + 1);
-            if(PlayerPrefs.GetInt("Level") == 6)
-            {
-                PlayerPrefs.SetInt("Level", 1);
-            }
+            WinTheGame();
         }
-        else if(stage != 5 && boss == null && !stagePanel.activeSelf)
+        else if(_stage != 5 && boss == null && !stagePanel.activeSelf)
         {
-            Player.instance.canPlay = false;
-            blackBG.SetActive(true);
-            platformsCountPrev.text = platformsCountOnStart.ToString();
-            warriorsCountPrev.text = warriorsCountOnStart.ToString();
-            powerCountPrev.text = powerCountOnStart.ToString();
-            healthCountPrev.text = healthCountOnStart.ToString();
-
-            platformsCountAdd.text = "+" + (Player.instance.platformCount - platformsCountOnStart).ToString();
-            if(Player.instance.warriorsCount - warriorsCountOnStart >= 0)
-                warriorsCountAdd.text = "+" + (Player.instance.warriorsCount - warriorsCountOnStart);
-            else
-                warriorsCountAdd.text = (Player.instance.warriorsCount - warriorsCountOnStart).ToString();
-            
-            if (Player.instance.fullDamage - powerCountOnStart >= 0)
-                powerCountAdd.text = "+" + (Player.instance.fullDamage - powerCountOnStart);
-            else
-                powerCountAdd.text = (Player.instance.fullDamage - powerCountOnStart).ToString();
-            
-            if (Player.instance.fullHp - healthCountOnStart >= 0)
-                healthCountAdd.text = "+" + (Player.instance.fullHp - healthCountOnStart);
-            else
-                healthCountAdd.text = (Player.instance.fullHp - healthCountOnStart).ToString();
-
-            warriorsCountOnStart = Player.instance.warriorsCount;
-            platformsCountOnStart = Player.instance.platformCount;
-            powerCountOnStart = (int)Player.instance.fullDamage;
-            healthCountOnStart = (int)Player.instance.fullHp;
-
-            stagePanel.SetActive(true);
-            progressFill.fillAmount = stage / 5f;
-            stage++;
-            Debug.Log(stage);
+            WarmupStage();
         }
 
-        for(int i = 0; i < enemies.Count; i++)
+        for(var i = 0; i < _enemies.Count; i++)
         {
-            if (enemies[i] == null)
-                enemies.RemoveAt(i);
+            if (_enemies[i] == null)
+                _enemies.RemoveAt(i);
         }
     }
-    
+
+    private void WarmupStage()
+    {
+        Player.instance.canPlay = false;
+        blackBG.SetActive(true);
+        WarmupUiStats();
+        WarmupStats();
+        stagePanel.SetActive(true);
+        progressFill.fillAmount = _stage / 5f;
+        _stage++;
+    }
+
+    private void WarmupStats()
+    {
+        platformsCountAdd.text = "+" + (Player.instance.platformCount - platformsCountOnStart);
+        if (Player.instance.warriorsCount - warriorsCountOnStart >= 0)
+        {
+            warriorsCountAdd.text = "+" + (Player.instance.warriorsCount - warriorsCountOnStart);
+        }
+        else
+        {
+            warriorsCountAdd.text = (Player.instance.warriorsCount - warriorsCountOnStart).ToString();
+        }
+
+        if (Player.instance.maximumDamage - powerCountOnStart >= 0)
+        {
+            powerCountAdd.text = "+" + (Player.instance.maximumDamage - powerCountOnStart);
+        }
+        else
+        {
+            powerCountAdd.text = (Player.instance.maximumDamage - powerCountOnStart).ToString();
+        }
+
+        if (Player.instance.maximumHp - healthCountOnStart >= 0)
+        {
+            healthCountAdd.text = "+" + (Player.instance.maximumHp - healthCountOnStart);
+        }
+        else
+        {
+            healthCountAdd.text = (Player.instance.maximumHp - healthCountOnStart).ToString();
+        }
+
+        warriorsCountOnStart = Player.instance.warriorsCount;
+        platformsCountOnStart = Player.instance.platformCount;
+        powerCountOnStart = (int)Player.instance.maximumDamage;
+        healthCountOnStart = (int)Player.instance.maximumHp;
+    }
+
+    private void WarmupUiStats()
+    {
+        platformsCountPrev.text = platformsCountOnStart.ToString();
+        warriorsCountPrev.text = warriorsCountOnStart.ToString();
+        powerCountPrev.text = powerCountOnStart.ToString();
+        healthCountPrev.text = healthCountOnStart.ToString();
+    }
+
+    private void WinTheGame()
+    {
+        Player.instance.canPlay = false;
+        blackBG.SetActive(true);
+        winPanel.SetActive(true);
+        IncrementLevel();
+    }
+
+    private static void IncrementLevel()
+    {
+        void Increment()
+        {
+            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") + 1);
+        }
+
+        Increment();
+        LoopLevelsOnOverflow();
+    }
+
+    private static void LoopLevelsOnOverflow()
+    {
+        if (PlayerPrefs.GetInt("Level") == 6)
+        {
+            PlayerPrefs.SetInt("Level", 1);
+        }
+    }
+
+    private void StartGameOnClick()
+    {
+        if (!Input.GetMouseButtonUp(0)) return;
+        _started = true;
+        tapToPlay.SetActive(false);
+        Player.instance.canPlay = true;
+    }
+
     public void AddEnemy(Enemy enemy)
     {
-        enemies.Add(enemy);
+        _enemies.Add(enemy);
     }
 
     public void NextStage()
     {
-        progressText.text = stage + "/5";
-        map.Generate(stage);
+        progressText.text = _stage + "/5";
+        map.Generate(_stage);
         Player.instance.canPlay = true;
         blackBG.SetActive(false);
         stagePanel.SetActive(false);
@@ -155,29 +201,67 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseHealth()
     {
-        if (Player.instance.coins >= hpCost)
+        bool IsNotEnoughMoneyToIncreaseHealth()
         {
-            Player.instance.AddCoins(-hpCost);
-            hpCost += 10;
-            Player.instance.AddHpBonus((float)hpPercent);
-            hpPercent += 0.1f;
-            hpPercent = Math.Round(hpPercent, 4);
-            hpPercentText.text = "+" + hpPercent * 100 + "%";
-            hpCostText.text = hpCost.ToString();
+            return Player.instance.coins < healthAmplificationCost;
         }
+
+        if (IsNotEnoughMoneyToIncreaseHealth()) return;
+
+        Player.instance.SpendCoins(healthAmplificationCost);
+        Player.instance.IncreaseHealth((float)buyableHealthPercent);
+        UpdateNextHealthUpgrade();
     }
 
+    private void UpdateNextHealthUpgrade()
+    {
+        void MakeNextHealthUpgradeMorePowerful()
+        {
+            buyableHealthPercent += 0.1f;
+            var integerPercent = (int)(buyableHealthPercent * 100);
+            hpPercentText.text = $"+{integerPercent}%";
+        }
+
+        void IncreaseHealthUpgradeCost()
+        {
+            healthAmplificationCost += 10;
+            hpCostText.text = healthAmplificationCost.ToString();
+        }
+        
+        MakeNextHealthUpgradeMorePowerful();
+        IncreaseHealthUpgradeCost();
+    }
+    
     public void IncreaseDamage()
     {
-        if(Player.instance.coins >= damageCost)
+        bool IsNotEnoughCoinsToAmplifyDamage()
         {
-            Player.instance.AddCoins(-damageCost);
+            return Player.instance.coins < damageCost;
+        }
+
+        if (IsNotEnoughCoinsToAmplifyDamage()) return;
+        
+        Player.instance.SpendCoins(damageCost);
+        Player.instance.AmplifyDamage(buyableDamagePercent);
+        UpdateNextDamageUpgrade();
+    }
+
+    private void UpdateNextDamageUpgrade()
+    {
+        void IncreaseNextDamageAmplification()
+        {
+            buyableDamagePercent += 0.1f;
+            var integerPercent = (int) (buyableDamagePercent * 100);
+            damagePercentText.text = $"+{integerPercent}%";
+        }
+        
+        void IncreaseNextDamageAmplificationCost()
+        {
             damageCost += 10;
-            Player.instance.AddDamageBonus((float)damagePercent);
-            damagePercent += 0.1f;
-            damagePercent = Math.Round(damagePercent, 4);
-            damagePercentText.text = "+" + damagePercent * 100 + "%";
             damageCostText.text = damageCost.ToString();
         }
+
+        IncreaseNextDamageAmplification();
+        IncreaseNextDamageAmplificationCost();
     }
 }

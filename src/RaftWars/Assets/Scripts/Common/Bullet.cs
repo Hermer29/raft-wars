@@ -4,33 +4,41 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private Vector3 target;
-    private Vector3 dir;
+    private Vector3 _target;
+    private Vector3 shotDirection;
 
     private float timer = 0;
+    private const float AccuracyError = 5f;
     public float speed = 10;
 
     public GameObject explosion;
 
-    public void SetPrefs(Vector3 target)
+    public void MoveTowards(Vector3 target)
     {
-        this.target = target;
-        this.target += new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5f, 5f));
-        dir = this.target - transform.position;
+        _target = target;
+        _target = AddAccuracyError(_target);
+        shotDirection = _target - transform.position;
     }
+
+    private static Vector3 AddAccuracyError(Vector3 target) 
+        => target + new Vector3(Random.Range(-AccuracyError, AccuracyError), 0, 
+            Random.Range(-AccuracyError, AccuracyError));
 
     private void Update()
     {
-        transform.position += dir * speed * Time.deltaTime;
+        transform.position += shotDirection * (speed * Time.deltaTime);
         if (timer > Random.Range(0.2f, 0.6f))
         {
-            GameObject _exp = Instantiate(explosion, transform.position, Quaternion.identity);
-            Destroy(_exp, 2);
-            Destroy(gameObject);
+            CreateExplosion();
         }
         else
             timer += Time.deltaTime;
     }
 
-
+    private void CreateExplosion()
+    {
+        GameObject _exp = Instantiate(explosion, transform.position, Quaternion.identity);
+        Destroy(_exp, 2);
+        Destroy(gameObject);
+    }
 }
