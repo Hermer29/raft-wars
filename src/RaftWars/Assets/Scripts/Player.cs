@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using input;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
     private float tempKoef = 1;
 
     [SerializeField] private Text coinsText, gemsText;
+    private PlayerController _input;
 
     private void Start()
     {
@@ -77,6 +79,12 @@ public class Player : MonoBehaviour
             PlayerPrefs.SetString("PlayerNick", "Player" + Random.Range(1000, 9999));
             nickname.text = PlayerPrefs.GetString("PlayerNick");
         }
+        CreateInput();
+    }
+
+    private void CreateInput()
+    {
+        _input = gameObject.AddComponent<PlayerController>();
     }
 
     private void Update()
@@ -176,11 +184,14 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_input == null)
+            return;
+        
         if (canPlay)
         {
             if (!battle)
             {
-                rb.velocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * speed;
+                rb.velocity = new Vector3(_input.Horizontal, 0, _input.Vertical) * speed;
             }
             else
             {
@@ -191,7 +202,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
 
     public void StartBattle(Enemy enemy)
     {
