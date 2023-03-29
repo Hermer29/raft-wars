@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using InputSystem;
+using RaftWars.Infrastructure;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -46,12 +50,18 @@ public class MapGenerator : MonoBehaviour
 
     private int stage = 1;
 
+    private void Start()
+    {
+        CollectiblesService service = Game.CollectiblesService;
+        service.NoCollectiblesLeft += SpawnMiscellaneous;
+    }
+
     public void Generate(int stage)
     {
         this.stage = stage;
         FigureOutPlatformsAndEnemies(stage); 
-        CreateActivePlatforms(stage);
-        CreateActivePeople(stage);
+        CreatePickablePlatforms(stage);
+        CreatePickablePeople(stage);
         CreateCoinChests(stage);
         CreateGems(stage);
         CreateBarrels(stage);
@@ -78,11 +88,10 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    public void SpawnMiscellaneous()
+    private void SpawnMiscellaneous()
     {
-        CreateBarrels(stage);
-        CreateGems(stage);
-        CreateCoinChests(stage);
+        CreatePickablePeople(stage);
+        CreatePickablePlatforms(stage);
     }
 
     private void CreateBarrels(int stage)
@@ -156,7 +165,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void CreateActivePeople(int stage)
+    private void CreatePickablePeople(int stage)
     {
         for (var i = 0; i < peopleNumber[stage - 1]; i++)
         {
@@ -174,7 +183,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void CreateActivePlatforms(int stage)
+    private void CreatePickablePlatforms(int stage)
     {
         for (var i = 0; i < platformsNumber[stage - 1]; i++)
         {

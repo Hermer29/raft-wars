@@ -1,7 +1,9 @@
+using System;
+using RaftWars.Pickables;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class PeopleThatCanBeTaken : MonoBehaviour
+public class PeopleThatCanBeTaken : Pickable
 {
     public GameObject warrior;
     [FormerlySerializedAs("explosion")] public GameObject explosionPrefab;
@@ -36,7 +38,7 @@ public class PeopleThatCanBeTaken : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected override void TriggerEntered(Collider other)
     {
         if (other.TryGetComponent(out ICanTakePeople otherTaker) == false || !canTake) return;
         

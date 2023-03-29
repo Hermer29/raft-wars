@@ -1,10 +1,10 @@
+using System;
+using RaftWars.Pickables;
 using UnityEngine;
 
-public class AttachablePlatform : MonoBehaviour
+public class AttachablePlatform : Pickable
 {
     public GameObject platform;
-
-    private bool canTake = true;
 
     private void Update()
     {
@@ -18,7 +18,7 @@ public class AttachablePlatform : MonoBehaviour
             transform.Translate(new Vector3(0, 0, 5) * Time.deltaTime);
     }
     
-    private void OnTriggerEnter(Collider other)
+    protected override void TriggerEntered(Collider other)
     {
         if (other.GetComponent<ICanTakePlatform>() == null || !canTake) return;
         canTake = false;
