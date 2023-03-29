@@ -61,17 +61,18 @@ MonoBehaviour:
   hpText: {fileID: 3377585064699056742}
   damageText: {fileID: 3377585064894652292}
   nickname: {fileID: 3377585066360050449}
-  fullHp: 0
-  fullDamage: 0
-  hpIncrease: 5
-  damageIncrease: 5
+  maximumHp: 0
+  maximumDamage: 0
+  hpIncome: 5
+  damageIncome: 5
   speed: 10
   isDead: 0
+  platformCount: 1
   canPlay: 0
   coins: 0
   gems: 0
-  platformsCount: 1
   warriorsCount: 2
+  battleKoef: 1
   coinsText: {fileID: 0}
   gemsText: {fileID: 0}
 --- !u!54 &3377585064621721320
@@ -149,7 +150,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 65
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
