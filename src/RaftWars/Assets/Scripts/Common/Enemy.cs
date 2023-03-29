@@ -135,16 +135,16 @@ public class Enemy : MonoBehaviour
         Vector3 vectorToPlayer = Vector3.MoveTowards(transform.position, _player.Position, 
             speed * deltaTime);
         Vector3 vectorFromPlayer = Vector3.MoveTowards(transform.position,
-            transform.position + _player.Position - transform.position,
-            speed * deltaTime);
+            _player.Position,
+            -speed * deltaTime);
         Debug.Log($"StatsDifference: Player: {_player.PlayerStatsSum} Enemy: {StatsSum}. EnemyName: {name}");
         if (_player.PlayerStatsSum >= StatsSum)
         {
-            transform.position = vectorToPlayer;
+            transform.position = vectorFromPlayer;
         }
         else
         {
-            transform.position = vectorFromPlayer;
+            transform.position = vectorToPlayer;
         }
     }
 
