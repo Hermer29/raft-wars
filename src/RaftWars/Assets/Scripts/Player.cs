@@ -17,8 +17,8 @@ public class Player : MonoBehaviour
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
     [SerializeField] private Text coinsText, gemsText;
-    [FormerlySerializedAs("fullHp")] public float maximumHp;
-    [FormerlySerializedAs("fullDamage")] public float maximumDamage;
+    [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public float hp;
+    [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public float damage;
     [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncomeForPeople = 5;
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncomeForPeople = 5;
     [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = 1;
@@ -123,15 +123,15 @@ public class Player : MonoBehaviour
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        maximumHp += hpIncomeForPeople * (1 + hpAdditive);
-        maximumDamage += damageIncomeForPeople * (1 + damageAdditive);
+        hp += hpIncomeForPeople * (1 + hpAdditive);
+        damage += damageIncomeForPeople * (1 + damageAdditive);
         RecountStats();
     }
 
     public void AddHealTurret(float healthIncrease)
     {
         platformHp += healthIncrease;
-        maximumHp += healthIncrease * (1 + hpAdditive);
+        hp += healthIncrease * (1 + hpAdditive);
         RecountStats();
     }
 
@@ -139,8 +139,8 @@ public class Player : MonoBehaviour
     {
         turrets.Add(tur);
         platformHp += healthIncrease;
-        maximumHp += healthIncrease * (1 + hpAdditive);
-        maximumDamage += damageIncrease * (1 + damageAdditive);
+        hp += healthIncrease * (1 + hpAdditive);
+        damage += damageIncrease * (1 + damageAdditive);
         RecountStats();
     }
     
@@ -151,8 +151,8 @@ public class Player : MonoBehaviour
 
     private void RecountStats()
     {
-        hpText.text = Mathf.RoundToInt(maximumHp).ToString();
-        damageText.text = Mathf.RoundToInt(maximumDamage).ToString();
+        hpText.text = Mathf.RoundToInt(hp).ToString();
+        damageText.text = Mathf.RoundToInt(damage).ToString();
         warriorsCount = warriors.Count;
     }
 
@@ -160,7 +160,7 @@ public class Player : MonoBehaviour
     {
         bool Something()
         {
-            return maximumHp - platformHp * (1 + hpAdditive) <= (warriors.Count - 1) * hpIncomeForPeople * (1 + hpAdditive);
+            return hp - platformHp * (1 + hpAdditive) <= (warriors.Count - 1) * hpIncomeForPeople * (1 + hpAdditive);
         }
         
         if (warriorsCount > 0)
@@ -172,7 +172,7 @@ public class Player : MonoBehaviour
                     People warrior = warriors[Random.Range(0, warriors.Count)];
                     warrior.PlayDyingAnimation();
                     warriors.Remove(warrior);
-                    maximumDamage -= damageIncomeForPeople * (1 + damageAdditive);
+                    damage -= damageIncomeForPeople * (1 + damageAdditive);
                 }
             }
         }
@@ -206,7 +206,7 @@ public class Player : MonoBehaviour
     {
         bool ControversialBattle(float f, float enemyHealth1, float enemyDamage1)
         {
-            return f >= enemyHealth1 && enemyDamage1 >= maximumHp;
+            return f >= enemyHealth1 && enemyDamage1 >= hp;
         }
 
         if (battle) return;
@@ -220,7 +220,7 @@ public class Player : MonoBehaviour
         float enemyHealth = enemy.fullHp;
         while (true)
         {
-            playerDamage += battleDamageOverTime * maximumDamage * Time.fixedDeltaTime;
+            playerDamage += battleDamageOverTime * damage * Time.fixedDeltaTime;
             enemyDamage += battleDamageOverTime * enemy.maximumDamage * Time.fixedDeltaTime;
 
             if (ControversialBattle(playerDamage, enemyHealth, enemyDamage))
@@ -234,13 +234,13 @@ public class Player : MonoBehaviour
             if (playerDamage > enemyHealth)
             {
                 damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
-                enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
+                enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
                 break;
             }
 
-            if (!(enemyDamage >= maximumHp)) continue;
+            if (!(enemyDamage >= hp)) continue;
             damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
-            enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
+            enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
             break;
         }
     }
@@ -251,7 +251,7 @@ public class Player : MonoBehaviour
             return;
         
         damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
-        float damageToPlayer = maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
+        float damageToPlayer = damage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
         enemy.AttackPlayer(damageToPlayer, this);
     }
 
@@ -261,7 +261,7 @@ public class Player : MonoBehaviour
             return;
         
         damageToEnemy = enemy.maximumDamage * battleDamageOverTime * LoosingDamageCoefficient * Time.fixedDeltaTime;
-        enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
+        enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
     }
 
     private void PushPlayerTowardsEnemy(Enemy enemy)
@@ -326,11 +326,11 @@ public class Player : MonoBehaviour
 
     public void GetDamage(float damage)
     {
-        maximumHp -= damage;
+        hp -= damage;
         CheckHp();
-        if (maximumHp <= 0)
+        if (hp <= 0)
         {
-            maximumHp = 0;
+            hp = 0;
             Dead();
         }
     }
@@ -349,13 +349,13 @@ public class Player : MonoBehaviour
 
     public void AmplifyDamage(float percent)
     {
-        maximumDamage += maximumDamage * (percent - damageAdditive);
+        damage += damage * (percent - damageAdditive);
         damageAdditive = percent;
     }
 
     public void IncreaseHealth(float bonus)
     {
-        maximumHp += maximumHp * (bonus - hpAdditive);
+        hp += hp * (bonus - hpAdditive);
         hpAdditive = bonus;
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using DefaultNamespace;
+using InputSystem;
+using RaftWars.Infrastructure;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
@@ -31,16 +33,19 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float damageIncrease = 5;
 
     public bool battle = false;
+    public float speed = 5;
 
     private Player player;
     private float timer = 0;
-    public bool isDead = false;
+    private const float RunningViewportBounds = .05f;
+    public bool isDead;
     public bool isBoss = false;
 
     private List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
     private List<AttachablePlatform> platformsAdditive = new List<AttachablePlatform>();
 
     private Vector3 prevSpawnPoint;
+    private PlayerService _player;
     public bool boss5Stage = true;
 
     private float playerDmg;
@@ -49,8 +54,11 @@ public class Enemy : MonoBehaviour
     public List<GameObject> enemiesToKill;
     public GameObject shieldToOff;
 
+    private int StatsSum => (int) (fullHp + maximumDamage);
+
     private void Start()
     {
+        _player = Game.PlayerService;
         TryGenerateNickname(when: !isBoss);
 
         if (!boss5Stage) return;
@@ -105,12 +113,39 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        if (!battle) return;
+        if (!battle)
+        {
+            TryMoveEnemy(Time.deltaTime);
+        }
         
-        if (!player.isDead && player != null) return;
+        if (player != null && !player.isDead) return;
         battle = false;
         timer = 0;
         PlayIdleAnimation();
+        
+    }
+
+    private void TryMoveEnemy(float deltaTime)
+    {
+        if (_player.GameStarted == false)
+            return;
+        if (_player.IsInViewportBounds(transform.position, RunningViewportBounds) == false)
+            return;
+
+        Vector3 vectorToPlayer = Vector3.MoveTowards(transform.position, _player.Position, 
+            speed * deltaTime);
+        Vector3 vectorFromPlayer = Vector3.MoveTowards(transform.position,
+            transform.position + _player.Position - transform.position,
+            speed * deltaTime);
+        Debug.Log($"StatsDifference: Player: {_player.PlayerStatsSum} Enemy: {StatsSum}. EnemyName: {name}");
+        if (_player.PlayerStatsSum >= StatsSum)
+        {
+            transform.position = vectorToPlayer;
+        }
+        else
+        {
+            transform.position = vectorFromPlayer;
+        }
     }
 
     private void PlayIdleAnimation()

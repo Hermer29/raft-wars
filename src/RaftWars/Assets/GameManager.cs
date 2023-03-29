@@ -101,28 +101,28 @@ public class GameManager : MonoBehaviour
             warriorsCountAdd.text = (Player.instance.warriorsCount - warriorsCountOnStart).ToString();
         }
 
-        if (Player.instance.maximumDamage - powerCountOnStart >= 0)
+        if (Player.instance.damage - powerCountOnStart >= 0)
         {
-            powerCountAdd.text = "+" + (Player.instance.maximumDamage - powerCountOnStart);
+            powerCountAdd.text = "+" + (Player.instance.damage - powerCountOnStart);
         }
         else
         {
-            powerCountAdd.text = (Player.instance.maximumDamage - powerCountOnStart).ToString();
+            powerCountAdd.text = (Player.instance.damage - powerCountOnStart).ToString();
         }
 
-        if (Player.instance.maximumHp - healthCountOnStart >= 0)
+        if (Player.instance.hp - healthCountOnStart >= 0)
         {
-            healthCountAdd.text = "+" + (Player.instance.maximumHp - healthCountOnStart);
+            healthCountAdd.text = "+" + (Player.instance.hp - healthCountOnStart);
         }
         else
         {
-            healthCountAdd.text = (Player.instance.maximumHp - healthCountOnStart).ToString();
+            healthCountAdd.text = (Player.instance.hp - healthCountOnStart).ToString();
         }
 
         warriorsCountOnStart = Player.instance.warriorsCount;
         platformsCountOnStart = Player.instance.platformCount;
-        powerCountOnStart = (int)Player.instance.maximumDamage;
-        healthCountOnStart = (int)Player.instance.maximumHp;
+        powerCountOnStart = (int)Player.instance.damage;
+        healthCountOnStart = (int)Player.instance.hp;
     }
 
     private void WarmupUiStats()
