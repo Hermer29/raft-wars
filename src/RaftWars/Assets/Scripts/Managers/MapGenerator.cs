@@ -103,14 +103,7 @@ public class MapGenerator : MonoBehaviour
         {
             while (true)
             {
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.x = Random.Range(xBorderMin, xBorderMax);
-                else
-                    posToSpawn.x = Random.Range(-xBorderMax, -xBorderMin);
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.z = Random.Range(yBorderMin, yBorderMax);
-                else
-                    posToSpawn.z = Random.Range(-yBorderMax, -yBorderMin);
+                posToSpawn = RandomizeSpawnPosition(posToSpawn);
 
                 var outCols = Physics.OverlapSphere(posToSpawn, 1);
                 if (outCols == null || outCols.Length == 0)
@@ -125,19 +118,12 @@ public class MapGenerator : MonoBehaviour
     private void CreateGems(int stage)
     {
         const float height = .5f;
+        Vector3 posToSpawn = Vector3.up * height;
         for (var i = 0; i < gemsNumber / stage; i++)
         {
             while (true)
             {
-                Vector3 posToSpawn = Vector3.up * height;
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.x = Random.Range(xBorderMin, xBorderMax);
-                else
-                    posToSpawn.x = Random.Range(-xBorderMax, -xBorderMin);
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.z = Random.Range(yBorderMin, yBorderMax);
-                else
-                    posToSpawn.z = Random.Range(-yBorderMax, -yBorderMin);
+                posToSpawn = RandomizeSpawnPosition(posToSpawn);
 
                 var outCols = Physics.OverlapSphere(posToSpawn, 1);
                 if (outCols == null || outCols.Length == 0)
@@ -147,6 +133,20 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+    }
+
+    private Vector3 RandomizeSpawnPosition(Vector3 position)
+    {
+        Vector3 posToSpawn = position;
+        if (Random.Range(0f, 1f) > 0.5f)
+            posToSpawn.x = Random.Range(xBorderMin, xBorderMax);
+        else
+            posToSpawn.x = Random.Range(-xBorderMax, -xBorderMin);
+        if (Random.Range(0f, 1f) > 0.5f)
+            posToSpawn.z = Random.Range(yBorderMin, yBorderMax);
+        else
+            posToSpawn.z = Random.Range(-yBorderMax, -yBorderMin);
+        return posToSpawn;
     }
 
     private void CreateCoinChests(int stage)

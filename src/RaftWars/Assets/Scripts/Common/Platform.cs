@@ -1,10 +1,10 @@
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTakeCoins, ICanTakeGems, ICanTakeBarrel
 {
-    private const float size = 2.5f;
     public Material colorMat;
     public bool isEnemy;
     private bool battle = false;
@@ -25,8 +25,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         if (!isTurret)
         {
             Vector3 spawnPoint = transform.position;
-            spawnPoint.x += Random.Range(-size / 2.4f, size / 2.4f);
-            spawnPoint.z += Random.Range(-size / 2.4f, size / 2.4f);
+            spawnPoint.x += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+            spawnPoint.z += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
             spawnPoint.y += 0.5f;
             People people = Instantiate(warrior, spawnPoint, Quaternion.identity).GetComponent<People>();
             people.transform.parent = transform;
@@ -42,8 +42,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             Platform platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
             Vector3 spawnPoint = platform.transform.position;
-            spawnPoint.x += Random.Range(-size / 2.4f, size / 2.4f);
-            spawnPoint.z += Random.Range(-size / 2.4f, size / 2.4f);
+            spawnPoint.x += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+            spawnPoint.z += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
             spawnPoint.y += 0.5f;
             People people = Instantiate(warrior, spawnPoint, Quaternion.identity).GetComponent<People>();
             people.transform.parent = platform.transform;
@@ -66,16 +66,16 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
         {
             if (diff.x > 0)
-                spawnPos.x += size;
+                spawnPos.x += Constants.PlatformSize;
             else
-                spawnPos.x -= size;
+                spawnPos.x -= Constants.PlatformSize;
         }
         else
         {
             if (diff.z > 0)
-                spawnPos.z += size;
+                spawnPos.z += Constants.PlatformSize;
             else
-                spawnPos.z -= size;
+                spawnPos.z -= Constants.PlatformSize;
         }
         var outCols = Physics.OverlapSphere(spawnPos, 1.2f);
         if (outCols.Length != 0)
@@ -86,16 +86,16 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
                 if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
                 {
                     if (diff.x > 0)
-                        spawnPos.x += size;
+                        spawnPos.x += Constants.PlatformSize;
                     else
-                        spawnPos.x -= size;
+                        spawnPos.x -= Constants.PlatformSize;
                 }
                 else
                 {
                     if (diff.z > 0)
-                        spawnPos.z += size;
+                        spawnPos.z += Constants.PlatformSize;
                     else
-                        spawnPos.z -= size;
+                        spawnPos.z -= Constants.PlatformSize;
                 }
 
                 outCols = Physics.OverlapSphere(spawnPos, 1.2f);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
@@ -154,16 +155,16 @@ public class Enemy : MonoBehaviour
                 if (Random.Range(0f, 1f) > 0.5f)
                 {
                     if (Random.Range(0f, 1f) > 0.5f)
-                        startPoint.x += 3;
+                        startPoint.x += Constants.PlatformSize;
                     else
-                        startPoint.x -= 3;
+                        startPoint.x -= Constants.PlatformSize;
                 }
                 else
                 {
                     if (Random.Range(0f, 1f) > 0.5f)
-                        startPoint.z += 3;
+                        startPoint.z += Constants.PlatformSize;
                     else
-                        startPoint.z -= 3;
+                        startPoint.z -= Constants.PlatformSize;
                 }
 
                 var outCols = Physics.OverlapSphere(startPoint, 1);

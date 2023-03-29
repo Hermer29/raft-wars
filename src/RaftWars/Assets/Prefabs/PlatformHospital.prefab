@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1439582966004701255}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.09, y: 0, z: -8.41}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalScale: {x: 2.5, y: 1, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7548487244118402594}
@@ -475,7 +475,8 @@ MonoBehaviour:
   shootEffect: {fileID: 0}
   toRotate: {fileID: 0}
   isFlamer: 0
-  flame: {fileID: 0}
+  flame:
+  - {fileID: 0}
   isWind: 0
   ishospital: 1
   mill: {fileID: 0}
@@ -483,6 +484,8 @@ MonoBehaviour:
   isLaser: 0
   laser: {fileID: 0}
   nonBattle: 1
+  isMagnet: 0
+  objectsToDraw: []
 --- !u!4 &7548487244118402594 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4f9ffd10d009de04991daffe59bc2466, type: 3}
