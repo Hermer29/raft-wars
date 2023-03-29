@@ -1,15 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class People : MonoBehaviour
 {
     public bool isAdditive;
 
     public SkinnedMeshRenderer matRenderer;
-    private Animator animator;
+    public Animator animator;
 
-    public Bullet bullet;
+    [FormerlySerializedAs("bullet")] public Bullet bulletPrefab;
     public Transform shootPoint;
 
     private bool battle;
@@ -22,9 +21,18 @@ public class People : MonoBehaviour
     private Vector3 targetShoot;
     public GameObject shootEffect;
 
+    private void Start()
+    {
+        if (animator != null && isAdditive)
+        {
+            animator.Play("Hold");
+        }
+    }
+
     private void Update()
     {
-        if (!battle || isDead) return;
+        if (!battle || isDead) 
+            return;
         if (timer >= Random.Range(0.6f, 1f))
         {
             timer = 0;
@@ -51,19 +59,9 @@ public class People : MonoBehaviour
     private void PerformShot()
     {
         Destroy(Instantiate(shootEffect, shootPoint.position, Quaternion.identity), 2);
-        Bullet _bullet = Instantiate(bullet, shootPoint.position, Quaternion.identity);
+        Bullet _bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
         _bullet.MoveTowards(targetShoot);
         audio.Play();
-    }
-
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-
-        if (animator != null && isAdditive)
-        {
-            animator.Play("Hold");
-        }
     }
 
     public void SetColor(Material mat)

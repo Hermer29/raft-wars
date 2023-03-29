@@ -279,7 +279,7 @@ public class Player : MonoBehaviour
         isDead = true;
         canPlay = false;
         PutTurretsInIdleAnimation();
-        GameManager.instance.Failed();
+        GameManager.instance.PlayerLost();
     }
 
     private void PutTurretsInIdleAnimation()

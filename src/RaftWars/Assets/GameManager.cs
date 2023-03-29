@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level", 1));
     }
 
-    public void Failed()
+    public void PlayerLost()
     {
         blackBG.SetActive(true);
         failedPanel.SetActive(true);
