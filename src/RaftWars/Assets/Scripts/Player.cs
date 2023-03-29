@@ -17,40 +17,31 @@ public class Player : MonoBehaviour
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
-
-    private float damageClear = 10;
-    private float platformHp = 0;
-
-    private float hpAdditive = 0;
-    private float damageAdditive = 0;
-
     [FormerlySerializedAs("fullHp")] public float maximumHp;
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
 
     [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncome = 5;
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncome = 5;
+    [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = 1;
     [SerializeField] private float speed;
 
+    private float damageClear = 10;
+    private float platformHp = 0;
+    private float hpAdditive = 0;
+    private float damageAdditive = 0;
     private bool battle = false;
-
     private Enemy enemyForBattle;
     private float timer = 0;
     public bool isDead = false;
-
     private FlyCamera flyCamera;
     public int platformCount = 1;
-
     public bool canPlay = false;
-
     public int coins = 0;
     public int gems = 0;
-
     public int warriorsCount = 2;
-
-    public float battleKoef = 1;
-
     private float enemyDmg;
-    private float tempKoef = 1;
+    private const float WinningDamageCoefficient = 1f;
+    private const float LoosingDamageCoefficient = 0.8f;
 
     [SerializeField] private Text coinsText, gemsText;
     private PlayerController _input;
@@ -204,58 +195,75 @@ public class Player : MonoBehaviour
         else
         {
             rb.velocity = Vector3.zero;
-            enemyDmg = enemyForBattle.fullDamage * battleKoef * Time.fixedDeltaTime * tempKoef;
+            enemyDmg = enemyForBattle.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * WinningDamageCoefficient;
             GetDamage(enemyDmg);
         }
     }
 
     public void StartBattle(Enemy enemy)
     {
+        bool ControversialBattle(float f, float enemyHealth1, float enemyDamage1)
+        {
+            return f >= enemyHealth1 && enemyDamage1 >= maximumHp;
+        }
+
         if (battle) return;
         enemyForBattle = enemy;
         battle = true;
         MakeWarriorsShot(enemy);
         MakeTurretsShot(enemy);
-        rb.AddForce((transform.position - enemy.transform.position).normalized * 2, ForceMode.Impulse);
+        PushPlayerTowardsEnemy(enemy);
 
-        float dmg1 = 0, dmg2 = 0;
-        float enDmg = enemy.fullDamage, enHp = enemy.fullHp;
+        float playerDamage = 0, enemyDamage = 0;
+        float enemyHealth = enemy.fullHp;
         while (true)
         {
-            dmg1 += battleKoef * maximumDamage * Time.fixedDeltaTime;
-            dmg2 += battleKoef * enDmg * Time.fixedDeltaTime;
+            playerDamage += battleDamageOverTime * maximumDamage * Time.fixedDeltaTime;
+            enemyDamage += battleDamageOverTime * enemy.maximumDamage * Time.fixedDeltaTime;
 
-            if (dmg1 >= enHp && dmg2 >= maximumHp)
+            if (ControversialBattle(playerDamage, enemyHealth, enemyDamage))
             {
-                if (dmg1 >= dmg2)
-                {
-                    tempKoef = 0.8f;
-                    enemyDmg = enDmg * battleKoef * tempKoef * Time.fixedDeltaTime;
-                    enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime, this);
-                }
-                else
-                {
-                    tempKoef = 1;
-                    enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime;
-                    enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime * 0.8f, this);
-                }
+                bool playerSuperior = playerDamage >= enemyDamage;
+                WhenControversialBattle_PlayerSuperior(enemy, playerSuperior);
+                WhenControversialBattle_EnemySuperior(enemy, !playerSuperior);
                 break;
             }
 
-            if (dmg1 > enHp)
+            if (playerDamage > enemyHealth)
             {
-                tempKoef = 0.8f;
-                enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime * tempKoef;
-                enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime, this);
+                enemyDmg = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
+                enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
                 break;
             }
 
-            if (!(dmg2 >= maximumHp)) continue;
-            tempKoef = 1;
-            enemyDmg = enDmg * battleKoef * Time.fixedDeltaTime;
-            enemy.AttackPlayer(maximumDamage * battleKoef * Time.fixedDeltaTime, this);
+            if (!(enemyDamage >= maximumHp)) continue;
+            enemyDmg = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
+            enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
             break;
         }
+    }
+
+    private void WhenControversialBattle_EnemySuperior(Enemy enemy, bool when)
+    {
+        if (!when)
+            return;
+        
+        enemyDmg = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
+        enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient, this);
+    }
+
+    private void WhenControversialBattle_PlayerSuperior(Enemy enemy, bool when)
+    {
+        if (!when)
+            return;
+        
+        enemyDmg = enemy.maximumDamage * battleDamageOverTime * LoosingDamageCoefficient * Time.fixedDeltaTime;
+        enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
+    }
+
+    private void PushPlayerTowardsEnemy(Enemy enemy)
+    {
+        rb.AddForce((transform.position - enemy.transform.position).normalized * 2, ForceMode.Impulse);
     }
 
     private void MakeTurretsShot(Enemy enemy)

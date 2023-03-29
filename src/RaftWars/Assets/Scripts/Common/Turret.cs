@@ -123,7 +123,7 @@ public class Turret : MonoBehaviour, ICoroutineSender
             {
                 foreach (Collider col in cols)
                 {
-                    if (col.gameObject.GetComponent<PeopleAdditive>() != null)
+                    if (col.gameObject.GetComponent<PeopleThatCanBeTaken>() != null)
                     {
                         col.transform.Translate((posToCast - col.transform.position) * Time.deltaTime);
                     }

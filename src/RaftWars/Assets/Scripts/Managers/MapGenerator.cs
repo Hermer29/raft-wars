@@ -22,7 +22,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int[] damageIncrease;
     [SerializeField] private int[] enemyPlatformsNumber;
     [SerializeField] private People[] enemyPeopleToSpawn;
-    [SerializeField] private PeopleAdditive[] enemyPeopleToSpawnAdd;
+    [SerializeField] private PeopleThatCanBeTaken[] enemyPeopleToSpawnAdd;
 
     [SerializeField] private Enemy[] bosses;
 
@@ -31,7 +31,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int[] platformsNumber;
     
     [Header("People")]
-    [SerializeField] private PeopleAdditive[] peopleToSpawn;
+    [SerializeField] private PeopleThatCanBeTaken[] peopleToSpawn;
     [SerializeField] private int[] peopleNumber;
 
     [Header("Props")]
@@ -74,7 +74,7 @@ public class MapGenerator : MonoBehaviour
                     _enemy = Instantiate(enemy, posToSpawn, Quaternion.identity);
                     List<Platform> platforms = new List<Platform>();
                     List<People> people = new List<People>();
-                    List<PeopleAdditive> peopleAdditive = new List<PeopleAdditive>();
+                    List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
                     List<PlatformAdditive> platformAdditive = new List<PlatformAdditive>();
                     if (stage == 1)
                     {
@@ -297,7 +297,7 @@ public class MapGenerator : MonoBehaviour
                 Enemy enemy = Instantiate(bosses[stage - 1], posToSpawn, Quaternion.identity);
                 List<Platform> platforms = new List<Platform>();
                 List<People> people = new List<People>();
-                List<PeopleAdditive> peopleAdditive = new List<PeopleAdditive>();
+                List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
                 List<PlatformAdditive> platformAdditive = new List<PlatformAdditive>();
                 if (stage == 1)
                 {

@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class People : MonoBehaviour
 {
@@ -20,6 +22,12 @@ public class People : MonoBehaviour
     public AudioSource audio;
     private Vector3 targetShoot;
     public GameObject shootEffect;
+
+    private void OnValidate()
+    {
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+    }
 
     private void Start()
     {

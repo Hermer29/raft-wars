@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Serialization;
 
 
 public class Enemy : MonoBehaviour
@@ -23,7 +24,7 @@ public class Enemy : MonoBehaviour
     private float platformHP = 0;
 
     public float fullHp;
-    public float fullDamage;
+    [FormerlySerializedAs("fullDamage")] public float maximumDamage;
 
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
@@ -35,7 +36,7 @@ public class Enemy : MonoBehaviour
     public bool isDead = false;
     public bool isBoss = false;
 
-    private List<PeopleAdditive> peopleAdditive = new List<PeopleAdditive>();
+    private List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
     private List<PlatformAdditive> platformsAdditive = new List<PlatformAdditive>();
 
     private Vector3 prevSpawnPoint;
@@ -122,7 +123,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Spawn(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<PlatformAdditive> platformsAdd, List<PeopleAdditive> peopleAdd)
+    public void Spawn(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<PlatformAdditive> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
     {
         if (boss5Stage) return;
         Material mat = colorMaterials[Random.Range(0, colorMaterials.Count)];
@@ -176,7 +177,7 @@ public class Enemy : MonoBehaviour
             {
                 turrets.Add(plat.GetComponentInChildren<Turret>());
                 turretDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
-                fullDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
+                maximumDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
                 platformHP += plat.GetComponentInChildren<Turret>().healthIncrease;
                 fullHp += plat.GetComponentInChildren<Turret>().healthIncrease;
                 platform.GetComponentInChildren<Turret>().DrawInMyColor(mat);
@@ -196,14 +197,14 @@ public class Enemy : MonoBehaviour
     private void RecountStats()
     {
         hpText.text = Mathf.RoundToInt(fullHp).ToString();
-        damageText.text = Mathf.RoundToInt(fullDamage).ToString();
+        damageText.text = Mathf.RoundToInt(maximumDamage).ToString();
     }
 
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
         fullHp += hpIncrease;
-        fullDamage += damageIncrease;
+        maximumDamage += damageIncrease;
         RecountStats();
     }
 
@@ -314,7 +315,7 @@ public class Enemy : MonoBehaviour
                     People warrior = warriors[Random.Range(0, warriors.Count)];
                     warrior.DeathAnim();
                     warriors.Remove(warrior);
-                    fullDamage -= damageIncrease;
+                    maximumDamage -= damageIncrease;
                 }
             }
         }
