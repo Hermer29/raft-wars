@@ -1,39 +1,37 @@
 using System.Collections.Generic;
+using System.Linq;
+using Cinemachine;
 using InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
-    public static Player instance;
-    private Rigidbody rb;
-
     [SerializeField] private List<People> warriors;
     [SerializeField] private List<Platform> platforms;
     [SerializeField] private List<Turret> turrets = new List<Turret>();
-
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
+    [SerializeField] private Text coinsText, gemsText;
     [FormerlySerializedAs("fullHp")] public float maximumHp;
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
-
     [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncome = 5;
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncome = 5;
     [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = 1;
     [SerializeField] private float speed;
+    [SerializeField] private CinemachineTargetGroup _group;
 
     private float damageClear = 10;
     private float platformHp = 0;
     private float hpAdditive = 0;
     private float damageAdditive = 0;
     private bool battle = false;
-    private Enemy enemyForBattle;
     private float timer = 0;
     public bool isDead = false;
-    private FlyCamera flyCamera;
     public int platformCount = 1;
     public bool canPlay = false;
     public int coins = 0;
@@ -42,9 +40,12 @@ public class Player : MonoBehaviour
     private float enemyDmg;
     private const float WinningDamageCoefficient = 1f;
     private const float LoosingDamageCoefficient = 0.8f;
-
-    [SerializeField] private Text coinsText, gemsText;
+    
+    private FlyCamera flyCamera;
+    private Enemy enemyForBattle;
     private PlayerController _input;
+    public static Player instance;
+    private Rigidbody rb;
 
     private void Start()
     {
@@ -60,6 +61,12 @@ public class Player : MonoBehaviour
         flyCamera = GetComponentInChildren<FlyCamera>();
         RecountStats();
 
+        TryGenerateNickname();
+        CreateInput();
+    }
+
+    private void TryGenerateNickname()
+    {
         if (PlayerPrefs.HasKey("PlayerNick"))
         {
             nickname.text = PlayerPrefs.GetString("PlayerNick");
@@ -69,7 +76,6 @@ public class Player : MonoBehaviour
             PlayerPrefs.SetString("PlayerNick", "Player" + Random.Range(1000, 9999));
             nickname.text = PlayerPrefs.GetString("PlayerNick");
         }
-        CreateInput();
     }
 
     private void CreateInput()
@@ -334,6 +340,7 @@ public class Player : MonoBehaviour
         if (platformCount % 4 == 0)
             flyCamera.Move();
         platforms.Add(platform);
+        _group.AddMember(platform.transform, 1, 7);
     }
 
     public void AmplifyDamage(float percent)

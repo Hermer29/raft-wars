@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour
     public bool isBoss = false;
 
     private List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
-    private List<PlatformAdditive> platformsAdditive = new List<PlatformAdditive>();
+    private List<AttachablePlatform> platformsAdditive = new List<AttachablePlatform>();
 
     private Vector3 prevSpawnPoint;
     public bool boss5Stage = true;
@@ -47,6 +47,48 @@ public class Enemy : MonoBehaviour
     public bool hasShield = false;
     public List<GameObject> enemiesToKill;
     public GameObject shieldToOff;
+
+    private void Start()
+    {
+        TryGenerateNickname(when: !isBoss);
+
+        if (!boss5Stage) return;
+        WarmupPlatforms();
+        AssignRelatedPeople();
+        RecountStats();
+    }
+
+    private void AssignRelatedPeople()
+    {
+        foreach (People people in GetComponentsInChildren<People>())
+        {
+            platforms[0].TakePeople(people.gameObject);
+        }
+    }
+
+    private void WarmupPlatforms()
+    {
+        Material mat = colorMaterials[Random.Range(0, colorMaterials.Count)];
+        foreach (Platform platform in platforms)
+        {
+            platform.isEnemy = true;
+            platform.colorMat = mat;
+            platform.gameObject.layer = LayerMask.NameToLayer("Enemy");
+            if (!platform.isTurret) continue;
+            turrets.Add(platform.GetComponentInChildren<Turret>());
+            turretDamage += platform.GetComponentInChildren<Turret>().damageIncrease;
+            platformHP += platform.GetComponentInChildren<Turret>().healthIncrease;
+            platform.GetComponentInChildren<Turret>().DrawInMyColor(mat);
+        }
+    }
+
+    private void TryGenerateNickname(bool when)
+    {
+        if (!when)
+            return;
+        
+        nickname.text = "Player" + Random.Range(1000, 10000);
+    }
 
     private void Update()
     {
@@ -91,39 +133,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        if (!isBoss)
-        {
-            nickname.text = "Player" + Random.Range(1000, 10000);
-        }
-        if (boss5Stage)
-        {
-            Material mat = colorMaterials[Random.Range(0, colorMaterials.Count)];
-            for (int i = 0; i < platforms.Count; i++)
-            {
-                platforms[i].isEnemy = true;
-                platforms[i].colorMat = mat;
-                platforms[i].gameObject.layer = LayerMask.NameToLayer("Enemy");
-                if (platforms[i].isTurret)
-                {
-                    turrets.Add(platforms[i].GetComponentInChildren<Turret>());
-                    turretDamage += platforms[i].GetComponentInChildren<Turret>().damageIncrease;
-                    platformHP += platforms[i].GetComponentInChildren<Turret>().healthIncrease;
-                    platforms[i].GetComponentInChildren<Turret>().DrawInMyColor(mat);
-                }
-            }
-
-            foreach (People c in GetComponentsInChildren<People>())
-            {
-                platforms[0].TakePeople(c.gameObject);
-            }
-
-            RecountStats();
-        }
-    }
-
-    public void Spawn(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<PlatformAdditive> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
+    public void SpawnEnvironment(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<AttachablePlatform> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
     {
         if (boss5Stage) return;
         Material mat = colorMaterials[Random.Range(0, colorMaterials.Count)];

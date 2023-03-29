@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformAdditive : MonoBehaviour
+public class AttachablePlatform : MonoBehaviour
 {
     public GameObject platform;
 
@@ -19,15 +17,13 @@ public class PlatformAdditive : MonoBehaviour
         else if (transform.position.z <= -45)
             transform.Translate(new Vector3(0, 0, 5) * Time.deltaTime);
     }
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<ICanTakePlatform>() != null && canTake)
-        {
-            canTake = false;
-            GetComponent<BoxCollider>().enabled = false;
-            other.GetComponent<ICanTakePlatform>().TakePlatform(platform, transform.position);
-            Destroy(gameObject);
-            
-        }
+        if (other.GetComponent<ICanTakePlatform>() == null || !canTake) return;
+        canTake = false;
+        GetComponent<BoxCollider>().enabled = false;
+        other.GetComponent<ICanTakePlatform>().TakePlatform(platform, transform.position);
+        Destroy(gameObject);
     }
 }

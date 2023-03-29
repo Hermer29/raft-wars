@@ -4,9 +4,10 @@ using UnityEngine.Serialization;
 public class PeopleThatCanBeTaken : MonoBehaviour
 {
     public GameObject warrior;
-    private bool canTake = true;
     [FormerlySerializedAs("explosion")] public GameObject explosionPrefab;
     
+    private bool canTake = true;
+
     private void Update()
     {
         Wander();

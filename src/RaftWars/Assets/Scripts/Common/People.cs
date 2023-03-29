@@ -51,14 +51,14 @@ public class People : MonoBehaviour
             }
             else
             {
-                EnableFlamethrower();
+                ShotWithFlamethrower();
             }
         }
         else
             timer += Time.deltaTime;
     }
 
-    private void EnableFlamethrower()
+    private void ShotWithFlamethrower()
     {
         flame.SetActive(true);
         StartCoroutine(Coroutines.WaitFor(1.3f, () => { flame.SetActive(false); }));

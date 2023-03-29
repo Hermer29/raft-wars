@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using DG.Tweening;
 
 public class FlyCamera : MonoBehaviour
 {
     [SerializeField] private float speed = 5;
-
+    
     private bool shouldMove = false;
 
     private Vector3 dir;
