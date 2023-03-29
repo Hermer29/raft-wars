@@ -49,29 +49,21 @@ public class MapGenerator : MonoBehaviour
     public void Generate(int stage)
     {
         this.stage = stage;
-        var posToSpawn = new Vector3();
-        posToSpawn = SpawnPlatformsAndEnemies(stage, posToSpawn);
-        posToSpawn = CreateActivePlatforms(stage, posToSpawn);
-        CreateActivePeople(stage, posToSpawn);
+        FigureOutPlatformsAndEnemies(stage); 
+        CreateActivePlatforms(stage);
+        CreateActivePeople(stage);
         CreateCoinChests(stage);
         CreateGems(stage);
         CreateBarrels(stage);
     }
 
-    private Vector3 SpawnPlatformsAndEnemies(int stage, Vector3 posToSpawn)
+    private void FigureOutPlatformsAndEnemies(int stage)
     {
         for (var i = 0; i < enemiesNumber[stage - 1]; i++)
         {
             while (true)
             {
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.x = Random.Range(xBorderMin, xBorderMax);
-                else
-                    posToSpawn.x = Random.Range(-xBorderMax, -xBorderMin);
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.z = Random.Range(yBorderMin, yBorderMax);
-                else
-                    posToSpawn.z = Random.Range(-yBorderMax, -yBorderMin);
+                Vector3 posToSpawn = GetRandomSpawnPosition();
 
                 var outCols = Physics.OverlapSphere(posToSpawn, 5);
                 if (outCols != null && outCols.Length != 0) continue;
@@ -84,8 +76,6 @@ public class MapGenerator : MonoBehaviour
                 break;
             }
         }
-
-        return posToSpawn;
     }
 
     public void SpawnMiscellaneous()
@@ -98,12 +88,11 @@ public class MapGenerator : MonoBehaviour
     private void CreateBarrels(int stage)
     {
         const float height = .5f;
-        Vector3 posToSpawn = Vector3.up * height;
         for (var i = 0; i < barrelNumbers / stage; i++)
         {
             while (true)
             {
-                posToSpawn = RandomizeSpawnPosition(posToSpawn);
+                Vector3 posToSpawn = GetRandomSpawnPosition() + Vector3.up * height;
 
                 var outCols = Physics.OverlapSphere(posToSpawn, 1);
                 if (outCols == null || outCols.Length == 0)
@@ -118,12 +107,11 @@ public class MapGenerator : MonoBehaviour
     private void CreateGems(int stage)
     {
         const float height = .5f;
-        Vector3 posToSpawn = Vector3.up * height;
         for (var i = 0; i < gemsNumber / stage; i++)
         {
             while (true)
             {
-                posToSpawn = RandomizeSpawnPosition(posToSpawn);
+                Vector3 posToSpawn = GetRandomSpawnPosition() + Vector3.up * height;
 
                 var outCols = Physics.OverlapSphere(posToSpawn, 1);
                 if (outCols == null || outCols.Length == 0)
@@ -135,17 +123,17 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private Vector3 RandomizeSpawnPosition(Vector3 position)
+    private Vector3 GetRandomSpawnPosition()
     {
-        Vector3 posToSpawn = position;
-        if (Random.Range(0f, 1f) > 0.5f)
-            posToSpawn.x = Random.Range(xBorderMin, xBorderMax);
-        else
-            posToSpawn.x = Random.Range(-xBorderMax, -xBorderMin);
-        if (Random.Range(0f, 1f) > 0.5f)
-            posToSpawn.z = Random.Range(yBorderMin, yBorderMax);
-        else
-            posToSpawn.z = Random.Range(-yBorderMax, -yBorderMin);
+        var posToSpawn = new Vector3
+        {
+            x = Random.Range(0f, 1f) > 0.5f ? 
+                Random.Range(xBorderMin, xBorderMax) : 
+                Random.Range(-xBorderMax, -xBorderMin),
+            z = Random.Range(0f, 1f) > 0.5f ? 
+                Random.Range(yBorderMin, yBorderMax) : 
+                Random.Range(-yBorderMax, -yBorderMin)
+        };
         return posToSpawn;
     }
 
@@ -168,20 +156,13 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void CreateActivePeople(int stage, Vector3 posToSpawn)
+    private void CreateActivePeople(int stage)
     {
         for (var i = 0; i < peopleNumber[stage - 1]; i++)
         {
             while (true)
             {
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.x = Random.Range(xBorderMin, xBorderMax);
-                else
-                    posToSpawn.x = Random.Range(-xBorderMax, -xBorderMin);
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.z = Random.Range(yBorderMin, yBorderMax);
-                else
-                    posToSpawn.z = Random.Range(-yBorderMax, -yBorderMin);
+                Vector3 posToSpawn = GetRandomSpawnPosition();
 
                 var outCols = Physics.OverlapSphere(posToSpawn, 2);
                 if (outCols == null || outCols.Length == 0)
@@ -193,21 +174,14 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private Vector3 CreateActivePlatforms(int stage, Vector3 posToSpawn)
+    private void CreateActivePlatforms(int stage)
     {
         for (var i = 0; i < platformsNumber[stage - 1]; i++)
         {
             while (true)
             {
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.x = Random.Range(xBorderMin, xBorderMax);
-                else
-                    posToSpawn.x = Random.Range(-xBorderMax, -xBorderMin);
-                if (Random.Range(0f, 1f) > 0.5f)
-                    posToSpawn.z = Random.Range(yBorderMin, yBorderMax);
-                else
-                    posToSpawn.z = Random.Range(-yBorderMax, -yBorderMin);
-                
+                Vector3 posToSpawn = GetRandomSpawnPosition();
+
                 var outCols = Physics.OverlapSphere(posToSpawn, 2);
                 if (outCols == null || outCols.Length == 0)
                 {
@@ -217,8 +191,6 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
-
-        return posToSpawn;
     }
 
     private List<Platform> ComeUpWithEnvironment(int stage, out List<People> people, out List<PeopleThatCanBeTaken> pickablePeople, out List<AttachablePlatform> pickablePlatforms)

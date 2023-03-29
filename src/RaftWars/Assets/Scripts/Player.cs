@@ -41,7 +41,6 @@ public class Player : MonoBehaviour
     private const float WinningDamageCoefficient = 1f;
     private const float LoosingDamageCoefficient = 0.8f;
     
-    private FlyCamera flyCamera;
     private Enemy enemyForBattle;
     private InputService _input;
     public static Player instance;
@@ -58,7 +57,6 @@ public class Player : MonoBehaviour
         }
 
         rb = GetComponent<Rigidbody>();
-        flyCamera = GetComponentInChildren<FlyCamera>();
         RecountStats();
 
         TryGenerateNickname();
@@ -148,7 +146,6 @@ public class Player : MonoBehaviour
     
     public void AddFastTurret(Turret tur, float speed)
     {
-        //turrets.Add(tur);
         this.speed += speed;
     }
 
@@ -346,8 +343,6 @@ public class Player : MonoBehaviour
         }
 
         platformCount++;
-        if (platformCount % 4 == 0)
-            flyCamera.Move();
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
     }
