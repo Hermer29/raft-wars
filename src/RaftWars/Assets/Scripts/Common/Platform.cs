@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTakeCoins, ICanTakeGems, ICanTakeBarrel
 {
-    private float size = 3;
+    private const float size = 2.5f;
     public Material colorMat;
     public bool isEnemy;
     private bool battle = false;
@@ -40,13 +40,13 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         else
         {
-            Platform _platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
-            Vector3 spawnPoint = _platform.transform.position;
+            Platform platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
+            Vector3 spawnPoint = platform.transform.position;
             spawnPoint.x += Random.Range(-size / 2.4f, size / 2.4f);
             spawnPoint.z += Random.Range(-size / 2.4f, size / 2.4f);
             spawnPoint.y += 0.5f;
             People people = Instantiate(warrior, spawnPoint, Quaternion.identity).GetComponent<People>();
-            people.transform.parent = _platform.transform;
+            people.transform.parent = platform.transform;
             if (transform.parent.GetComponent<Player>() != null)
                 transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
             else
@@ -60,8 +60,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     public void TakePlatform(GameObject platform, Vector3 pos)
     {
         if (isEnemy) return;
-        
-        Collider[] outCols;
+
         Vector3 spawnPos = transform.position;
         Vector3 diff = pos - transform.position;
         if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
@@ -78,7 +77,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             else
                 spawnPos.z -= size;
         }
-        outCols = Physics.OverlapSphere(spawnPos, 1.2f);
+        var outCols = Physics.OverlapSphere(spawnPos, 1.2f);
         if (outCols.Length != 0)
         {
             while (true)
@@ -151,7 +150,6 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             GetComponentInParent<Player>().AddCoins(coins);
         }
-
     }
 
     public void TakeGems(int gems)
@@ -160,7 +158,6 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             GetComponentInParent<Player>().AddGems(gems);
         }
-
     }
 
     public void TakeBarrel(int damage)

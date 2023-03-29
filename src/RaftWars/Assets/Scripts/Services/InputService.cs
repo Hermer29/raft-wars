@@ -2,7 +2,7 @@
 
 namespace InputSystem
 {
-    public class PlayerController : MonoBehaviour
+    public class InputService : MonoBehaviour
     {
         private Joystick _joystick;
         private Player _player;

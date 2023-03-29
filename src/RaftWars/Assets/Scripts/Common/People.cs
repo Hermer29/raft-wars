@@ -93,7 +93,7 @@ public class People : MonoBehaviour
         battle = false;
     }
 
-    public void DeathAnim()
+    public void PlayDyingAnimation()
     {
         isDead = true;
         animator.Play("Death");

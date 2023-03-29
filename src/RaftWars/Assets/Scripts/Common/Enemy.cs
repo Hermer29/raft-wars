@@ -305,7 +305,7 @@ public class Enemy : MonoBehaviour
 
         for(int i = 0; i < warriors.Count; i++)
         {
-            warriors[i].DeathAnim();
+            warriors[i].PlayDyingAnimation();
             warriors.RemoveAt(i);
             damageClear -= damageIncrease;
             damageText.text = damageClear.ToString();
@@ -323,7 +323,7 @@ public class Enemy : MonoBehaviour
                 if (warriors.Count > 0)
                 {
                     People warrior = warriors[Random.Range(0, warriors.Count)];
-                    warrior.DeathAnim();
+                    warrior.PlayDyingAnimation();
                     warriors.Remove(warrior);
                     maximumDamage -= damageIncrease;
                 }

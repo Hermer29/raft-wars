@@ -19,31 +19,31 @@ public class Player : MonoBehaviour
     [SerializeField] private Text coinsText, gemsText;
     [FormerlySerializedAs("fullHp")] public float maximumHp;
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
-    [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncome = 5;
-    [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncome = 5;
+    [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncomeForPeople = 5;
+    [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncomeForPeople = 5;
     [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = 1;
     [SerializeField] private float speed;
     [SerializeField] private CinemachineTargetGroup _group;
 
     private float damageClear = 10;
-    private float platformHp = 0;
-    private float hpAdditive = 0;
-    private float damageAdditive = 0;
-    private bool battle = false;
+    private float platformHp;
+    private float hpAdditive;
+    private float damageAdditive;
+    private bool battle;
     private float timer = 0;
-    public bool isDead = false;
+    public bool isDead;
     public int platformCount = 1;
-    public bool canPlay = false;
-    public int coins = 0;
-    public int gems = 0;
+    public bool canPlay;
+    public int coins;
+    public int gems;
     public int warriorsCount = 2;
-    private float enemyDmg;
+    private float damageToEnemy;
     private const float WinningDamageCoefficient = 1f;
     private const float LoosingDamageCoefficient = 0.8f;
     
     private FlyCamera flyCamera;
     private Enemy enemyForBattle;
-    private PlayerController _input;
+    private InputService _input;
     public static Player instance;
     private Rigidbody rb;
 
@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
 
     private void CreateInput()
     {
-        _input = gameObject.AddComponent<PlayerController>();
+        _input = gameObject.AddComponent<InputService>();
     }
 
     private void Update()
@@ -125,8 +125,8 @@ public class Player : MonoBehaviour
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        maximumHp += hpIncome * (1 + hpAdditive);
-        maximumDamage += damageIncome * (1 + damageAdditive);
+        maximumHp += hpIncomeForPeople * (1 + hpAdditive);
+        maximumDamage += damageIncomeForPeople * (1 + damageAdditive);
         RecountStats();
     }
 
@@ -146,7 +146,6 @@ public class Player : MonoBehaviour
         RecountStats();
     }
     
-
     public void AddFastTurret(Turret tur, float speed)
     {
         //turrets.Add(tur);
@@ -164,7 +163,7 @@ public class Player : MonoBehaviour
     {
         bool Something()
         {
-            return maximumHp - platformHp * (1 + hpAdditive) <= (warriors.Count - 1) * hpIncome * (1 + hpAdditive);
+            return maximumHp - platformHp * (1 + hpAdditive) <= (warriors.Count - 1) * hpIncomeForPeople * (1 + hpAdditive);
         }
         
         if (warriorsCount > 0)
@@ -174,9 +173,9 @@ public class Player : MonoBehaviour
                 if (warriors.Count > 0)
                 {
                     People warrior = warriors[Random.Range(0, warriors.Count)];
-                    warrior.DeathAnim();
+                    warrior.PlayDyingAnimation();
                     warriors.Remove(warrior);
-                    maximumDamage -= damageIncome * (1 + damageAdditive);
+                    maximumDamage -= damageIncomeForPeople * (1 + damageAdditive);
                 }
             }
         }
@@ -201,8 +200,8 @@ public class Player : MonoBehaviour
         else
         {
             rb.velocity = Vector3.zero;
-            enemyDmg = enemyForBattle.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * WinningDamageCoefficient;
-            GetDamage(enemyDmg);
+            damageToEnemy = enemyForBattle.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * WinningDamageCoefficient;
+            GetDamage(damageToEnemy);
         }
     }
 
@@ -237,13 +236,13 @@ public class Player : MonoBehaviour
 
             if (playerDamage > enemyHealth)
             {
-                enemyDmg = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
+                damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
                 enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
                 break;
             }
 
             if (!(enemyDamage >= maximumHp)) continue;
-            enemyDmg = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
+            damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
             enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
             break;
         }
@@ -254,8 +253,9 @@ public class Player : MonoBehaviour
         if (!when)
             return;
         
-        enemyDmg = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
-        enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient, this);
+        damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
+        float damageToPlayer = maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
+        enemy.AttackPlayer(damageToPlayer, this);
     }
 
     private void WhenControversialBattle_PlayerSuperior(Enemy enemy, bool when)
@@ -263,7 +263,7 @@ public class Player : MonoBehaviour
         if (!when)
             return;
         
-        enemyDmg = enemy.maximumDamage * battleDamageOverTime * LoosingDamageCoefficient * Time.fixedDeltaTime;
+        damageToEnemy = enemy.maximumDamage * battleDamageOverTime * LoosingDamageCoefficient * Time.fixedDeltaTime;
         enemy.AttackPlayer(maximumDamage * battleDamageOverTime * Time.fixedDeltaTime, this);
     }
 
@@ -293,6 +293,10 @@ public class Player : MonoBehaviour
         isDead = true;
         canPlay = false;
         PutTurretsInIdleAnimation();
+        foreach (People warrior in warriors)
+        {
+            warrior.PlayDyingAnimation();
+        }
         GameManager.instance.PlayerLost();
     }
 
@@ -336,11 +340,16 @@ public class Player : MonoBehaviour
 
     public void AddPlatform(Platform platform)
     {
+        void AddPlatformToCameraTargetGroup()
+        {
+            _group.AddMember(platform.transform, 1, 7);
+        }
+
         platformCount++;
         if (platformCount % 4 == 0)
             flyCamera.Move();
         platforms.Add(platform);
-        _group.AddMember(platform.transform, 1, 7);
+        AddPlatformToCameraTargetGroup();
     }
 
     public void AmplifyDamage(float percent)

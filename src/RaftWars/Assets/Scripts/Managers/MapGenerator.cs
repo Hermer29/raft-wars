@@ -88,6 +88,13 @@ public class MapGenerator : MonoBehaviour
         return posToSpawn;
     }
 
+    public void SpawnMiscellaneous()
+    {
+        CreateBarrels(stage);
+        CreateGems(stage);
+        CreateCoinChests(stage);
+    }
+
     private void CreateBarrels(int stage)
     {
         const float height = .5f;
@@ -322,10 +329,7 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateBoss()
     {
-        Collider[] outCols;
         Vector3 posToSpawn = new Vector3();
-        int platInd = 0;
-        int peopInd = 0;
         while (true)
         {
             if (Random.Range(0f, 1f) > 0.5f)
@@ -337,7 +341,7 @@ public class MapGenerator : MonoBehaviour
             else
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
 
-            outCols = Physics.OverlapSphere(posToSpawn, 3);
+            var outCols = Physics.OverlapSphere(posToSpawn, 3);
             if (outCols == null || outCols.Length == 0)
             {
                 Enemy enemy = Instantiate(bosses[stage - 1], posToSpawn, Quaternion.identity);
@@ -345,6 +349,8 @@ public class MapGenerator : MonoBehaviour
                 List<People> people = new List<People>();
                 List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
                 List<AttachablePlatform> platformAdditive = new List<AttachablePlatform>();
+                var platInd = 0;
+                var peopInd = 0;
                 if (stage == 1)
                 {
                     for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
