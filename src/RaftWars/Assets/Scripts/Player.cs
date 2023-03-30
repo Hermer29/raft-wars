@@ -226,8 +226,8 @@ public class Player : MonoBehaviour
             if (ControversialBattle(playerDamage, enemyHealth, enemyDamage))
             {
                 bool playerSuperior = playerDamage >= enemyDamage;
-                WhenControversialBattle_PlayerSuperior(enemy, playerSuperior);
-                WhenControversialBattle_EnemySuperior(enemy, !playerSuperior);
+                WhenControversialBattle_PlayerSuperior(enemy, when: playerSuperior);
+                WhenControversialBattle_EnemySuperior(enemy, when: !playerSuperior);
                 break;
             }
 

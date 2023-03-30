@@ -3877,7 +3877,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 51.32323
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -3902,8 +3902,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1374510030}
-  m_LocalRotation: {x: 0.4129811, y: 0.000000022161483, z: -0.000000010049276, w: 0.9107396}
-  m_LocalPosition: {x: 0, y: 13.7, z: -12}
+  m_LocalRotation: {x: 0.44071418, y: 4.664959e-36, z: 1.4705081e-36, w: 0.8976475}
+  m_LocalPosition: {x: 0, y: 16.69, z: -12.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4006,8 +4006,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1404479969}
-  m_LocalRotation: {x: 0.4129811, y: 0.000000022161483, z: -0.000000010049276, w: 0.9107396}
-  m_LocalPosition: {x: 0, y: 13.7, z: -12}
+  m_LocalRotation: {x: 0.44071418, y: 4.664959e-36, z: 1.4705081e-36, w: 0.8976475}
+  m_LocalPosition: {x: 0, y: 16.69, z: -12.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4856,9 +4856,29 @@ PrefabInstance:
       propertyPath: m_ReflectionProbeUsage
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3377585066121525920, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8ed6be4d200f44763bb6a52ceb413920, type: 2}
     - target: {fileID: 3377585066121525926, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
       propertyPath: isEnemy
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3821744572458117953, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3821744572458117953, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3821744573504796706, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3821744573504796706, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8358105861719330801, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
       propertyPath: UVModule.enabled
@@ -6159,7 +6179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 13.7, z: -12}
+  m_FollowOffset: {x: 0, y: 16.69, z: -12.9}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0

@@ -105,8 +105,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
                 }
             }
         }
-        GameObject _platform = Instantiate(platform, spawnPos, Quaternion.identity);
-        _platform.transform.parent = transform.parent;
+        GameObject _platform = Instantiate(platform, spawnPos, Quaternion.identity, transform.parent);
         _platform.GetComponent<Platform>().colorMat = colorMat;
 
         if (GetComponentInParent<Player>() != null)
