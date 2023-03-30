@@ -45,13 +45,10 @@ public class People : MonoBehaviour
         {
             timer = 0;
             animator.Play("Shoot");
+            ShotWithFlamethrower();
             if (!isFlamer)
             {
                 PerformShot();
-            }
-            else
-            {
-                ShotWithFlamethrower();
             }
         }
         else
