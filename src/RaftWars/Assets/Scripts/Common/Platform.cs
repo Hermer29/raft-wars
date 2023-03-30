@@ -62,17 +62,17 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         if (isEnemy) return;
 
         Vector3 spawnPos = transform.position;
-        Vector3 diff = pos - transform.position;
-        if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
+        Vector3 vectorFromPlayer = pos - transform.position;
+        if (Mathf.Abs(vectorFromPlayer.x) > Mathf.Abs(vectorFromPlayer.z))
         {
-            if (diff.x > 0)
+            if (vectorFromPlayer.x > 0)
                 spawnPos.x += Constants.PlatformSize;
             else
                 spawnPos.x -= Constants.PlatformSize;
         }
         else
         {
-            if (diff.z > 0)
+            if (vectorFromPlayer.z > 0)
                 spawnPos.z += Constants.PlatformSize;
             else
                 spawnPos.z -= Constants.PlatformSize;
@@ -83,16 +83,16 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             while (true)
             {
                 spawnPos = GetComponentInParent<Player>().GetAnotherPlatform().transform.position;
-                if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
+                if (Mathf.Abs(vectorFromPlayer.x) > Mathf.Abs(vectorFromPlayer.z))
                 {
-                    if (diff.x > 0)
+                    if (vectorFromPlayer.x > 0)
                         spawnPos.x += Constants.PlatformSize;
                     else
                         spawnPos.x -= Constants.PlatformSize;
                 }
                 else
                 {
-                    if (diff.z > 0)
+                    if (vectorFromPlayer.z > 0)
                         spawnPos.z += Constants.PlatformSize;
                     else
                         spawnPos.z -= Constants.PlatformSize;

@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
     public bool battle = false;
-    public float speed = 5;
+    private float speed = 5 - 5/4;
     private Player player;
     private float timer = 0;
     private const float RunningViewportBounds = .05f;
@@ -49,6 +49,8 @@ public class Enemy : MonoBehaviour
     public List<GameObject> enemiesToKill;
     public GameObject shieldToOff;
     private Vector3? _moveDirection;
+    private bool _fleeingPlayer;
+    private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     
     private int StatsSum => (int) (fullHp + maximumDamage);
 
@@ -118,7 +120,6 @@ public class Enemy : MonoBehaviour
         battle = false;
         timer = 0;
         PlayIdleAnimation();
-        
     }
 
     private void TryMoveEnemy(float deltaTime)
@@ -128,16 +129,9 @@ public class Enemy : MonoBehaviour
 
         if (_moveDirection == null)
         {
-            float radians = Random.Range(0, 360f) * Mathf.Deg2Rad;
-            _moveDirection = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians));
+            MoveInRandomDirection();
         }
 
-        Vector3 vectorToPlayer = Vector3.MoveTowards(transform.position, _player.Position, 
-            speed * deltaTime);
-        Vector3 vectorFromPlayer = Vector3.MoveTowards(transform.position,
-            _player.Position,
-            -speed * deltaTime);
-        
         bool ReachedWorldBounds()
         {
             return Vector3.Distance(GetNearestPointOnBound(), transform.position) <= 1f;
@@ -148,17 +142,34 @@ public class Enemy : MonoBehaviour
             _moveDirection = Vector3.Reflect(_moveDirection.Value, GetNormalToNearestBound());
         }
 
-        // if (_player.PlayerStatsSum >= StatsSum)
-        // {
-        //     _moveDirectio
-        // }
-        // else
-        // {
-        //     transform.position = vectorToPlayer;
-        // }
-        transform.position += _moveDirection.Value * (Time.deltaTime * speed);
+        if ((_player.Position - transform.position).sqrMagnitude < SqrMagnitudeDistanceToReactOnPlayer)
+        {
+            bool playerSuperior = _player.PlayerStatsSum >= StatsSum;
+            if (playerSuperior)
+            {
+                if(ReachedWorldBounds())
+                {
+                    MoveInRandomDirection();
+                    goto Exit;
+                }
+
+                _moveDirection = -(_player.Position - transform.position).normalized;
+            }
+            else
+            {
+                _moveDirection = (_player.Position - transform.position).normalized;
+            }
+        }
+        Exit:
+        transform.position += _moveDirection.Value * (deltaTime * speed);
     }
-    
+
+    private void MoveInRandomDirection()
+    {
+        float radians = Random.Range(0, 360f) * Mathf.Deg2Rad;
+        _moveDirection = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians));
+    }
+
     private Vector3 GetNearestPointOnBound()
     {
         Vector3 position = transform.position;
