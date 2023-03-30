@@ -1,59 +1,55 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Rendering.UI;
 using UnityEngine.Serialization;
+using Quaternion = UnityEngine.Quaternion;
+using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private List<Material> colorMaterials;
-
     private List<People> warriors = new List<People>();
     [SerializeField] private List<Platform> platforms = new List<Platform>();
     private List<Turret> turrets = new List<Turret>();
     private int warriorsCount;
-
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
-
     private float hpClear = 0;
     private float damageClear = 0;
     private float turretDamage = 0;
     private float platformHP = 0;
-
     public float fullHp;
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
-
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
-
     public bool battle = false;
     public float speed = 5;
-
     private Player player;
     private float timer = 0;
     private const float RunningViewportBounds = .05f;
     public bool isDead;
     public bool isBoss = false;
-
     private List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
     private List<AttachablePlatform> platformsAdditive = new List<AttachablePlatform>();
-
     private Vector3 prevSpawnPoint;
     private PlayerService _player;
     public bool boss5Stage = true;
-
     private float playerDmg;
-
     public bool hasShield = false;
     public List<GameObject> enemiesToKill;
     public GameObject shieldToOff;
-
+    private Vector3? _moveDirection;
+    
     private int StatsSum => (int) (fullHp + maximumDamage);
 
     private void Start()
@@ -129,23 +125,111 @@ public class Enemy : MonoBehaviour
     {
         if (_player.GameStarted == false)
             return;
-        if (_player.IsInViewportBounds(transform.position, RunningViewportBounds) == false)
-            return;
+
+        if (_moveDirection == null)
+        {
+            float radians = Random.Range(0, 360f) * Mathf.Deg2Rad;
+            _moveDirection = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians));
+        }
 
         Vector3 vectorToPlayer = Vector3.MoveTowards(transform.position, _player.Position, 
             speed * deltaTime);
         Vector3 vectorFromPlayer = Vector3.MoveTowards(transform.position,
             _player.Position,
             -speed * deltaTime);
-        Debug.Log($"StatsDifference: Player: {_player.PlayerStatsSum} Enemy: {StatsSum}. EnemyName: {name}");
-        if (_player.PlayerStatsSum >= StatsSum)
+        
+        bool ReachedWorldBounds()
         {
-            transform.position = vectorFromPlayer;
+            return Vector3.Distance(GetNearestPointOnBound(), transform.position) <= 1f;
         }
-        else
+
+        if (ReachedWorldBounds())
         {
-            transform.position = vectorToPlayer;
+            _moveDirection = Vector3.Reflect(_moveDirection.Value, GetNormalToNearestBound());
         }
+
+        // if (_player.PlayerStatsSum >= StatsSum)
+        // {
+        //     _moveDirectio
+        // }
+        // else
+        // {
+        //     transform.position = vectorToPlayer;
+        // }
+        transform.position += _moveDirection.Value * (Time.deltaTime * speed);
+    }
+    
+    private Vector3 GetNearestPointOnBound()
+    {
+        Vector3 position = transform.position;
+        float distanceToZMaxBound = Mathf.Abs(45 - position.z);
+        float distanceToZMinBound = Mathf.Abs(-45 - position.z);
+        float distanceToXMinBound = Mathf.Abs(-45 - position.x);
+        float distanceToXMaxBound = Mathf.Abs(45 - position.x);
+
+        var minimal = Mathf.Min(distanceToZMaxBound, distanceToZMinBound, distanceToXMinBound, distanceToXMaxBound);
+        Debug.Log($"{name} Nearest bound distance: {minimal}");
+        Vector3 result = Vector3.zero;
+        if (distanceToZMaxBound == minimal)
+        {
+            result = new Vector3(position.x, 0, 45);
+        }
+
+        if (distanceToZMinBound == minimal)
+        {
+            result = new Vector3(position.x, 0, -45);
+        }
+
+        if (distanceToXMinBound == minimal)
+        {
+            result = new Vector3(-45, 0, position.z);
+        }
+
+        if (distanceToXMaxBound == minimal)
+        {
+            result = new Vector3(45, 0, position.z);
+        }
+
+        Debug.Log($"{name} Nearest bound position {result}");
+        return result;
+    }
+
+    private Vector3 GetNormalToNearestBound()
+    {
+        Vector3 position = transform.position;
+        float distanceToZMaxBound = Mathf.Abs(45 - position.z);
+        float distanceToZMinBound = Mathf.Abs(-45 - position.z);
+        float distanceToXMinBound = Mathf.Abs(-45 - position.x);
+        float distanceToXMaxBound = Mathf.Abs(45 - position.x);
+        var minimal = Mathf.Min(distanceToZMaxBound, distanceToZMinBound, distanceToXMinBound, distanceToXMaxBound);
+        if (distanceToZMaxBound == minimal)
+        {
+            
+            Debug.Log($"{gameObject.name} reached world bounds. normal back");
+            return Vector3.back;
+        }
+
+        if (distanceToZMinBound == minimal)
+        {
+            
+            Debug.Log($"{gameObject.name} reached world bounds. normal forward");
+            return Vector3.forward;
+        }
+
+        if (distanceToXMinBound == minimal)
+        {
+            
+            Debug.Log($"{gameObject.name} reached world bounds. normal right");
+            return Vector3.right;
+        }
+
+        if (distanceToXMaxBound == minimal)
+        {
+            Debug.Log($"{gameObject.name} reached world bounds. normal left");
+            return Vector3.left;
+        }
+
+        throw new Exception("Unreachable");
     }
 
     private void PlayIdleAnimation()
