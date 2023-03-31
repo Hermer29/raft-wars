@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -37,6 +39,7 @@ public class Player : MonoBehaviour
     public int coins;
     public int gems;
     public int warriorsCount = 2;
+    public CinemachineCameraOffset _camera;
     private float damageToEnemy;
     private const float WinningDamageCoefficient = 1f;
     private const float LoosingDamageCoefficient = 0.8f;
@@ -345,6 +348,8 @@ public class Player : MonoBehaviour
         platformCount++;
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
+
+        _camera.m_Offset.z -= 2;
     }
 
     public void AmplifyDamage(float percent)

@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour
 
     private float timer = 0;
     private const float AccuracyError = 5f;
-    public float speed = 10;
+    private float speed = 10;
 
     public GameObject explosion;
 
@@ -17,7 +17,7 @@ public class Bullet : MonoBehaviour
     {
         _target = target;
         _target = AddAccuracyError(_target);
-        shotDirection = _target - transform.position;
+        shotDirection = (_target - transform.position).normalized;
     }
 
     private static Vector3 AddAccuracyError(Vector3 target) 
