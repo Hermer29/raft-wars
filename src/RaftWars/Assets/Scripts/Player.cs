@@ -58,10 +58,12 @@ public class Player : MonoBehaviour
         damage = 1;
         _materialsService = Game.MaterialsService;
         _material = _materialsService.GetRandom();
-        GetComponentInChildren<Platform>().Material = _material;
+        var onlyPlatform = GetComponentInChildren<Platform>();
+        onlyPlatform.Material = _material;
         foreach (People componentsInChild in GetComponentsInChildren<People>())
         {
             componentsInChild.matRenderer.material = _material;
+            componentsInChild.SetRelatedPlatform(onlyPlatform);
         }
         if (instance == null)
             instance = this;

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -22,6 +24,7 @@ public class People : MonoBehaviour
     public AudioSource audio;
     private Vector3 targetShoot;
     public GameObject shootEffect;
+    private Platform _platform;
 
     private void OnValidate()
     {
@@ -35,6 +38,43 @@ public class People : MonoBehaviour
         {
             animator.Play("Hold");
         }
+    }
+
+    private IEnumerator MoveOnPlatformOverTime()
+    {
+        const float speed = 1f;
+
+        while (true)
+        {
+            const float platformSizeModifier = 5;
+            Vector3 nextPoint = new Vector3(
+                Random.Range(-Constants.PlatformSize / platformSizeModifier, Constants.PlatformSize / platformSizeModifier),
+                    .5f,
+                Random.Range(-Constants.PlatformSize / platformSizeModifier, Constants.PlatformSize / platformSizeModifier));
+            transform.rotation = Quaternion.LookRotation(nextPoint - transform.localPosition);
+            while (Vector3.SqrMagnitude(nextPoint - transform.localPosition) > Mathf.Epsilon)
+            {
+                if(battle)
+                {
+                    yield return null;
+                    continue;
+                }
+                
+                transform.localPosition = Vector3.MoveTowards(transform.localPosition, nextPoint, speed * Time.deltaTime);
+                yield return null;
+            }
+
+            const float spacingBetweenMoves = 1f;
+            yield return new WaitForSeconds(spacingBetweenMoves);
+        }
+    }
+
+    public void SetRelatedPlatform(Platform platform)
+    {
+        _platform = platform;
+        transform.localScale = new Vector3(1 / platform.transform.lossyScale.x, 
+            1 / platform.transform.lossyScale.y, 1 / platform.transform.lossyScale.z);
+        StartCoroutine(MoveOnPlatformOverTime());
     }
 
     private void Update()

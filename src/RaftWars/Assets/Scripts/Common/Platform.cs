@@ -38,15 +38,18 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             Vector3 spawnPoint = transform.position;
             spawnPoint = FindPointOnPlatform(spawnPoint);
-            People people = Instantiate(warrior, spawnPoint, Quaternion.identity).GetComponent<People>();
-            people.transform.parent = transform;
+            People people = Instantiate(warrior, spawnPoint, Quaternion.identity, transform).GetComponent<People>();
+            
             if (transform.parent.GetComponent<Player>() != null)
+            {
                 transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
+            }
             else
             {
                 transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
             }
-            people.GetComponent<People>().SetColor(_material);
+            people.SetColor(_material);
+            people.SetRelatedPlatform(this);
         }
         else
         {
@@ -78,6 +81,12 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
         spawnPoint.y += 0.5f;
         return spawnPoint;
+    }
+
+    public Vector3 FindPointOnPlatform()
+    {
+        Vector3 middle = transform.position;
+        return FindPointOnPlatform(middle);
     }
 
     public void TakePlatform(GameObject platform, Vector3 pos)
