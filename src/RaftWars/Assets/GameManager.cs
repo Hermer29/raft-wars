@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") + 1);
         }
 
-        Increment();
+        //Increment();
         LoopLevelsOnOverflow();
     }
 

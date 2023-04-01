@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     private Rigidbody rb;
     private MaterialsService _materialsService;
     private Material _material;
+    private bool idleBehaviour;
 
     private void Start()
     {
@@ -102,7 +103,16 @@ public class Player : MonoBehaviour
     {
         if (!battle) return;
         if (!enemyForBattle.isDead && enemyForBattle != null) return;
+        if (idleBehaviour)
+            return;
+        OnBattleEnded();
+    }
+
+    private void OnBattleEnded()
+    {
         battle = false;
+        idleBehaviour = true;
+        
         PutInIdleAnimation();
     }
 
@@ -228,6 +238,7 @@ public class Player : MonoBehaviour
         }
 
         if (battle) return;
+        idleBehaviour = false;
         enemyForBattle = enemy;
         battle = true;
         MakeWarriorsShot(enemy);
@@ -364,7 +375,7 @@ public class Player : MonoBehaviour
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
 
-        _camera.m_Offset.z -= 2;
+        _camera.m_Offset.z -= 1;
     }
 
     public void AmplifyDamage(float percent)

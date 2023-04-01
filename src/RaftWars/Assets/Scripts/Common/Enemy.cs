@@ -151,7 +151,6 @@ public class Enemy : MonoBehaviour
         if (player != null && !player.isDead) return;
         battle = false;
         timer = 0;
-        PlayIdleAnimation();
     }
 
     private void TryMoveEnemy(float deltaTime)
@@ -267,19 +266,6 @@ public class Enemy : MonoBehaviour
         throw new Exception("Unreachable");
     }
 
-    private void PlayIdleAnimation()
-    {
-        foreach (People people in warriors)
-        {
-            people.IdleAnim();
-        }
-
-        foreach (Turret turret in turrets)
-        {
-            turret.IdleAnim();
-        }
-    }
-
     private void FixedUpdate()
     {
         if (battle)
@@ -378,13 +364,6 @@ public class Enemy : MonoBehaviour
         fullHp += hpIncrease;
         maximumDamage += damageIncrease;
         RecountStats();
-    }
-
-    public void StartBattle(Player target)
-    {
-        player = target;
-        battle = true;
-        PlayShotAnimation(target);
     }
 
     private void PlayShotAnimation(Player target)

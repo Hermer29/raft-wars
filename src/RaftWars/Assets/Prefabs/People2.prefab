@@ -833,7 +833,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1526000458446469623}
-  - component: {fileID: 1344263094535560734}
   - component: {fileID: 1344263094535560735}
   m_Layer: 0
   m_Name: People2
@@ -858,26 +857,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1344263094535560734
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2190616357139686221}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 09713b0346c85254ab41b485061b6172, type: 3}
-  m_Controller: {fileID: 9100000, guid: 65f2a64af6e805b4aadf0fa589985e8d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &1344263094535560735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -892,7 +871,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAdditive: 0
   matRenderer: {fileID: 7466106352184890890}
-  animator: {fileID: 1344263094535560734}
+  animator: {fileID: 3620115377113714828}
   bulletPrefab: {fileID: -8588107189933345300, guid: 33afb2f29cde573409c578f56730c140, type: 3}
   shootPoint: {fileID: 7161023765035481407}
   isFlamer: 1
@@ -1483,7 +1462,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3519731210513556930}
-  - component: {fileID: 7365835342084702136}
+  - component: {fileID: 3620115377113714828}
   m_Layer: 0
   m_Name: Y Bot
   m_TagString: Untagged
@@ -1509,7 +1488,7 @@ Transform:
   m_Father: {fileID: 1526000458446469623}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &7365835342084702136
+--- !u!95 &3620115377113714828
 Animator:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -1520,9 +1499,9 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 09713b0346c85254ab41b485061b6172, type: 3}
   m_Controller: {fileID: 9100000, guid: 65f2a64af6e805b4aadf0fa589985e8d, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
