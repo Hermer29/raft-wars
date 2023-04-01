@@ -25,6 +25,7 @@ public class People : MonoBehaviour
     private Vector3 targetShoot;
     public GameObject shootEffect;
     private Platform _platform;
+    private Coroutine _movingOnPlatform;
 
     private void OnValidate()
     {
@@ -52,6 +53,7 @@ public class People : MonoBehaviour
                     .5f,
                 Random.Range(-Constants.PlatformSize / platformSizeModifier, Constants.PlatformSize / platformSizeModifier));
             transform.rotation = Quaternion.LookRotation(nextPoint - transform.localPosition);
+            PlayRunAnimation();
             while (Vector3.SqrMagnitude(nextPoint - transform.localPosition) > Mathf.Epsilon)
             {
                 if(battle)
@@ -63,7 +65,7 @@ public class People : MonoBehaviour
                 transform.localPosition = Vector3.MoveTowards(transform.localPosition, nextPoint, speed * Time.deltaTime);
                 yield return null;
             }
-
+            IdleAnim();
             const float spacingBetweenMoves = 1f;
             yield return new WaitForSeconds(spacingBetweenMoves);
         }
@@ -74,7 +76,7 @@ public class People : MonoBehaviour
         _platform = platform;
         transform.localScale = new Vector3(1 / platform.transform.lossyScale.x, 
             1 / platform.transform.lossyScale.y, 1 / platform.transform.lossyScale.z);
-        StartCoroutine(MoveOnPlatformOverTime());
+        _movingOnPlatform = StartCoroutine(MoveOnPlatformOverTime());
     }
 
     private void Update()
@@ -124,6 +126,11 @@ public class People : MonoBehaviour
         animator.Play("Idle Aiming");
     }
 
+    public void PlayRunAnimation()
+    {
+        animator.Play("Running");
+    }
+
     public void IdleAnim()
     {
         animator.Play("Idle");
@@ -133,6 +140,7 @@ public class People : MonoBehaviour
     public void PlayDyingAnimation()
     {
         isDead = true;
+        StopCoroutine(_movingOnPlatform);
         animator.Play("Death");
         Destroy(gameObject, 2.5f);
     }

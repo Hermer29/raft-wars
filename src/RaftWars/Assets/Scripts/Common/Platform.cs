@@ -72,7 +72,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
         }
 
-        people.GetComponent<People>().SetColor(_material);
+        people.SetColor(_material);
+        people.SetRelatedPlatform(this);
     }
 
     private static Vector3 FindPointOnPlatform(Vector3 spawnPoint)
