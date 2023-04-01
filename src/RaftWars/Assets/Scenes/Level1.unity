@@ -3954,7 +3954,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 45.05788
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -4351,6 +4351,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436385759}
   m_CullTransparentMesh: 1
+--- !u!1 &1453957738 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8135886326569738825, guid: 56fae09712773584fb63896d473a98ee, type: 3}
+  m_PrefabInstance: {fileID: 753463929}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1494298812
 GameObject:
   m_ObjectHideFlags: 0
@@ -5284,6 +5289,7 @@ MonoBehaviour:
   _damageUpgradeVideoIcon: {fileID: 453781562}
   _damageUpgradeCoin: {fileID: 297455541}
   _healthUpgradeCoin: {fileID: 1502610371}
+  _joystick: {fileID: 1453957738}
   map: {fileID: 1174789168}
   boss: {fileID: 0}
 --- !u!4 &1712862182
