@@ -79,7 +79,7 @@ public class MapGenerator : MonoBehaviour
         {
             Vector3 posToSpawn = GetRandomSpawnPosition();
             Enemy enemy = Instantiate(enemyPrefab, posToSpawn, Quaternion.identity);
-            var platforms = ComeUpWithEnvironment(stage, out var people, out var pickablePeople
+            var platforms = ComeUpWithPeopleAndPlatformsCount(stage, out var people, out var pickablePeople
                 ,out var pickablePlatforms);
             enemy.Material = _materials.GetRandom();
             enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1],
@@ -202,7 +202,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private List<Platform> ComeUpWithEnvironment(int stage, out List<People> people, out List<PeopleThatCanBeTaken> pickablePeople, out List<AttachablePlatform> pickablePlatforms)
+    private List<Platform> ComeUpWithPeopleAndPlatformsCount(int stage, out List<People> people, out List<PeopleThatCanBeTaken> pickablePeople, out List<AttachablePlatform> pickablePlatforms)
     {
         int platInd;
         int peopInd;

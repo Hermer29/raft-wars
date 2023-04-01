@@ -13,7 +13,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private List<Material> colorMaterials;
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
@@ -302,6 +301,7 @@ public class Enemy : MonoBehaviour
         damageIncrease = damage;
         warriorsCount = people.Length;
         prevSpawnPoint = startPoint;
+        
         foreach (Platform platform in platforms)
         {
             startPoint = ThinkOutSpawnPosition(startPoint);
