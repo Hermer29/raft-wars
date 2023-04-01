@@ -1,7 +1,6 @@
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Assertions;
-using Color = System.Drawing.Color;
 using Random = UnityEngine.Random;
 
 public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTakeCoins, ICanTakeGems, ICanTakeBarrel
@@ -38,9 +37,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         if (!isTurret)
         {
             Vector3 spawnPoint = transform.position;
-            spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-            spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-            spawnPoint.y += 0.5f;
+            spawnPoint = FindPointOnPlatform(spawnPoint);
             People people = Instantiate(warrior, spawnPoint, Quaternion.identity).GetComponent<People>();
             people.transform.parent = transform;
             if (transform.parent.GetComponent<Player>() != null)
@@ -61,18 +58,26 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     {
         Platform platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
         Vector3 spawnPoint = platform.transform.position;
-        spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-        spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-        spawnPoint.y += 0.5f;
+        spawnPoint = FindPointOnPlatform(spawnPoint);
         People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform).GetComponent<People>();
         if (transform.parent.GetComponent<Player>() != null)
+        {
             transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
+        }
         else
         {
             transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
         }
 
         people.GetComponent<People>().SetColor(_material);
+    }
+
+    private static Vector3 FindPointOnPlatform(Vector3 spawnPoint)
+    {
+        spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+        spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+        spawnPoint.y += 0.5f;
+        return spawnPoint;
     }
 
     public void TakePlatform(GameObject platform, Vector3 pos)
