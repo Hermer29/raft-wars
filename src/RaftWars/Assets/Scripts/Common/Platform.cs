@@ -38,8 +38,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         if (!isTurret)
         {
             Vector3 spawnPoint = transform.position;
-            spawnPoint.x += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-            spawnPoint.z += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+            spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+            spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
             spawnPoint.y += 0.5f;
             People people = Instantiate(warrior, spawnPoint, Quaternion.identity).GetComponent<People>();
             people.transform.parent = transform;
@@ -53,20 +53,26 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         else
         {
-            Platform platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
-            Vector3 spawnPoint = platform.transform.position;
-            spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-            spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-            spawnPoint.y += 0.5f;
-            People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform).GetComponent<People>();
-            if (transform.parent.GetComponent<Player>() != null)
-                transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
-            else
-            {
-                transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
-            }
-            people.GetComponent<People>().SetColor(_material);
+            FigureOutWhereSpawnPeopleInstead(warrior);
         }
+    }
+
+    private void FigureOutWhereSpawnPeopleInstead(GameObject warrior)
+    {
+        Platform platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
+        Vector3 spawnPoint = platform.transform.position;
+        spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+        spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+        spawnPoint.y += 0.5f;
+        People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform).GetComponent<People>();
+        if (transform.parent.GetComponent<Player>() != null)
+            transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
+        else
+        {
+            transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
+        }
+
+        people.GetComponent<People>().SetColor(_material);
     }
 
     public void TakePlatform(GameObject platform, Vector3 pos)
