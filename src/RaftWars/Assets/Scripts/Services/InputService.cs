@@ -15,7 +15,7 @@ namespace InputSystem
 
         private void Start()
         {
-            _joystick = FindObjectOfType<Joystick>();
+            _joystick = FindObjectOfType<Joystick>(true);
         }
     }
 }

@@ -30,7 +30,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image _damageUpgradeVideoIcon;
     [SerializeField] private Image _damageUpgradeCoin;
     [SerializeField] private Image _healthUpgradeCoin;
-    
+    [SerializeField] private GameObject _joystick;
+
     private int platformsCountOnStart = 1;
     private int warriorsCountOnStart = 2;
     private int powerCountOnStart = 10;
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
 
         map.Generate(_stage);
         map.GenerateBoss();
+        _joystick.gameObject.SetActive(false);
     }
     
     private void Update()
@@ -176,6 +178,7 @@ public class GameManager : MonoBehaviour
         _started = true;
         tapToPlay.SetActive(false);
         Player.instance.canPlay = true;
+        _joystick.gameObject.SetActive(true);
     }
 
     public void AddEnemy(Enemy enemy)
