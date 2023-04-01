@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Agava.YandexGames;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,7 @@ namespace RaftWars.Infrastructure
         {
             LoadLevel();
             DontDestroyOnLoad(gameObject);
+            YandexGamesSdk.Initialize();
         }
 
         private void LoadLevel()

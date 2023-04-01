@@ -8,6 +8,7 @@ namespace RaftWars.Infrastructure
         public static CollectiblesService CollectiblesService;
         public static PlayerService PlayerService;
         public static MaterialsService MaterialsService;
+        public static AdvertisingService AdverisingService;
         public static bool Initialized { get; private set; }
         
         public Game(Player player, Camera camera)
@@ -15,6 +16,7 @@ namespace RaftWars.Infrastructure
             CollectiblesService = new CollectiblesService();
             PlayerService = new PlayerService(player, camera);
             MaterialsService = new MaterialsService();
+            AdverisingService = new AdvertisingService();
             Initialized = true;
         }
     }

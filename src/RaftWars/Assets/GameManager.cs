@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using DefaultNamespace.Common;
+using InputSystem;
+using RaftWars.Infrastructure;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,7 +26,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text warriorsCountPrev, warriorsCountAdd;
     [SerializeField] private Text powerCountPrev, powerCountAdd;
     [SerializeField] private Text healthCountPrev, healthCountAdd;
-
+    [SerializeField] private Image _healthUpgradeVideoIcon;
+    [SerializeField] private Image _damageUpgradeVideoIcon;
+    [SerializeField] private Image _damageUpgradeCoin;
+    [SerializeField] private Image _healthUpgradeCoin;
+    
     private int platformsCountOnStart = 1;
     private int warriorsCountOnStart = 2;
     private int powerCountOnStart = 10;
@@ -38,10 +45,12 @@ public class GameManager : MonoBehaviour
 
     private float buyableDamagePercent = 0.2f, buyableHealthPercent = 0.2f;
     private int damageCost = 10, healthAmplificationCost = 10;
+    private AdvertisingService _advertising;
 
 
     private void Awake()
     {
+        _advertising = Game.AdverisingService;
         if (instance == null)
         {
             instance = this;
@@ -139,6 +148,7 @@ public class GameManager : MonoBehaviour
         blackBG.SetActive(true);
         winPanel.SetActive(true);
         IncrementLevel();
+        _advertising.ShowInterstitial();
     }
 
     private static void IncrementLevel()
@@ -190,6 +200,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartLevel()
     {
+        _advertising.ShowInterstitial();
         SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level", 1));
     }
 
@@ -206,6 +217,15 @@ public class GameManager : MonoBehaviour
             return Player.instance.coins < healthAmplificationCost;
         }
 
+        if (_healthUpgradeVideoIcon.gameObject.activeInHierarchy)
+        {
+            _advertising.ShowRewarded(() =>
+            {
+                Player.instance.IncreaseHealth((float)buyableHealthPercent);
+                UpdateNextHealthUpgrade();
+            });
+            return;
+        }
         if (IsNotEnoughMoneyToIncreaseHealth()) return;
 
         Player.instance.SpendCoins(healthAmplificationCost);
@@ -224,8 +244,20 @@ public class GameManager : MonoBehaviour
 
         void IncreaseHealthUpgradeCost()
         {
+            if (RandomExtension.ProbabilityCheck(.7f))
+            {
+                _healthUpgradeVideoIcon.gameObject.SetActive(true);
+                hpCostText.enabled = false;
+                _healthUpgradeCoin.gameObject.SetActive(false);
+            }
+            else
+            {
+                _healthUpgradeVideoIcon.gameObject.SetActive(false);
+                hpCostText.enabled = true;
+                hpCostText.text = healthAmplificationCost.ToString();
+                _healthUpgradeCoin.gameObject.SetActive(true);
+            }
             healthAmplificationCost += 10;
-            hpCostText.text = healthAmplificationCost.ToString();
         }
         
         MakeNextHealthUpgradeMorePowerful();
@@ -239,6 +271,16 @@ public class GameManager : MonoBehaviour
             return Player.instance.coins < damageCost;
         }
 
+        if (_damageUpgradeVideoIcon.gameObject.activeInHierarchy)
+        {
+            _advertising.ShowRewarded(() =>
+            {
+                Player.instance.AmplifyDamage(buyableDamagePercent);
+                UpdateNextDamageUpgrade();
+            });
+            return;
+        }
+        
         if (IsNotEnoughCoinsToAmplifyDamage()) return;
         
         Player.instance.SpendCoins(damageCost);
@@ -257,8 +299,20 @@ public class GameManager : MonoBehaviour
         
         void IncreaseNextDamageAmplificationCost()
         {
+            if (RandomExtension.ProbabilityCheck(.7f))
+            {
+                _damageUpgradeVideoIcon.gameObject.SetActive(true);
+                damageCostText.enabled = false;
+                _damageUpgradeCoin.enabled = false;
+            }
+            else
+            {
+                _damageUpgradeVideoIcon.gameObject.SetActive(false);
+                damageCostText.enabled = true;
+                damageCostText.text = damageCost.ToString();
+                _damageUpgradeCoin.enabled = true;
+            }
             damageCost += 10;
-            damageCostText.text = damageCost.ToString();
         }
 
         IncreaseNextDamageAmplification();
