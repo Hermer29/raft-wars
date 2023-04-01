@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
-    [SerializeField] private List<Platform> platforms = new List<Platform>();
+    [SerializeField] public List<Platform> platforms = new List<Platform>();
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
@@ -60,6 +60,7 @@ public class Enemy : MonoBehaviour
             if(meshRenderer != null) 
                 meshRenderer.material = value;
             _material = value;
+            SetColor(_material);
         }
     }
 
@@ -68,7 +69,7 @@ public class Enemy : MonoBehaviour
         _player = Game.PlayerService;
         _materialService = Game.MaterialsService;
         TryGenerateNickname(when: !isBoss);
-        GenerateRandomColor(when: isBoss);
+        GenerateRandomColor(when: isBoss && _material == null);
 
         if (!boss5Stage) return;
         WarmupPlatforms();
@@ -82,14 +83,20 @@ public class Enemy : MonoBehaviour
             return;
 
         _material = _materialService.GetRandom();
+        SetColor(_material);
+    }
+
+    private void SetColor(Material material)
+    {
         foreach (Platform platform in platforms)
         {
-            platform.Material = _material;
+            AssignColors(platform);
+            platform.Material = material;
         }
 
         foreach (People warrior in warriors)
         {
-            warrior.matRenderer.material = _material;
+            warrior.matRenderer.material = material;
         }
     }
 
@@ -103,12 +110,6 @@ public class Enemy : MonoBehaviour
 
     private void WarmupPlatforms()
     {
-        void AssignColors(Platform platform)
-        {
-            platform.Material = _material;
-            platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
-        }
-
         foreach (Platform platform in platforms)
         {
             platform.isEnemy = true;
@@ -117,8 +118,12 @@ public class Enemy : MonoBehaviour
             turrets.Add(platform.GetComponentInChildren<Turret>());
             turretDamage += platform.GetComponentInChildren<Turret>().damageIncrease;
             platformHP += platform.GetComponentInChildren<Turret>().healthIncrease;
-            AssignColors(platform);
         }
+    }
+
+    private void AssignColors(Platform platform)
+    {
+        platform.Material = _material;
     }
 
     private void TryGenerateNickname(bool when)
@@ -323,8 +328,13 @@ public class Enemy : MonoBehaviour
 
     private Vector3 ThinkOutSpawnPosition(Vector3 startPoint)
     {
+        int counter = 0;
+        
         while (true)
         {
+            counter++;
+            if (counter == 10)
+                break;
             if (Random.Range(0f, 1f) > 0.5f)
             {
                 if (Random.Range(0f, 1f) > 0.5f)

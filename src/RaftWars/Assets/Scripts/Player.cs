@@ -236,8 +236,13 @@ public class Player : MonoBehaviour
         {
             return f >= enemyHealth1 && enemyDamage1 >= hp;
         }
-
+        
         if (battle) return;
+
+        foreach (var platform in enemy.platforms)
+        {
+            _group.AddMember(platform.transform, 1, 7);
+        }
         idleBehaviour = false;
         enemyForBattle = enemy;
         battle = true;

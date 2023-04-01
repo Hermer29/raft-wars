@@ -22,6 +22,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             _material = value;
             colorMat = value;
             GetComponent<MeshRenderer>().material = value;
+            var turret = GetComponentInChildren<Turret>();
+            turret?.DrawInMyColor(_material);
         }
     }
 

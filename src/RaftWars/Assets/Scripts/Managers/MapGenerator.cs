@@ -99,17 +99,9 @@ public class MapGenerator : MonoBehaviour
         const float height = .5f;
         for (var i = 0; i < barrelNumbers / stage; i++)
         {
-            while (true)
-            {
-                Vector3 posToSpawn = GetRandomSpawnPosition() + Vector3.up * height;
-
-                var outCols = Physics.OverlapSphere(posToSpawn, 1);
-                if (outCols == null || outCols.Length == 0)
-                {
-                    Instantiate(barrelsToSpawn, posToSpawn, Quaternion.identity);
-                    break;
-                }
-            }
+            
+            Vector3 posToSpawn = GetRandomSpawnPosition() + Vector3.up * height;
+            Instantiate(barrelsToSpawn, posToSpawn, Quaternion.identity);
         }
     }
 
@@ -118,17 +110,8 @@ public class MapGenerator : MonoBehaviour
         const float height = .5f;
         for (var i = 0; i < gemsNumber / stage; i++)
         {
-            while (true)
-            {
-                Vector3 posToSpawn = GetRandomSpawnPosition() + Vector3.up * height;
-
-                var outCols = Physics.OverlapSphere(posToSpawn, 1);
-                if (outCols == null || outCols.Length == 0)
-                {
-                    Instantiate(gemsToSpawn, posToSpawn, Quaternion.identity);
-                    break;
-                }
-            }
+            Vector3 posToSpawn = GetRandomSpawnPosition() + Vector3.up * height;
+            Instantiate(gemsToSpawn, posToSpawn, Quaternion.identity);
         }
     }
 
@@ -187,18 +170,11 @@ public class MapGenerator : MonoBehaviour
     {
         for (var i = 0; i < platformsNumber[stage - 1]; i++)
         {
-            while (true)
-            {
-                Vector3 posToSpawn = GetRandomSpawnPosition();
-
-                var outCols = Physics.OverlapSphere(posToSpawn, 2);
-                if (outCols == null || outCols.Length == 0)
-                {
-                    Instantiate(platformsToSpawn[Random.Range(0, platformsToSpawn.Length)], posToSpawn,
-                        Quaternion.identity);
-                    break;
-                }
-            }
+            
+            Vector3 posToSpawn = GetRandomSpawnPosition();
+            Instantiate(platformsToSpawn[Random.Range(0, platformsToSpawn.Length)], posToSpawn,
+                Quaternion.identity);
+            break;
         }
     }
 
@@ -322,8 +298,6 @@ public class MapGenerator : MonoBehaviour
             else
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
 
-            var outCols = Physics.OverlapSphere(posToSpawn, 3);
-            if (outCols != null && outCols.Length != 0) continue;
             Enemy enemy = Instantiate(bosses[stage - 1], posToSpawn, Quaternion.identity);
             List<Platform> platforms = new List<Platform>();
             List<People> people = new List<People>();
@@ -406,6 +380,8 @@ public class MapGenerator : MonoBehaviour
                     peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
                 }
             }
+
+            enemy.Material = _materials.GetRandom();
             enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1] + 1, damageIncrease[stage - 1] + 1, platformAdditive, peopleAdditive);
             GameManager.instance.boss = enemy;
             break;

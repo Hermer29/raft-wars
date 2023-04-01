@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8ed6be4d200f44763bb6a52ceb413920, type: 2}
+  - {fileID: 2100000, guid: 61cd6080c4e253346828ae80ee9f8f4a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -270,9 +270,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6b29fc9d4a45a4045b812449c36a15f7, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 61cd6080c4e253346828ae80ee9f8f4a, type: 2}
     m_RemovedComponents:
     - {fileID: 9500000, guid: 6b29fc9d4a45a4045b812449c36a15f7, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6b29fc9d4a45a4045b812449c36a15f7, type: 3}
+--- !u!23 &2905745140412715596 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: 6b29fc9d4a45a4045b812449c36a15f7, type: 3}
+  m_PrefabInstance: {fileID: 2905745140414745132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2905745140414615724 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 6b29fc9d4a45a4045b812449c36a15f7, type: 3}
@@ -313,4 +322,6 @@ MonoBehaviour:
   laser: {fileID: 0}
   nonBattle: 1
   isMagnet: 0
-  objectsToDraw: []
+  objectsToDraw:
+  - {fileID: 2905745140412715596}
+  - {fileID: 4684615808979959826}

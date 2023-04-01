@@ -194,6 +194,7 @@ public class GameManager : MonoBehaviour
         blackBG.SetActive(false);
         stagePanel.SetActive(false);
         map.GenerateBoss();
+        _advertising.ShowInterstitial();
     }
 
     public void Continue()
@@ -257,10 +258,10 @@ public class GameManager : MonoBehaviour
             {
                 _healthUpgradeVideoIcon.gameObject.SetActive(false);
                 hpCostText.enabled = true;
-                hpCostText.text = healthAmplificationCost.ToString();
                 _healthUpgradeCoin.gameObject.SetActive(true);
             }
             healthAmplificationCost += 10;
+            hpCostText.text = healthAmplificationCost.ToString();
         }
         
         MakeNextHealthUpgradeMorePowerful();
@@ -312,10 +313,10 @@ public class GameManager : MonoBehaviour
             {
                 _damageUpgradeVideoIcon.gameObject.SetActive(false);
                 damageCostText.enabled = true;
-                damageCostText.text = damageCost.ToString();
                 _damageUpgradeCoin.enabled = true;
             }
             damageCost += 10;
+            damageCostText.text = damageCost.ToString();
         }
 
         IncreaseNextDamageAmplification();
