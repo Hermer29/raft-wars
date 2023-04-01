@@ -15,6 +15,8 @@ public class LoadingScreen : MonoBehaviour
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
+        _canvas.interactable = true;
+        _canvas.blocksRaycasts = true;
     }
 
     private void Update()
@@ -28,6 +30,8 @@ public class LoadingScreen : MonoBehaviour
         {
             _canvas.alpha = process;
         }));
+        _canvas.interactable = true;
+        _canvas.blocksRaycasts = true;
     }
 
     public void SetSliderProcess(float t)
@@ -53,5 +57,7 @@ public class LoadingScreen : MonoBehaviour
         {
             _canvas.alpha = 1 - process;
         }));
+        _canvas.interactable = false;
+        _canvas.blocksRaycasts = false;
     }
 }
