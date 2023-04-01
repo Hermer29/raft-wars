@@ -55,11 +55,10 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             Platform platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
             Vector3 spawnPoint = platform.transform.position;
-            spawnPoint.x += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
-            spawnPoint.z += Random.Range(Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+            spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
+            spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
             spawnPoint.y += 0.5f;
-            People people = Instantiate(warrior, spawnPoint, Quaternion.identity).GetComponent<People>();
-            people.transform.parent = platform.transform;
+            People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform).GetComponent<People>();
             if (transform.parent.GetComponent<Player>() != null)
                 transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
             else

@@ -42,8 +42,8 @@ public class Player : MonoBehaviour
     public int warriorsCount = 2;
     public CinemachineCameraOffset _camera;
     private float damageToEnemy;
-    private const float WinningDamageCoefficient = 1f;
-    private const float LoosingDamageCoefficient = 0.8f;
+    private const float WinningDamageCoefficient = .8f;
+    private const float LoosingDamageCoefficient = 0.6f;
     
     private Enemy enemyForBattle;
     private InputService _input;
@@ -54,6 +54,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        hp = 1;
+        damage = 1;
         _materialsService = Game.MaterialsService;
         _material = _materialsService.GetRandom();
         GetComponentInChildren<Platform>().Material = _material;
@@ -165,8 +167,8 @@ public class Player : MonoBehaviour
 
     private void RecountStats()
     {
-        hpText.text = Mathf.RoundToInt(hp).ToString();
-        damageText.text = Mathf.RoundToInt(damage).ToString();
+        hpText.text = Mathf.RoundToInt(Mathf.Clamp(hp, 0, 99999)).ToString();
+        damageText.text = Mathf.RoundToInt(Mathf.Clamp(damage, 0, 99999)).ToString();
         warriorsCount = warriors.Count;
     }
 
