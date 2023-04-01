@@ -1,6 +1,7 @@
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Color = System.Drawing.Color;
 using Random = UnityEngine.Random;
 
 public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTakeCoins, ICanTakeGems, ICanTakeBarrel
@@ -12,6 +13,18 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     public bool isWind;
     public bool ishospital;
     private Enemy _relatedEnemy;
+    private Material _materials;
+    private Material _material;
+
+    public Material Material
+    {
+        set
+        {
+            _material = value;
+            colorMat = value;
+            GetComponent<MeshRenderer>().material = value;
+        }
+    }
 
     private void Start()
     {
@@ -36,7 +49,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             {
                 transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
             }
-            people.GetComponent<People>().SetColor(colorMat);
+            people.GetComponent<People>().SetColor(_material);
         }
         else
         {
@@ -53,7 +66,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             {
                 transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
             }
-            people.GetComponent<People>().SetColor(colorMat);
+            people.GetComponent<People>().SetColor(_material);
         }
     }
 
@@ -106,7 +119,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             }
         }
         GameObject _platform = Instantiate(platform, spawnPos, Quaternion.identity, transform.parent);
-        _platform.GetComponent<Platform>().colorMat = colorMat;
+        _platform.GetComponent<Platform>().Material = colorMat;
 
         if (GetComponentInParent<Player>() != null)
         {

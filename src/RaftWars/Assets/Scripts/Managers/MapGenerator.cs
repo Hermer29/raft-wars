@@ -1,15 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class MapGenerator : MonoBehaviour
 {
+    [FormerlySerializedAs("enemy")]
     [Header("Enemy")]
-    [SerializeField] private Enemy enemy;
+    [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private Platform[] enemiesToSpawn1;
     [SerializeField] private AttachablePlatform[] enemiesToSpawn1Add;
     [SerializeField] private Platform[] enemiesToSpawn2;
@@ -49,11 +52,14 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private float xBorderMax, xBorderMin, yBorderMax, yBorderMin;
 
     private int stage = 1;
+    private MaterialsService _materials;
+    private CollectiblesService _collectibles;
 
-    private void Start()
+    private void Awake()
     {
-        CollectiblesService service = Game.CollectiblesService;
-        service.NoCollectiblesLeft += SpawnMiscellaneous;
+        _collectibles = Game.CollectiblesService;
+        _materials = Game.MaterialsService;
+        _collectibles.NoCollectiblesLeft += SpawnMiscellaneous;
     }
 
     public void Generate(int stage)
@@ -71,20 +77,14 @@ public class MapGenerator : MonoBehaviour
     {
         for (var i = 0; i < enemiesNumber[stage - 1]; i++)
         {
-            while (true)
-            {
-                Vector3 posToSpawn = GetRandomSpawnPosition();
-
-                var outCols = Physics.OverlapSphere(posToSpawn, 5);
-                if (outCols != null && outCols.Length != 0) continue;
-                Enemy _enemy = Instantiate(enemy, posToSpawn, Quaternion.identity);
-                var platforms = ComeUpWithEnvironment(stage, out var people, out var pickablePeople
-                    , out var pickablePlatforms);
-                _enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1],
-                    damageIncrease[stage - 1], pickablePlatforms, pickablePeople);
-                GameManager.instance.AddEnemy(_enemy);
-                break;
-            }
+            Vector3 posToSpawn = GetRandomSpawnPosition();
+            Enemy enemy = Instantiate(enemyPrefab, posToSpawn, Quaternion.identity);
+            var platforms = ComeUpWithEnvironment(stage, out var people, out var pickablePeople
+                ,out var pickablePlatforms);
+            enemy.Material = _materials.GetRandom();
+            enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1],
+                damageIncrease[stage - 1], pickablePlatforms, pickablePeople);
+            GameManager.instance.AddEnemy(enemy);
         }
     }
 
@@ -323,94 +323,92 @@ public class MapGenerator : MonoBehaviour
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
 
             var outCols = Physics.OverlapSphere(posToSpawn, 3);
-            if (outCols == null || outCols.Length == 0)
+            if (outCols != null && outCols.Length != 0) continue;
+            Enemy enemy = Instantiate(bosses[stage - 1], posToSpawn, Quaternion.identity);
+            List<Platform> platforms = new List<Platform>();
+            List<People> people = new List<People>();
+            List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
+            List<AttachablePlatform> platformAdditive = new List<AttachablePlatform>();
+            var platInd = 0;
+            var peopInd = 0;
+            if (stage == 1)
             {
-                Enemy enemy = Instantiate(bosses[stage - 1], posToSpawn, Quaternion.identity);
-                List<Platform> platforms = new List<Platform>();
-                List<People> people = new List<People>();
-                List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
-                List<AttachablePlatform> platformAdditive = new List<AttachablePlatform>();
-                var platInd = 0;
-                var peopInd = 0;
-                if (stage == 1)
+                for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
                 {
-                    for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
-                    {
-                        platInd = Random.Range(0, enemiesToSpawn1.Length);
-                        platformAdditive.Add(enemiesToSpawn1Add[platInd]);
-                        platforms.Add(enemiesToSpawn1[platInd]);
-                    }
-                    for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
-                    {
-                        peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
-                        people.Add(enemyPeopleToSpawn[peopInd]);
-                        peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
-                    }
+                    platInd = Random.Range(0, enemiesToSpawn1.Length);
+                    platformAdditive.Add(enemiesToSpawn1Add[platInd]);
+                    platforms.Add(enemiesToSpawn1[platInd]);
                 }
-                else if (stage == 2)
+                for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
                 {
-                    for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
-                    {
-                        platInd = Random.Range(0, enemiesToSpawn2.Length);
-                        platformAdditive.Add(enemiesToSpawn2Add[platInd]);
-                        platforms.Add(enemiesToSpawn2[platInd]);
-                    }
-                    for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
-                    {
-                        peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
-                        people.Add(enemyPeopleToSpawn[peopInd]);
-                        peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
-                    }
+                    peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
+                    people.Add(enemyPeopleToSpawn[peopInd]);
+                    peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
                 }
-                else if (stage == 3)
-                {
-                    for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
-                    {
-                        platInd = Random.Range(0, enemiesToSpawn2.Length);
-                        platformAdditive.Add(enemiesToSpawn2Add[platInd]);
-                        platforms.Add(enemiesToSpawn2[platInd]);
-                    }
-                    for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
-                    {
-                        peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
-                        people.Add(enemyPeopleToSpawn[peopInd]);
-                        peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
-                    }
-                }
-                else if (stage == 4)
-                {
-                    for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
-                    {
-                        platInd = Random.Range(0, enemiesToSpawn2.Length);
-                        platformAdditive.Add(enemiesToSpawn2Add[platInd]);
-                        platforms.Add(enemiesToSpawn2[platInd]);
-                    }
-                    for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
-                    {
-                        peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
-                        people.Add(enemyPeopleToSpawn[peopInd]);
-                        peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
-                    }
-                }
-                else
-                {
-                    for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
-                    {
-                        platInd = Random.Range(0, enemiesToSpawn2.Length);
-                        platformAdditive.Add(enemiesToSpawn2Add[platInd]);
-                        platforms.Add(enemiesToSpawn2[platInd]);
-                    }
-                    for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
-                    {
-                        peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
-                        people.Add(enemyPeopleToSpawn[peopInd]);
-                        peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
-                    }
-                }
-                enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1] + 1, damageIncrease[stage - 1] + 1, platformAdditive, peopleAdditive);
-                GameManager.instance.boss = enemy;
-                break;
             }
+            else if (stage == 2)
+            {
+                for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
+                {
+                    platInd = Random.Range(0, enemiesToSpawn2.Length);
+                    platformAdditive.Add(enemiesToSpawn2Add[platInd]);
+                    platforms.Add(enemiesToSpawn2[platInd]);
+                }
+                for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
+                {
+                    peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
+                    people.Add(enemyPeopleToSpawn[peopInd]);
+                    peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
+                }
+            }
+            else if (stage == 3)
+            {
+                for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
+                {
+                    platInd = Random.Range(0, enemiesToSpawn2.Length);
+                    platformAdditive.Add(enemiesToSpawn2Add[platInd]);
+                    platforms.Add(enemiesToSpawn2[platInd]);
+                }
+                for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
+                {
+                    peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
+                    people.Add(enemyPeopleToSpawn[peopInd]);
+                    peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
+                }
+            }
+            else if (stage == 4)
+            {
+                for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
+                {
+                    platInd = Random.Range(0, enemiesToSpawn2.Length);
+                    platformAdditive.Add(enemiesToSpawn2Add[platInd]);
+                    platforms.Add(enemiesToSpawn2[platInd]);
+                }
+                for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
+                {
+                    peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
+                    people.Add(enemyPeopleToSpawn[peopInd]);
+                    peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
+                }
+            }
+            else
+            {
+                for (int j = 0; j < enemyPlatformsNumber[stage - 1] + 1; j++)
+                {
+                    platInd = Random.Range(0, enemiesToSpawn2.Length);
+                    platformAdditive.Add(enemiesToSpawn2Add[platInd]);
+                    platforms.Add(enemiesToSpawn2[platInd]);
+                }
+                for (int j = 0; j < enemyPeopleNumber[stage - 1] + 1; j++)
+                {
+                    peopInd = Random.Range(0, enemyPeopleToSpawn.Length);
+                    people.Add(enemyPeopleToSpawn[peopInd]);
+                    peopleAdditive.Add(enemyPeopleToSpawnAdd[peopInd]);
+                }
+            }
+            enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1] + 1, damageIncrease[stage - 1] + 1, platformAdditive, peopleAdditive);
+            GameManager.instance.boss = enemy;
+            break;
         }
     }
 }

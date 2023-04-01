@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
 using TMPro;
-using UnityEngine.Rendering.UI;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
@@ -17,21 +14,21 @@ using Vector3 = UnityEngine.Vector3;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private List<Material> colorMaterials;
-    private List<People> warriors = new List<People>();
-    [SerializeField] private List<Platform> platforms = new List<Platform>();
-    private List<Turret> turrets = new List<Turret>();
-    private int warriorsCount;
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
+    [SerializeField] private List<Platform> platforms = new List<Platform>();
+    [FormerlySerializedAs("fullDamage")] public float maximumDamage;
+    [SerializeField] private float hpIncrease = 5;
+    [SerializeField] private float damageIncrease = 5;
+    private List<People> warriors = new List<People>();
+    private List<Turret> turrets = new List<Turret>();
+    private int warriorsCount;
     private float hpClear = 0;
     private float damageClear = 0;
     private float turretDamage = 0;
     private float platformHP = 0;
     public float fullHp;
-    [FormerlySerializedAs("fullDamage")] public float maximumDamage;
-    [SerializeField] private float hpIncrease = 5;
-    [SerializeField] private float damageIncrease = 5;
     public bool battle = false;
     private float speed = 5 - 5/4;
     private Player player;
@@ -50,9 +47,21 @@ public class Enemy : MonoBehaviour
     public GameObject shieldToOff;
     private Vector3? _moveDirection;
     private bool _fleeingPlayer;
+    public Material _material;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     
     private int StatsSum => (int) (fullHp + maximumDamage);
+
+    public Material Material
+    {
+        set
+        {
+            var meshRenderer = GetComponent<MeshRenderer>();
+            if(meshRenderer != null) 
+                meshRenderer.material = value;
+            _material = value;
+        }
+    }
 
     private void Start()
     {
@@ -75,17 +84,21 @@ public class Enemy : MonoBehaviour
 
     private void WarmupPlatforms()
     {
-        Material mat = colorMaterials[Random.Range(0, colorMaterials.Count)];
+        void AssignColors(Platform platform)
+        {
+            platform.Material = _material;
+            platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
+        }
+
         foreach (Platform platform in platforms)
         {
             platform.isEnemy = true;
-            platform.colorMat = mat;
             platform.gameObject.layer = LayerMask.NameToLayer("Enemy");
             if (!platform.isTurret) continue;
             turrets.Add(platform.GetComponentInChildren<Turret>());
             turretDamage += platform.GetComponentInChildren<Turret>().damageIncrease;
             platformHP += platform.GetComponentInChildren<Turret>().healthIncrease;
-            platform.GetComponentInChildren<Turret>().DrawInMyColor(mat);
+            AssignColors(platform);
         }
     }
 
@@ -178,8 +191,7 @@ public class Enemy : MonoBehaviour
         float distanceToXMinBound = Mathf.Abs(-45 - position.x);
         float distanceToXMaxBound = Mathf.Abs(45 - position.x);
 
-        var minimal = Mathf.Min(distanceToZMaxBound, distanceToZMinBound, distanceToXMinBound, distanceToXMaxBound);
-        Debug.Log($"{name} Nearest bound distance: {minimal}");
+        float minimal = Mathf.Min(distanceToZMaxBound, distanceToZMinBound, distanceToXMinBound, distanceToXMaxBound);
         Vector3 result = Vector3.zero;
         if (distanceToZMaxBound == minimal)
         {
@@ -201,7 +213,6 @@ public class Enemy : MonoBehaviour
             result = new Vector3(45, 0, position.z);
         }
 
-        Debug.Log($"{name} Nearest bound position {result}");
         return result;
     }
 
@@ -215,28 +226,22 @@ public class Enemy : MonoBehaviour
         var minimal = Mathf.Min(distanceToZMaxBound, distanceToZMinBound, distanceToXMinBound, distanceToXMaxBound);
         if (distanceToZMaxBound == minimal)
         {
-            
-            Debug.Log($"{gameObject.name} reached world bounds. normal back");
             return Vector3.back;
         }
 
         if (distanceToZMinBound == minimal)
         {
-            
-            Debug.Log($"{gameObject.name} reached world bounds. normal forward");
             return Vector3.forward;
         }
 
         if (distanceToXMinBound == minimal)
         {
             
-            Debug.Log($"{gameObject.name} reached world bounds. normal right");
             return Vector3.right;
         }
 
         if (distanceToXMaxBound == minimal)
         {
-            Debug.Log($"{gameObject.name} reached world bounds. normal left");
             return Vector3.left;
         }
 
@@ -267,11 +272,10 @@ public class Enemy : MonoBehaviour
     public void SpawnEnvironment(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<AttachablePlatform> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
     {
         if (boss5Stage) return;
-        Material mat = colorMaterials[Random.Range(0, colorMaterials.Count)];
         platformsAdditive = platformsAdd;
         peopleAdditive = peopleAdd;
         this.platforms[0].isEnemy = true;
-        this.platforms[0].colorMat = mat;
+        this.platforms[0].Material = _material;
         this.platforms[0].gameObject.layer = LayerMask.NameToLayer("Enemy");
         Vector3 startPoint = transform.position;
         hpIncrease = hp;
@@ -280,35 +284,11 @@ public class Enemy : MonoBehaviour
         prevSpawnPoint = startPoint;
         foreach (Platform platform in platforms)
         {
-            while (true)
-            {
-                if (Random.Range(0f, 1f) > 0.5f)
-                {
-                    if (Random.Range(0f, 1f) > 0.5f)
-                        startPoint.x += Constants.PlatformSize;
-                    else
-                        startPoint.x -= Constants.PlatformSize;
-                }
-                else
-                {
-                    if (Random.Range(0f, 1f) > 0.5f)
-                        startPoint.z += Constants.PlatformSize;
-                    else
-                        startPoint.z -= Constants.PlatformSize;
-                }
-
-                var outCols = Physics.OverlapSphere(startPoint, 1);
-                if (outCols == null || outCols.Length == 0)
-                {
-                    break;
-                }
-                startPoint = prevSpawnPoint;
-            }
-            Platform plat = Instantiate(platform, startPoint, Quaternion.identity);
+            startPoint = ThinkOutSpawnPosition(startPoint);
+            Platform plat = Instantiate(platform, startPoint, Quaternion.identity, transform);
+            plat.Material = _material;
             plat.isEnemy = true;
-            plat.colorMat = mat;
             plat.gameObject.layer = LayerMask.NameToLayer("Enemy");
-            plat.transform.parent = gameObject.transform;
             if (plat.ishospital)
             {
                 platformHP += plat.GetComponentInChildren<Turret>().healthIncrease;
@@ -321,7 +301,7 @@ public class Enemy : MonoBehaviour
                 maximumDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
                 platformHP += plat.GetComponentInChildren<Turret>().healthIncrease;
                 fullHp += plat.GetComponentInChildren<Turret>().healthIncrease;
-                platform.GetComponentInChildren<Turret>().DrawInMyColor(mat);
+                platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
             }
             else
                 this.platforms.Add(plat);
@@ -333,6 +313,37 @@ public class Enemy : MonoBehaviour
         }
 
         RecountStats();
+    }
+
+    private Vector3 ThinkOutSpawnPosition(Vector3 startPoint)
+    {
+        while (true)
+        {
+            if (Random.Range(0f, 1f) > 0.5f)
+            {
+                if (Random.Range(0f, 1f) > 0.5f)
+                    startPoint.x += Constants.PlatformSize;
+                else
+                    startPoint.x -= Constants.PlatformSize;
+            }
+            else
+            {
+                if (Random.Range(0f, 1f) > 0.5f)
+                    startPoint.z += Constants.PlatformSize;
+                else
+                    startPoint.z -= Constants.PlatformSize;
+            }
+
+            var outCols = Physics.OverlapSphere(startPoint, 1);
+            if (outCols == null || outCols.Length == 0)
+            {
+                break;
+            }
+
+            startPoint = prevSpawnPoint;
+        }
+
+        return startPoint;
     }
 
     private void RecountStats()
