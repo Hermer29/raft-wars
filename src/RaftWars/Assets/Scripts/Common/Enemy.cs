@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour
     private Vector3? _moveDirection;
     private bool _fleeingPlayer;
     public Material _material;
+    private MaterialsService _materialService;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     
     private int StatsSum => (int) (fullHp + maximumDamage);
@@ -66,12 +67,31 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         _player = Game.PlayerService;
+        _materialService = Game.MaterialsService;
         TryGenerateNickname(when: !isBoss);
+        GenerateRandomColor(when: isBoss);
 
         if (!boss5Stage) return;
         WarmupPlatforms();
         AssignRelatedPeople();
         RecountStats();
+    }
+
+    private void GenerateRandomColor(bool when)
+    {
+        if (!when)
+            return;
+
+        _material = _materialService.GetRandom();
+        foreach (Platform platform in platforms)
+        {
+            platform.Material = _material;
+        }
+
+        foreach (People warrior in warriors)
+        {
+            warrior.matRenderer.material = _material;
+        }
     }
 
     private void AssignRelatedPeople()
