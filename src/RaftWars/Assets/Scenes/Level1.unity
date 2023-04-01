@@ -3136,7 +3136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6e9a4bc3d00b034b85e4d12c60d35fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 665502603565056400, guid: 2fa91b54bf3e5bc49afd1b9e3e1eeaf9, type: 3}
+  enemyPrefab: {fileID: 665502603565056400, guid: 2fa91b54bf3e5bc49afd1b9e3e1eeaf9, type: 3}
   enemiesToSpawn1:
   - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
   enemiesToSpawn1Add:

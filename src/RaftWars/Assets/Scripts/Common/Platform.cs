@@ -42,11 +42,11 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             
             if (transform.parent.GetComponent<Player>() != null)
             {
-                transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
+                transform.parent.GetComponent<Player>().AddPeople(people);
             }
             else
             {
-                transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
+                transform.parent.GetComponent<Enemy>().AddPeople(people);
             }
             people.SetColor(_material);
             people.SetRelatedPlatform(this);
