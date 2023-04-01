@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using InputSystem;
+using RaftWars.Infrastructure;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -48,9 +49,18 @@ public class Player : MonoBehaviour
     private InputService _input;
     public static Player instance;
     private Rigidbody rb;
+    private MaterialsService _materialsService;
+    private Material _material;
 
     private void Start()
     {
+        _materialsService = Game.MaterialsService;
+        _material = _materialsService.GetRandom();
+        GetComponentInChildren<Platform>().Material = _material;
+        foreach (People componentsInChild in GetComponentsInChildren<People>())
+        {
+            componentsInChild.matRenderer.material = _material;
+        }
         if (instance == null)
             instance = this;
         else
@@ -128,6 +138,7 @@ public class Player : MonoBehaviour
         warriors.Add(warrior);
         hp += hpIncomeForPeople * (1 + hpAdditive);
         damage += damageIncomeForPeople * (1 + damageAdditive);
+        warrior.matRenderer.material = _material;
         RecountStats();
     }
 
