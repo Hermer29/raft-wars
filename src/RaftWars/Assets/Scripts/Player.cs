@@ -231,6 +231,9 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         if (_input == null)
             return;
 
+        if (isDead)
+            battle = false;
+
         if (!canPlay)
         {
             rb.velocity = Vector3.zero;
@@ -342,6 +345,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     {
         isDead = true;
         canPlay = false;
+        battle = false;
         PutTurretsInIdleAnimation();
         foreach (People warrior in warriors)
         {
