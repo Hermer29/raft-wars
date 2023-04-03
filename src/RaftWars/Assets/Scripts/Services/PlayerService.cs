@@ -35,7 +35,7 @@ namespace InputSystem
             var position = Platform.FindPointOnPlatform(platform.transform.position);
             var instance = GameObject.Instantiate(peoplePrefab, position, Quaternion.identity, platform.transform);
             _player.AddPeople(instance.GetComponent<People>());
-            instance.GetComponent<People>().SetRelatedPlatform(platform.GetComponent<Platform>()();
+            instance.GetComponent<People>().SetRelatedPlatform(platform.GetComponent<Platform>());
         }
     }
 }
