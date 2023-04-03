@@ -1,7 +1,4 @@
 ﻿using System.Linq;
-using Mono.Cecil;
-using RaftWars.Infrastructure;
-using UnityEditor.SceneTemplate;
 using UnityEngine;
 
 namespace InputSystem
@@ -21,12 +18,6 @@ namespace InputSystem
 
         public Vector3 Position => _player.transform.position;
         public bool GameStarted => _player.canPlay;
-
-        public bool IsInViewportBounds(Vector3 worldPoint, float viewportOffset)
-        {
-            Vector3 point = _camera.WorldToViewportPoint(worldPoint);
-            return point.x <= 1 - viewportOffset && point.y <= 1 - viewportOffset && point.x >= 0 + viewportOffset && point.x >= 0 + viewportOffset;
-        }
 
         public void AddPeople()
         {

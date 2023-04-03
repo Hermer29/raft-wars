@@ -109,8 +109,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             else
                 spawnPos.z -= Constants.PlatformSize;
         }
-        var outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-        if (outCols.Length != 0)
+        if (false)
         {
             while (true)
             {
@@ -128,12 +127,6 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
                         spawnPos.z += Constants.PlatformSize;
                     else
                         spawnPos.z -= Constants.PlatformSize;
-                }
-
-                outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-                if (outCols.Length == 0)
-                {
-                    break;
                 }
             }
         }
