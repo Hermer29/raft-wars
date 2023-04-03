@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using DefaultNamespace;
+using DG.Tweening;
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = 1;
     [SerializeField] private float speed;
     [SerializeField] private CinemachineTargetGroup _group;
+    [SerializeField] private GameObject[] _indicators;
 
     private float damageClear = 10;
     private float platformHp;
@@ -45,7 +47,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private float damageToEnemy;
     private const float WinningDamageCoefficient = .8f;
     private const float LoosingDamageCoefficient = 0.6f;
-    
+
     private Enemy enemyForBattle;
     private InputService _input;
     public static Player instance;
@@ -54,6 +56,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private Material _material;
     private bool idleBehaviour;
     private Edges _edges;
+    public static event Action Died;
 
     private void Start()
     {
@@ -125,7 +128,10 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     {
         battle = false;
         idleBehaviour = true;
-        
+        foreach (var platform in enemyForBattle.platforms)  
+        {
+            _group.RemoveMember(platform.transform);
+        }
         PutInIdleAnimation();
     }
 
@@ -342,6 +348,15 @@ public class Player : MonoBehaviour, IPlatformsCarrier
             warrior.PlayDyingAnimation();
         }
         GameManager.instance.PlayerLost();
+        Died?.Invoke();
+
+        foreach (GameObject indicator in _indicators)
+        {
+            indicator.SetActive(false);
+        }
+        _group.m_Targets = Array.Empty<CinemachineTargetGroup.Target>();
+        _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
+        transform.DOMoveY(-999, 3).SetSpeedBased(true);
     }
 
     private void PutTurretsInIdleAnimation()

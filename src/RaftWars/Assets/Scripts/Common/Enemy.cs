@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
+using DG.Tweening;
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
@@ -70,11 +71,16 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         TryGenerateNickname(when: !isBoss);
         GenerateRandomColor(when: isBoss && _material == null);
         WarmupEdges();
-        
+        Player.Died += () =>
+        {
+            battle = false;
+            PlayIdleAnimation();
+        };
         if (!boss5Stage) return;
         WarmupPlatforms();
         AssignRelatedPeople();
         RecountStats();
+        
     }
 
     private void WarmupEdges()
@@ -158,7 +164,12 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     private void TryMoveEnemy(float deltaTime)
     {
-        if (_player.GameStarted == false)
+        if (_player.IsDead)
+        { }
+        else if (_player.GameStarted == false)
+            return;
+
+        if (isDead)
             return;
 
         if (_moveDirection == null)
@@ -176,7 +187,9 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             _moveDirection = Vector3.Reflect(_moveDirection.Value, GetNormalToNearestBound());
         }
 
-        if ((_player.Position - transform.position).sqrMagnitude < SqrMagnitudeDistanceToReactOnPlayer)
+        if(_player.IsDead)
+        {}
+        else if ((_player.Position - transform.position).sqrMagnitude < SqrMagnitudeDistanceToReactOnPlayer)
         {
             bool playerSuperior = _player.PlayerStatsSum >= StatsSum;
             if (playerSuperior)
@@ -386,6 +399,25 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             turret.ShootAnim(target.transform);
         }
     }
+    
+    private void PlayIdleAnimation()
+    {
+        if(isBoss)
+        {}
+        else
+            foreach (People people in warriors)
+            {
+                if(people == null)
+                    continue;
+                
+                people.IdleAnim();
+            }
+
+        foreach (Turret turret in turrets)
+        {
+            turret.IdleAnim();
+        }
+    }
 
     public void AttackPlayer(float dmg, Player target)
     {
@@ -396,7 +428,32 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         PlayShotAnimation(target);
     }
 
-    public void Dead()
+    private void Dead()
+    {
+        InstantiateRewards();
+
+        for(int i = 0; i < warriors.Count; i++)
+        {
+            warriors[i].PlayDyingAnimation();
+            warriors.RemoveAt(i);
+            damageClear -= damageIncrease;
+            damageText.text = damageClear.ToString();
+        }
+
+        var collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+        foreach (Collider col in GetComponentsInChildren<Collider>())
+        {
+            col.enabled = false;
+        }
+        
+        Destroy(gameObject);
+    }
+
+    private void InstantiateRewards()
     {
         Vector3 pos = transform.position;
         if (Random.Range(0, 2) == 0)
@@ -408,21 +465,18 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             pos.z += Random.Range(5, 10);
         else
             pos.z -= Random.Range(5, 10);
-        for (int i = 0; i < platformsAdditive.Count; i++)
+        foreach (AttachablePlatform t in platformsAdditive.Where(t => Random.Range(0f, 1f) > 0.7f))
         {
-            if (Random.Range(0f, 1f) > 0.7f)
-            {
-                Instantiate(platformsAdditive[i], pos, Quaternion.identity);
-                if (Random.Range(0, 2) == 0)
-                    pos.x += Random.Range(5, 10);
-                else
-                    pos.x -= Random.Range(5, 10);
+            Instantiate(t, pos, Quaternion.identity);
+            if (Random.Range(0, 2) == 0)
+                pos.x += Random.Range(5, 10);
+            else
+                pos.x -= Random.Range(5, 10);
 
-                if (Random.Range(0, 2) == 0)
-                    pos.z += Random.Range(5, 10);
-                else
-                    pos.z -= Random.Range(5, 10);
-            }
+            if (Random.Range(0, 2) == 0)
+                pos.z += Random.Range(5, 10);
+            else
+                pos.z -= Random.Range(5, 10);
         }
 
         pos = transform.position;
@@ -439,7 +493,8 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         {
             if (Random.Range(0f, 1f) > 0.3f)
             {
-                Instantiate(peopleAdditive[Random.Range(0, peopleAdditive.Count)], pos, Quaternion.identity); ;
+                Instantiate(peopleAdditive[Random.Range(0, peopleAdditive.Count)], pos, Quaternion.identity);
+                ;
                 if (Random.Range(0, 2) == 0)
                     pos.x += Random.Range(3, 10);
                 else
@@ -451,16 +506,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
                     pos.z -= Random.Range(3, 10);
             }
         }
-
-        for(int i = 0; i < warriors.Count; i++)
-        {
-            warriors[i].PlayDyingAnimation();
-            warriors.RemoveAt(i);
-            damageClear -= damageIncrease;
-            damageText.text = damageClear.ToString();
-        }
-
-        Destroy(gameObject);
     }
 
     private void CheckHP()
@@ -487,7 +532,9 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         CheckHP();
         if (maximumHp <= 0)
         {
+            battle = false;
             maximumHp = 0;
+            isDead = true;
             Dead();
         }
     }
@@ -495,6 +542,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     public IEnumerable<GameObject> GetPlatforms()
     {
-        return platforms.Select(x => x.gameObject).Concat(turrets.Select(x => x.gameObject));
+        return platforms.Select(x => x.gameObject).Concat(turrets.Select(x => x.transform.parent.gameObject));
     }
 }

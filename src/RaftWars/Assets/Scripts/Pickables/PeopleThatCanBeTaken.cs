@@ -7,8 +7,6 @@ public class PeopleThatCanBeTaken : Pickable
 {
     public GameObject warrior;
     [FormerlySerializedAs("explosion")] public GameObject explosionPrefab;
-    
-    private bool canTake = true;
 
     private void Update()
     {

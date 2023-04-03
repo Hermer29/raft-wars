@@ -109,27 +109,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             else
                 spawnPos.z -= Constants.PlatformSize;
         }
-        if (false)
-        {
-            while (true)
-            {
-                spawnPos = GetComponentInParent<Player>().GetAnotherPlatform().transform.position;
-                if (Mathf.Abs(vectorFromPlayer.x) > Mathf.Abs(vectorFromPlayer.z))
-                {
-                    if (vectorFromPlayer.x > 0)
-                        spawnPos.x += Constants.PlatformSize;
-                    else
-                        spawnPos.x -= Constants.PlatformSize;
-                }
-                else
-                {
-                    if (vectorFromPlayer.z > 0)
-                        spawnPos.z += Constants.PlatformSize;
-                    else
-                        spawnPos.z -= Constants.PlatformSize;
-                }
-            }
-        }
+        
         GameObject _platform = Instantiate(platform, spawnPos, Quaternion.identity, transform.parent);
         _platform.GetComponent<Platform>().Material = _material;
 
@@ -159,11 +139,16 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             return !_relatedEnemy.battle;
         }
-        
         if (!isEnemy) return;
         if (collision.gameObject.TryGetComponent(out Player player) == false) return;
         if (IsNotInBattle())
         {
+            var enemy = GetComponentInParent<Enemy>();
+            if (enemy != null)
+            {
+                if (enemy.isDead)
+                    return;
+            }
             player.StartBattle(_relatedEnemy);
         }
     }

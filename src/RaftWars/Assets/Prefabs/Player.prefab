@@ -70,12 +70,19 @@ MonoBehaviour:
   battleDamageOverTime: 1
   speed: 10
   _group: {fileID: 5655730262444525566}
+  _indicators:
+  - {fileID: 3377585064699056743}
+  - {fileID: 3377585064894652293}
+  - {fileID: 3377585064756394383}
+  - {fileID: 3377585065952960913}
+  - {fileID: 3377585066360050455}
   isDead: 0
   platformCount: 1
   canPlay: 0
   coins: 0
   gems: 0
   warriorsCount: 2
+  _camera: {fileID: 0}
 --- !u!54 &3377585064621721320
 Rigidbody:
   m_ObjectHideFlags: 0

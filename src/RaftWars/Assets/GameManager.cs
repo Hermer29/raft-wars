@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
 
     public void Continue()
     {
-        SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level"));
+        SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level", 1));
     }
 
     public void RestartLevel()

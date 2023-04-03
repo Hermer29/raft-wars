@@ -2,6 +2,7 @@
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DefaultNamespace.IMGUI
 {
@@ -9,6 +10,11 @@ namespace DefaultNamespace.IMGUI
     {
         private PlayerService _player;
         private bool _enabled;
+
+        [SerializeField] private GUIStyle _style;
+        [SerializeField] private Vector2 _viewportBtnPosition;
+        [SerializeField] private Vector2 _viewPortBtnSize;
+        
         
         private void Start()
         {
@@ -17,9 +23,9 @@ namespace DefaultNamespace.IMGUI
 
         private void OnGUI()
         {
-            var position = new Vector2(Screen.width * 0.1f, Screen.height * 0.1f);
-            var size = new Vector2(Screen.width / 5, Screen.height / 10);
-            if(GUI.Button(new Rect(position, size),"Add People"))
+            var position = new Vector2(Screen.width * _viewportBtnPosition.x, Screen.height * _viewportBtnPosition.y);
+            var size = new Vector2(Screen.width / _viewPortBtnSize.x, Screen.height / _viewPortBtnSize.y);
+            if(GUI.Button(new Rect(position, size), "Add People", _style))
             {
                 _player.AddPeople();
             }  

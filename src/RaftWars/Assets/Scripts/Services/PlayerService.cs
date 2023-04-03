@@ -18,6 +18,7 @@ namespace InputSystem
 
         public Vector3 Position => _player.transform.position;
         public bool GameStarted => _player.canPlay;
+        public bool IsDead => _player.isDead;
 
         public void AddPeople()
         {

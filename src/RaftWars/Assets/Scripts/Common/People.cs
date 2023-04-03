@@ -15,7 +15,7 @@ public class People : MonoBehaviour
     [FormerlySerializedAs("bullet")] public Bullet bulletPrefab;
     public Transform shootPoint;
 
-    private bool battle;
+    public bool battle;
     private float timer = 0;
     private Vector3 target;
     private bool isDead = false;
@@ -139,7 +139,10 @@ public class People : MonoBehaviour
 
     public void IdleAnim()
     {
-        animator.Play("Idle");
+        if (animator != null)
+        {
+            animator.Play("Idle");
+        }
         battle = false;
     }
 
