@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
+using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
     private MaterialsService _materialsService;
     private Material _material;
     private bool idleBehaviour;
+    private PlatformEdges _edges;
 
     private void Start()
     {
@@ -76,9 +78,35 @@ public class Player : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         RecountStats();
-
+        CreateEdges();
         TryGenerateNickname();
         CreateInput();
+    }
+    
+    private void CreateEdges()
+    {
+        _edges = new PlatformEdges(platforms.Select(x => x.gameObject).ToArray());
+        foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdges())
+        {
+            GameObject edge = CreateEdge();
+            edge.transform.position = position + Vector3.up * HeightOffset;
+            edge.transform.rotation = rotation;
+        }
+    }
+
+    private const float HeightOffset = .7f;
+    
+    private GameObject CreateEdge()
+    {
+        var prefab = Resources.Load<GameObject>("Edge");
+        var parent = transform.Cast<Transform>().FirstOrDefault(x => x.name == "Edges");
+        if (parent == null)
+        {
+            parent = new GameObject().transform;
+            parent.name = "Edges";
+            parent.SetParent(transform);
+        }
+        return Instantiate(prefab, parent);
     }
 
     private void TryGenerateNickname()
@@ -379,6 +407,13 @@ public class Player : MonoBehaviour
         platformCount++;
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
+        var edgesParent = transform.Cast<Transform>().First(x => x.name == "Edges");
+        foreach (Transform childEdge in edgesParent.transform)
+        {
+            Destroy(childEdge.gameObject);
+        }
+        _edges.Add(platform.gameObject);
+        CreateEdges();
 
         _camera.m_Offset.z -= 1;
     }

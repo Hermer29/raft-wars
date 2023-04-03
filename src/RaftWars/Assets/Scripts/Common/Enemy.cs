@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
@@ -20,6 +21,7 @@ public class Enemy : MonoBehaviour
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
+    private const float HeightOffset = .6f;
     private List<People> warriors = new List<People>();
     private List<Turret> turrets = new List<Turret>();
     private int warriorsCount;
@@ -49,6 +51,7 @@ public class Enemy : MonoBehaviour
     public Material _material;
     private MaterialsService _materialService;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
+    private PlatformEdges _edges;
     
     private int StatsSum => (int) (fullHp + maximumDamage);
 
@@ -70,11 +73,23 @@ public class Enemy : MonoBehaviour
         _materialService = Game.MaterialsService;
         TryGenerateNickname(when: !isBoss);
         GenerateRandomColor(when: isBoss && _material == null);
-
+        WarmupEdges();
+        
         if (!boss5Stage) return;
         WarmupPlatforms();
         AssignRelatedPeople();
         RecountStats();
+    }
+
+    private void WarmupEdges()
+    {
+        _edges = new PlatformEdges(platforms.Select(x => x.gameObject).ToArray());
+        foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdges())
+        {
+            var edge = CreateEdge();
+            edge.transform.position = position + Vector3.up * HeightOffset;
+            edge.transform.rotation = rotation;
+        }
     }
 
     private void GenerateRandomColor(bool when)
@@ -492,5 +507,31 @@ public class Enemy : MonoBehaviour
             fullHp = 0;
             Dead();
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_edges == null)
+            return;
+
+        Gizmos.color = Color.green;
+        foreach ((Vector3 position, Quaternion rotation) edge in _edges.GetEdges())
+        {
+            Gizmos.DrawWireSphere(edge.position, .5f);
+            Gizmos.DrawLine(edge.position, edge.position + edge.rotation * Vector3.left);
+        }
+    }
+
+    private GameObject CreateEdge()
+    {
+        var prefab = Resources.Load<GameObject>("Edge");
+        var parent = transform.Cast<Transform>().FirstOrDefault(x => x.name == "Edges");
+        if (parent == null)
+        {
+            parent = new GameObject().transform;
+            parent.name = "Edges";
+            parent.SetParent(transform);
+        }
+        return Instantiate(prefab, parent);
     }
 }
