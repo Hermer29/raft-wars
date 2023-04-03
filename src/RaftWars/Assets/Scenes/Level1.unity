@@ -5034,10 +5034,6 @@ PrefabInstance:
       propertyPath: m_ReflectionProbeUsage
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3377585066121525920, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 8ed6be4d200f44763bb6a52ceb413920, type: 2}
     - target: {fileID: 3377585066121525926, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
       propertyPath: isEnemy
       value: 0

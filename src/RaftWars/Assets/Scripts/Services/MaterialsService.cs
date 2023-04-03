@@ -6,18 +6,23 @@ namespace InputSystem
 {
     public class MaterialsService
     {
-        private Material[] _materials;
+        private Material[] _edgesMaterial;
 
         public MaterialsService()
         {
-            _materials = Resources.LoadAll<Material>("Options");
+            _edgesMaterial = Resources.LoadAll<Material>("MaterialOptions");
+        }
+
+        public Material GetPlayerMaterial()
+        {
+            return Resources.Load<Material>("PlayerMaterial");
         }
         
         public Material GetRandom()
         {
-            if(_materials.Length == 0)
+            if(_edgesMaterial.Length == 0)
                 throw new InvalidOperationException();
-            return _materials[Random.Range(0, _materials.Length)];
+            return _edgesMaterial[Random.Range(0, _edgesMaterial.Length)];
         }
     }
 }

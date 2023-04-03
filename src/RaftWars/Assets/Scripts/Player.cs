@@ -12,7 +12,7 @@ using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IPlatformsCarrier
 {
     [SerializeField] private List<People> warriors;
     [SerializeField] private List<Platform> platforms;
@@ -53,21 +53,15 @@ public class Player : MonoBehaviour
     private MaterialsService _materialsService;
     private Material _material;
     private bool idleBehaviour;
-    private PlatformEdges _edges;
+    private Edges _edges;
 
     private void Start()
     {
         hp = 1;
         damage = 1;
         _materialsService = Game.MaterialsService;
-        _material = _materialsService.GetRandom();
-        var onlyPlatform = GetComponentInChildren<Platform>();
-        onlyPlatform.Material = _material;
-        foreach (People componentsInChild in GetComponentsInChildren<People>())
-        {
-            componentsInChild.matRenderer.material = _material;
-            componentsInChild.SetRelatedPlatform(onlyPlatform);
-        }
+        _material = _materialsService.GetPlayerMaterial();
+        MakePeopleRunAndColorize(_material);
         if (instance == null)
             instance = this;
         else
@@ -82,31 +76,22 @@ public class Player : MonoBehaviour
         TryGenerateNickname();
         CreateInput();
     }
-    
-    private void CreateEdges()
+
+    private void MakePeopleRunAndColorize(Material material)
     {
-        _edges = new PlatformEdges(platforms.Select(x => x.gameObject).ToArray());
-        foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdges())
+        var onlyPlatform = GetComponentInChildren<Platform>();
+        onlyPlatform.Material = material;
+        foreach (People componentsInChild in GetComponentsInChildren<People>())
         {
-            GameObject edge = CreateEdge();
-            edge.transform.position = position + Vector3.up * HeightOffset;
-            edge.transform.rotation = rotation;
+            componentsInChild.SetRelatedPlatform(onlyPlatform);
         }
     }
 
-    private const float HeightOffset = .7f;
-    
-    private GameObject CreateEdge()
+    private void CreateEdges()
     {
-        var prefab = Resources.Load<GameObject>("Edge");
-        var parent = transform.Cast<Transform>().FirstOrDefault(x => x.name == "Edges");
-        if (parent == null)
-        {
-            parent = new GameObject().transform;
-            parent.name = "Edges";
-            parent.SetParent(transform);
-        }
-        return Instantiate(prefab, parent);
+        _edges = gameObject.AddComponent<Edges>();
+        _edges.Construct(this, _material);
+        _edges.WarmupEdges();
     }
 
     private void TryGenerateNickname()
@@ -180,7 +165,7 @@ public class Player : MonoBehaviour
         warriors.Add(warrior);
         hp += hpIncomeForPeople * (1 + hpAdditive);
         damage += damageIncomeForPeople * (1 + damageAdditive);
-        warrior.matRenderer.material = _material;
+        warrior.Material = _material;
         RecountStats();
     }
 
@@ -279,7 +264,7 @@ public class Player : MonoBehaviour
         PushPlayerTowardsEnemy(enemy);
 
         float playerDamage = 0, enemyDamage = 0;
-        float enemyHealth = enemy.fullHp;
+        float enemyHealth = enemy.maximumHp;
         while (true)
         {
             playerDamage += battleDamageOverTime * damage * Time.fixedDeltaTime;
@@ -407,14 +392,7 @@ public class Player : MonoBehaviour
         platformCount++;
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
-        var edgesParent = transform.Cast<Transform>().First(x => x.name == "Edges");
-        foreach (Transform childEdge in edgesParent.transform)
-        {
-            Destroy(childEdge.gameObject);
-        }
-        _edges.Add(platform.gameObject);
-        CreateEdges();
-
+        _edges.UpdateEdges(platform.gameObject);
         _camera.m_Offset.z -= 1;
     }
 
@@ -428,5 +406,10 @@ public class Player : MonoBehaviour
     {
         hp += hp * (bonus - hpAdditive);
         hpAdditive = bonus;
+    }
+
+    public IEnumerable<GameObject> GetPlatforms()
+    {
+        return platforms.Select(x => x.gameObject);
     }
 }

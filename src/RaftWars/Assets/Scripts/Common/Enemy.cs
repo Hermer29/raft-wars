@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IPlatformsCarrier
 {
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private TextMeshPro damageText;
@@ -21,15 +21,14 @@ public class Enemy : MonoBehaviour
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
-    private const float HeightOffset = .6f;
     private List<People> warriors = new List<People>();
     private List<Turret> turrets = new List<Turret>();
     private int warriorsCount;
     private float hpClear = 0;
     private float damageClear = 0;
     private float turretDamage = 0;
-    private float platformHP = 0;
-    public float fullHp;
+    private float currentHp = 0;
+    [FormerlySerializedAs("fullHp")] public float maximumHp;
     public bool battle = false;
     private float speed = 5 - 5/4;
     private Player player;
@@ -51,17 +50,13 @@ public class Enemy : MonoBehaviour
     public Material _material;
     private MaterialsService _materialService;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
-    private PlatformEdges _edges;
     
-    private int StatsSum => (int) (fullHp + maximumDamage);
+    private int StatsSum => (int) (maximumHp + maximumDamage);
 
     public Material Material
     {
         set
         {
-            var meshRenderer = GetComponent<MeshRenderer>();
-            if(meshRenderer != null) 
-                meshRenderer.material = value;
             _material = value;
             SetColor(_material);
         }
@@ -83,13 +78,9 @@ public class Enemy : MonoBehaviour
 
     private void WarmupEdges()
     {
-        _edges = new PlatformEdges(platforms.Select(x => x.gameObject).ToArray());
-        foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdges())
-        {
-            var edge = CreateEdge();
-            edge.transform.position = position + Vector3.up * HeightOffset;
-            edge.transform.rotation = rotation;
-        }
+        var edges = gameObject.AddComponent<Edges>();
+        edges.Construct(this, _material);
+        edges.WarmupEdges();
     }
 
     private void GenerateRandomColor(bool when)
@@ -103,12 +94,6 @@ public class Enemy : MonoBehaviour
 
     private void SetColor(Material material)
     {
-        foreach (Platform platform in platforms)
-        {
-            AssignColors(platform);
-            platform.Material = material;
-        }
-
         foreach (People warrior in warriors)
         {
             warrior.matRenderer.material = material;
@@ -132,13 +117,8 @@ public class Enemy : MonoBehaviour
             if (!platform.isTurret) continue;
             turrets.Add(platform.GetComponentInChildren<Turret>());
             turretDamage += platform.GetComponentInChildren<Turret>().damageIncrease;
-            platformHP += platform.GetComponentInChildren<Turret>().healthIncrease;
+            currentHp += platform.GetComponentInChildren<Turret>().healthIncrease;
         }
-    }
-
-    private void AssignColors(Platform platform)
-    {
-        platform.Material = _material;
     }
 
     private void TryGenerateNickname(bool when)
@@ -317,16 +297,16 @@ public class Enemy : MonoBehaviour
             plat.gameObject.layer = LayerMask.NameToLayer("Enemy");
             if (plat.ishospital)
             {
-                platformHP += plat.GetComponentInChildren<Turret>().healthIncrease;
-                fullHp += plat.GetComponentInChildren<Turret>().healthIncrease;
+                currentHp += plat.GetComponentInChildren<Turret>().healthIncrease;
+                maximumHp += plat.GetComponentInChildren<Turret>().healthIncrease;
             }
             else if (plat.isTurret)
             {
                 turrets.Add(plat.GetComponentInChildren<Turret>());
                 turretDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
                 maximumDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
-                platformHP += plat.GetComponentInChildren<Turret>().healthIncrease;
-                fullHp += plat.GetComponentInChildren<Turret>().healthIncrease;
+                currentHp += plat.GetComponentInChildren<Turret>().healthIncrease;
+                maximumHp += plat.GetComponentInChildren<Turret>().healthIncrease;
                 platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
             }
             else
@@ -379,14 +359,14 @@ public class Enemy : MonoBehaviour
 
     private void RecountStats()
     {
-        hpText.text = Mathf.RoundToInt(fullHp).ToString();
+        hpText.text = Mathf.RoundToInt(maximumHp).ToString();
         damageText.text = Mathf.RoundToInt(maximumDamage).ToString();
     }
 
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        fullHp += hpIncrease;
+        maximumHp += hpIncrease;
         maximumDamage += damageIncrease;
         RecountStats();
     }
@@ -484,7 +464,7 @@ public class Enemy : MonoBehaviour
     {
         if (warriorsCount > 0)
         {
-            if (fullHp - platformHP <= (warriors.Count - 1) * hpIncrease )
+            if (maximumHp - currentHp <= (warriors.Count - 1) * hpIncrease )
             {
                 if (warriors.Count > 0)
                 {
@@ -500,38 +480,18 @@ public class Enemy : MonoBehaviour
 
     public void GetDamage(float damage)
     {
-        fullHp -= damage;
+        maximumHp -= damage;
         CheckHP();
-        if (fullHp <= 0)
+        if (maximumHp <= 0)
         {
-            fullHp = 0;
+            maximumHp = 0;
             Dead();
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        if (_edges == null)
-            return;
 
-        Gizmos.color = Color.green;
-        foreach ((Vector3 position, Quaternion rotation) edge in _edges.GetEdges())
-        {
-            Gizmos.DrawWireSphere(edge.position, .5f);
-            Gizmos.DrawLine(edge.position, edge.position + edge.rotation * Vector3.left);
-        }
-    }
-
-    private GameObject CreateEdge()
+    public IEnumerable<GameObject> GetPlatforms()
     {
-        var prefab = Resources.Load<GameObject>("Edge");
-        var parent = transform.Cast<Transform>().FirstOrDefault(x => x.name == "Edges");
-        if (parent == null)
-        {
-            parent = new GameObject().transform;
-            parent.name = "Edges";
-            parent.SetParent(transform);
-        }
-        return Instantiate(prefab, parent);
+        return platforms.Select(x => x.gameObject);
     }
 }

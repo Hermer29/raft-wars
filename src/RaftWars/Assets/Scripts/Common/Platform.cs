@@ -5,14 +5,12 @@ using Random = UnityEngine.Random;
 
 public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTakeCoins, ICanTakeGems, ICanTakeBarrel
 {
-    public Material colorMat;
     public bool isEnemy;
     private bool battle = false;
     public bool isTurret;
     public bool isWind;
     public bool ishospital;
     private Enemy _relatedEnemy;
-    private Material _materials;
     private Material _material;
 
     public Material Material
@@ -20,11 +18,10 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         set
         {
             _material = value;
-            colorMat = value;
-            GetComponent<MeshRenderer>().material = value;
             var turret = GetComponentInChildren<Turret>();
             turret?.DrawInMyColor(_material);
         }
+        get => _material;
     }
 
     private void Start()
@@ -141,13 +138,13 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             }
         }
         GameObject _platform = Instantiate(platform, spawnPos, Quaternion.identity, transform.parent);
-        _platform.GetComponent<Platform>().Material = colorMat;
+        _platform.GetComponent<Platform>().Material = _material;
 
         if (GetComponentInParent<Player>() != null)
         {
             if (_platform.GetComponent<Platform>().isTurret)
             {
-                _platform.GetComponentInChildren<Turret>().DrawInMyColor(colorMat);
+                _platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
                 if (!_platform.GetComponent<Platform>().isWind)
                     GetComponentInParent<Player>().AddTurret(_platform.GetComponentInChildren<Turret>(),
                         _platform.GetComponentInChildren<Turret>().damageIncrease,

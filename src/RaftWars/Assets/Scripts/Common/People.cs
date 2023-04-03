@@ -27,6 +27,11 @@ public class People : MonoBehaviour
     private Platform _platform;
     private Coroutine _movingOnPlatform;
 
+    public Material Material
+    {
+        set => matRenderer.material = value;
+    }
+
     private void OnValidate()
     {
         if (animator == null)
@@ -74,6 +79,7 @@ public class People : MonoBehaviour
     public void SetRelatedPlatform(Platform platform)
     {
         _platform = platform;
+        Material = platform.Material;
         transform.localScale = new Vector3(1 / platform.transform.lossyScale.x, 
             1 / platform.transform.lossyScale.y, 1 / platform.transform.lossyScale.z);
         _movingOnPlatform = StartCoroutine(MoveOnPlatformOverTime());
