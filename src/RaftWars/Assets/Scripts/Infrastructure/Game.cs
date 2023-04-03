@@ -1,4 +1,5 @@
-﻿using InputSystem;
+﻿using DefaultNamespace;
+using InputSystem;
 using UnityEngine;
 
 namespace RaftWars.Infrastructure
@@ -9,6 +10,7 @@ namespace RaftWars.Infrastructure
         public static PlayerService PlayerService;
         public static MaterialsService MaterialsService;
         public static AdvertisingService AdverisingService;
+        public static FeatureFlags FeatureFlags;
         public static bool Initialized { get; private set; }
         
         public Game(Player player, Camera camera)
@@ -17,6 +19,7 @@ namespace RaftWars.Infrastructure
             PlayerService = new PlayerService(player, camera);
             MaterialsService = new MaterialsService();
             AdverisingService = new AdvertisingService();
+            FeatureFlags = Resources.Load<FeatureFlags>("FeatureFlags");
             Initialized = true;
         }
     }

@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using Mono.Cecil;
+using RaftWars.Infrastructure;
+using UnityEditor.SceneTemplate;
+using UnityEngine;
 
 namespace InputSystem
 {
@@ -22,6 +26,16 @@ namespace InputSystem
         {
             Vector3 point = _camera.WorldToViewportPoint(worldPoint);
             return point.x <= 1 - viewportOffset && point.y <= 1 - viewportOffset && point.x >= 0 + viewportOffset && point.x >= 0 + viewportOffset;
+        }
+
+        public void AddPeople()
+        {
+            var peoplePrefab = Resources.Load<GameObject>("People");
+            var platform = _player.GetPlatforms().First();
+            var position = Platform.FindPointOnPlatform(platform.transform.position);
+            var instance = GameObject.Instantiate(peoplePrefab, position, Quaternion.identity, platform.transform);
+            _player.AddPeople(instance.GetComponent<People>());
+            instance.GetComponent<People>().SetRelatedPlatform(platform.GetComponent<Platform>()();
         }
     }
 }

@@ -149,24 +149,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4cff9ffd3f6ba4e85060728dc1b5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMaterials:
-  - {fileID: 2100000, guid: 1152c35d4b665684b9b23a6b387e32ab, type: 2}
-  - {fileID: 2100000, guid: 6244fea651ba25b4485815dd414c8014, type: 2}
-  - {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
-  - {fileID: 2100000, guid: 8c8751c02c33ef5419ef73d63606c116, type: 2}
-  - {fileID: 2100000, guid: 4ee8f5b7a01e858439908baef3d3a716, type: 2}
-  - {fileID: 2100000, guid: a4754d58fb9495c42960ab9c8ec76165, type: 2}
+  hpText: {fileID: 82371736273962454}
+  damageText: {fileID: 8470180462971869537}
+  nickname: {fileID: 0}
   platforms:
   - {fileID: 4153268649175240866}
   - {fileID: 5014709787852056081}
   - {fileID: 7032540779925539300}
-  hpText: {fileID: 82371736273962454}
-  damageText: {fileID: 8470180462971869537}
-  nickname: {fileID: 0}
-  fullHp: 0
-  fullDamage: 0
+  maximumDamage: 0
   hpIncrease: 15
   damageIncrease: 15
+  _disableEdges: 1
+  maximumHp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -174,6 +168,7 @@ MonoBehaviour:
   hasShield: 0
   enemiesToKill: []
   shieldToOff: {fileID: 0}
+  _material: {fileID: 0}
 --- !u!1 &5123124379269596463
 GameObject:
   m_ObjectHideFlags: 0
@@ -1561,7 +1556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 0}
   isEnemy: 0
   isTurret: 0
   isWind: 0

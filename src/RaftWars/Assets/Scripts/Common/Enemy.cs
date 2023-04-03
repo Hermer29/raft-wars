@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
+    [SerializeField] private bool _disableEdges;
     private List<People> warriors = new List<People>();
     private List<Turret> turrets = new List<Turret>();
     private int warriorsCount;
@@ -78,6 +79,8 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     private void WarmupEdges()
     {
+        if (_disableEdges)
+            return;
         var edges = gameObject.AddComponent<Edges>();
         edges.Construct(this, _material);
         edges.WarmupEdges();
@@ -492,6 +495,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     public IEnumerable<GameObject> GetPlatforms()
     {
-        return platforms.Select(x => x.gameObject);
+        return platforms.Select(x => x.gameObject).Concat(turrets.Select(x => x.gameObject));
     }
 }
