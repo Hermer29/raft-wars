@@ -75,7 +75,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         people.SetRelatedPlatform(this);
     }
 
-    private static Vector3 FindPointOnPlatform(Vector3 spawnPoint)
+    public static Vector3 FindPointOnPlatform(Vector3 spawnPoint)
     {
         spawnPoint.x += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);
         spawnPoint.z += Random.Range(-Constants.PlatformSize / 2.4f, Constants.PlatformSize / 2.4f);

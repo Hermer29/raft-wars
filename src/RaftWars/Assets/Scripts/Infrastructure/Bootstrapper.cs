@@ -11,6 +11,12 @@ namespace RaftWars.Infrastructure
         {
             var game = new Game(_playerService, _camera);
             DontDestroyOnLoad(gameObject);
+
+            if (Game.FeatureFlags.IMGUIEnabled)
+            {
+                var obj = Resources.Load<GameObject>("IMGUI");
+                Instantiate(obj);
+            }
         }
     }
 }

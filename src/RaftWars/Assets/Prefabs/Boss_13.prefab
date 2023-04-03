@@ -15092,7 +15092,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
   isEnemy: 1
   isTurret: 0
   isWind: 0
@@ -26274,7 +26273,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
   isEnemy: 1
   isTurret: 0
   isWind: 0
@@ -26449,20 +26447,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4cff9ffd3f6ba4e85060728dc1b5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMaterials:
-  - {fileID: 2100000, guid: 1152c35d4b665684b9b23a6b387e32ab, type: 2}
-  - {fileID: 2100000, guid: 6244fea651ba25b4485815dd414c8014, type: 2}
-  - {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
-  platforms:
-  - {fileID: 9182267864735776208}
-  - {fileID: 8090845344016243301}
   hpText: {fileID: 6503240639260449904}
   damageText: {fileID: 7755333600118728991}
   nickname: {fileID: 0}
-  fullHp: 0
-  fullDamage: 0
+  platforms:
+  - {fileID: 9182267864735776208}
+  - {fileID: 8090845344016243301}
+  maximumDamage: 0
   hpIncrease: 18
   damageIncrease: 18
+  _disableEdges: 0
+  maximumHp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -26470,6 +26465,7 @@ MonoBehaviour:
   hasShield: 0
   enemiesToKill: []
   shieldToOff: {fileID: 0}
+  _material: {fileID: 0}
 --- !u!1 &3667632927830360270
 GameObject:
   m_ObjectHideFlags: 0
@@ -27204,20 +27200,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4cff9ffd3f6ba4e85060728dc1b5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMaterials:
-  - {fileID: 2100000, guid: 1152c35d4b665684b9b23a6b387e32ab, type: 2}
-  - {fileID: 2100000, guid: 6244fea651ba25b4485815dd414c8014, type: 2}
-  - {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
-  platforms:
-  - {fileID: 8282080258773804857}
-  - {fileID: 8979786905867251849}
   hpText: {fileID: 3819955122908343383}
   damageText: {fileID: 3288700351157444031}
   nickname: {fileID: 0}
-  fullHp: 0
-  fullDamage: 0
+  platforms:
+  - {fileID: 8282080258773804857}
+  - {fileID: 8979786905867251849}
+  maximumDamage: 0
   hpIncrease: 18
   damageIncrease: 18
+  _disableEdges: 0
+  maximumHp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -27225,6 +27218,7 @@ MonoBehaviour:
   hasShield: 0
   enemiesToKill: []
   shieldToOff: {fileID: 0}
+  _material: {fileID: 0}
 --- !u!1 &5067210338701314171
 GameObject:
   m_ObjectHideFlags: 0
@@ -32354,7 +32348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
   isEnemy: 1
   isTurret: 0
   isWind: 0
@@ -32642,7 +32635,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
   isEnemy: 1
   isTurret: 0
   isWind: 0
@@ -37601,20 +37593,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4cff9ffd3f6ba4e85060728dc1b5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMaterials:
-  - {fileID: 2100000, guid: 1152c35d4b665684b9b23a6b387e32ab, type: 2}
-  - {fileID: 2100000, guid: 6244fea651ba25b4485815dd414c8014, type: 2}
-  - {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
-  platforms:
-  - {fileID: 5407425613177391326}
-  - {fileID: 5260305934570896704}
   hpText: {fileID: 8959397344587426008}
   damageText: {fileID: 648140677308626031}
   nickname: {fileID: 0}
-  fullHp: 0
-  fullDamage: 0
+  platforms:
+  - {fileID: 5407425613177391326}
+  - {fileID: 5260305934570896704}
+  maximumDamage: 0
   hpIncrease: 18
   damageIncrease: 18
+  _disableEdges: 0
+  maximumHp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -37622,6 +37611,7 @@ MonoBehaviour:
   hasShield: 0
   enemiesToKill: []
   shieldToOff: {fileID: 0}
+  _material: {fileID: 0}
 --- !u!1 &6219095461607354401
 GameObject:
   m_ObjectHideFlags: 0
@@ -37698,13 +37688,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4cff9ffd3f6ba4e85060728dc1b5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMaterials:
-  - {fileID: 2100000, guid: 1152c35d4b665684b9b23a6b387e32ab, type: 2}
-  - {fileID: 2100000, guid: 6244fea651ba25b4485815dd414c8014, type: 2}
-  - {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
-  - {fileID: 2100000, guid: 8c8751c02c33ef5419ef73d63606c116, type: 2}
-  - {fileID: 2100000, guid: 4ee8f5b7a01e858439908baef3d3a716, type: 2}
-  - {fileID: 2100000, guid: a4754d58fb9495c42960ab9c8ec76165, type: 2}
+  hpText: {fileID: 8790906815348426518}
+  damageText: {fileID: 961263182232902561}
+  nickname: {fileID: 0}
   platforms:
   - {fileID: 4717635305238712930}
   - {fileID: 4281316930706883916}
@@ -37712,13 +37698,11 @@ MonoBehaviour:
   - {fileID: 6410493374781307684}
   - {fileID: 8632570819058151720}
   - {fileID: 7839602342543097886}
-  hpText: {fileID: 8790906815348426518}
-  damageText: {fileID: 961263182232902561}
-  nickname: {fileID: 0}
-  fullHp: 0
-  fullDamage: 0
+  maximumDamage: 0
   hpIncrease: 20
   damageIncrease: 20
+  _disableEdges: 1
+  maximumHp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -37730,6 +37714,7 @@ MonoBehaviour:
   - {fileID: 3540170325148840652}
   - {fileID: 8302844619368275640}
   shieldToOff: {fileID: 2814489574095041227}
+  _material: {fileID: 0}
 --- !u!1 &6331918460122575739
 GameObject:
   m_ObjectHideFlags: 0
@@ -62672,20 +62657,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae4cff9ffd3f6ba4e85060728dc1b5fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMaterials:
-  - {fileID: 2100000, guid: 1152c35d4b665684b9b23a6b387e32ab, type: 2}
-  - {fileID: 2100000, guid: 6244fea651ba25b4485815dd414c8014, type: 2}
-  - {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
-  platforms:
-  - {fileID: 4459230521327546427}
-  - {fileID: 4406929326319038267}
   hpText: {fileID: 8735703209452421988}
   damageText: {fileID: 112149708776756423}
   nickname: {fileID: 0}
-  fullHp: 0
-  fullDamage: 0
+  platforms:
+  - {fileID: 4459230521327546427}
+  - {fileID: 4406929326319038267}
+  maximumDamage: 0
   hpIncrease: 18
   damageIncrease: 18
+  _disableEdges: 0
+  maximumHp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -62693,6 +62675,7 @@ MonoBehaviour:
   hasShield: 0
   enemiesToKill: []
   shieldToOff: {fileID: 0}
+  _material: {fileID: 0}
 --- !u!1 &8606751068958999004
 GameObject:
   m_ObjectHideFlags: 0
@@ -65400,7 +65383,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 0}
   isEnemy: 0
   isTurret: 0
   isWind: 0
