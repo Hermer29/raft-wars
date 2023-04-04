@@ -95,20 +95,30 @@ namespace Visual
                 wave.transform.position = position;
                 var particleSystem = wave.GetComponent<ParticleSystem>();
                 ParticleSystem.MainModule main = particleSystem.main;
-                wave.name = GetRotationAngle(direction).ToString();
                 var rotation = new ParticleSystem.MinMaxCurve
                 {
                     constantMax = 0,
                     constantMin = 0,
-                    constant = GetRotationAngle(direction)
+                    constant = AngleOffAroundAxis(Vector3.forward, direction, Vector3.up) * Mathf.Deg2Rad
                 };
                 main.startRotation = rotation;
             }
         }
 
-        private static float GetRotationAngle(Vector3 direction)
+        public static float AngleOffAroundAxis(Vector3 v, Vector3 forward, Vector3 axis, bool clockwise = false)
         {
-            return Mathf.Asin(direction.x) * Mathf.Acos(direction.z);
+            Vector3 right;
+            if(clockwise)
+            {
+                right = Vector3.Cross(forward, axis);
+                forward = Vector3.Cross(axis, right);
+            }
+            else
+            {
+                right = Vector3.Cross(axis, forward);
+                forward = Vector3.Cross(right, axis);
+            }
+            return Mathf.Atan2(Vector3.Dot(v, right), Vector3.Dot(v, forward)) * Mathf.Rad2Deg;
         }
 
         private static GameObject GetPrefab(string resourcesPath)
@@ -131,11 +141,13 @@ namespace Visual
             if (_angles == null)
                 return;
             
-            Gizmos.color = Color.red;
             foreach ((Vector3 position, Vector3 direction) in _angles.GetOuterAngles())
             {
+                Gizmos.color = Color.red;
                 Gizmos.DrawWireSphere(position, .5f);
                 Gizmos.DrawLine(position, position + direction);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(position + direction, .2f);
             }
         }
     }
