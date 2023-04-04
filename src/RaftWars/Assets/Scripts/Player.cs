@@ -27,7 +27,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public float damage;
     [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncomeForPeople = 5;
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncomeForPeople = 5;
-    [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = 1;
+    [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = .2f;
     [SerializeField] private float speed;
     [SerializeField] private CinemachineTargetGroup _group;
     [SerializeField] private GameObject[] _indicators;
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private float platformHp;
     private float hpAdditive;
     private float damageAdditive;
-    private bool battle;
+    public bool battle;
     private float timer = 0;
     public bool isDead;
     public int platformCount = 1;
@@ -46,8 +46,8 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     public int warriorsCount = 2;
     public CinemachineCameraOffset _camera;
     private float damageToEnemy;
-    private const float WinningDamageCoefficient = .8f;
-    private const float LoosingDamageCoefficient = 0.6f;
+    private const float WinningDamageCoefficient = .6f;
+    private const float LoosingDamageCoefficient = .4f;
 
     private Enemy enemyForBattle;
     private InputService _input;

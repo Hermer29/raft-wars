@@ -162,6 +162,8 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     private void TryMoveEnemy(float deltaTime)
     {
+        if (_player.InBattle)
+            return;
         if (_player.IsDead)
         { }
         else if (_player.GameStarted == false)
