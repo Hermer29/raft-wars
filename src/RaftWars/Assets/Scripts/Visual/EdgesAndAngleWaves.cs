@@ -99,7 +99,8 @@ namespace Visual
                 {
                     constantMax = 0,
                     constantMin = 0,
-                    constant = AngleOffAroundAxis(Vector3.forward, direction, Vector3.up) * Mathf.Deg2Rad
+                    constant = Vector3.SignedAngle(Vector3.forward, direction, Vector3.up) * Mathf.Deg2Rad
+                        
                 };
                 main.startRotation = rotation;
             }
