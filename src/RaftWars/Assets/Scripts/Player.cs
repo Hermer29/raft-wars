@@ -414,7 +414,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
         edgesAndAngleWaves.UpdateVisual(platform.gameObject);
-        _camera.m_Offset.z -= 1;
+        _camera.m_Offset.z -= 1f / platforms.Count;
     }
 
     public void AmplifyDamage(float percent)
