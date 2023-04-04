@@ -126,6 +126,11 @@ public class MapGenerator : MonoBehaviour
                 Random.Range(yBorderMin, yBorderMax) : 
                 Random.Range(-yBorderMax, -yBorderMin)
         };
+        var distanceToCenter = Vector3.Distance(Vector3.zero, posToSpawn);
+        const int eligibleDistanceToCenter = 20;
+        if (distanceToCenter <= eligibleDistanceToCenter)
+            return GetRandomSpawnPosition();
+        
         return posToSpawn;
     }
 
@@ -386,5 +391,14 @@ public class MapGenerator : MonoBehaviour
             GameManager.instance.boss = enemy;
             break;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        const int height = 3;
+        Gizmos.DrawLine(new Vector3(-xBorderMin, height, -yBorderMin), new Vector3(-xBorderMin, height, yBorderMax));
+        Gizmos.DrawLine(new Vector3(-xBorderMin, height, yBorderMax), new Vector3(-xBorderMax, height, -yBorderMin));
+        Gizmos.DrawLine(new Vector3(xBorderMax, height, -yBorderMin), new Vector3(xBorderMax, height, yBorderMax));
+        Gizmos.DrawLine(new Vector3(xBorderMax, height, yBorderMax), new Vector3(-xBorderMin, height, -yBorderMin));
     }
 }

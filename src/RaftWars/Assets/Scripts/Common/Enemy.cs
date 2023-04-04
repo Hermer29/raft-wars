@@ -53,7 +53,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     public Material _material;
     private MaterialsService _materialService;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
-    private const int ExclusionSqrDistanceToPlayer = 300;
+    private const int ExclusionSqrDistanceToPlayer = 300*2;
 
     private int StatsSum => (int) (maximumHp + maximumDamage);
 
@@ -79,6 +79,21 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         AssignRelatedPeople();
         RecountStats();
         
+    }
+
+    private void TeleportFromOutOfBounds()
+    {
+        bool IsOutOfBounds()
+        {
+            return (transform.position.x > 45f || transform.position.x < -45f) && (transform.position.z > 45f ||
+                transform.position.z < -45f);
+        }
+
+        if (!IsOutOfBounds()) return;
+        Vector3 pointOnBound = GetNearestPointOnBound();
+        Vector3 vectorToCenter = (Vector3.zero - pointOnBound).normalized;
+        const int distanceFromBounds = 5;
+        transform.position = vectorToCenter * distanceFromBounds + pointOnBound;
     }
 
     private void WarmupEdges()
@@ -139,6 +154,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     private void Update()
     {
+        TeleportFromOutOfBounds();
         if (hasShield)
         {
             for(int i = 0; i < enemiesToKill.Count; i++)
