@@ -67,8 +67,8 @@ MonoBehaviour:
   damage: 0
   hpIncomeForPeople: 5
   damageIncomeForPeople: 5
-  battleDamageOverTime: 1
-  speed: 3.5
+  battleDamageOverTime: 0.2
+  speed: 5.39
   _group: {fileID: 5655730262444525566}
   _indicators:
   - {fileID: 3377585064699056743}
@@ -76,6 +76,7 @@ MonoBehaviour:
   - {fileID: 3377585064756394383}
   - {fileID: 3377585065952960913}
   - {fileID: 3377585066360050455}
+  battle: 0
   isDead: 0
   platformCount: 1
   canPlay: 0

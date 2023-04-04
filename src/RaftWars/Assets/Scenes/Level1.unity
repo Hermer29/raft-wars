@@ -4978,10 +4978,6 @@ PrefabInstance:
       propertyPath: warriorsCount
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 3377585064621721321, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
-      propertyPath: battleDamageOverTime
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 3377585064621721326, guid: 07c49a911fa51b9439d640534d3e45ad, type: 3}
       propertyPath: m_RootOrder
       value: 8

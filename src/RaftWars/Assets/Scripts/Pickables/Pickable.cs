@@ -21,6 +21,9 @@ namespace RaftWars.Pickables
         {
             if (other.GetComponent<ICanTakePlatform>() == null)
                 return;
+                
+            if(other.gameObject.transform.parent.TryGetComponent<Enemy>(out _))
+                return;
 
             if (canTake == false)
                 return;
