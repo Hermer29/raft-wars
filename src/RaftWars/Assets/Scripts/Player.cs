@@ -355,7 +355,10 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         }
         GameManager.instance.PlayerLost();
         Died?.Invoke();
-
+        foreach (var collider in GetComponentsInChildren<Collider>())
+        {
+            collider.enabled = false;
+        }
         foreach (GameObject indicator in _indicators)
         {
             indicator.SetActive(false);
@@ -415,6 +418,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         AddPlatformToCameraTargetGroup();
         edgesAndAngleWaves.UpdateVisual(platform.gameObject);
         _camera.m_Offset.z -= 1f / platforms.Count;
+        speed += .5f;
     }
 
     public void AmplifyDamage(float percent)

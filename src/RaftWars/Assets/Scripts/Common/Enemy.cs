@@ -72,11 +72,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         TryGenerateNickname(when: !isBoss);
         GenerateRandomColor(when: isBoss && _material == null);
         WarmupEdges();
-        Player.Died += () =>
-        {
-            battle = false;
-            PlayIdleAnimation();
-        };
+        Player.Died += OnPlayerDied;
         if (!boss5Stage) return;
         WarmupPlatforms();
         AssignRelatedPeople();
@@ -404,17 +400,18 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     
     private void PlayIdleAnimation()
     {
-        if(isBoss)
-        {}
-        else
-            foreach (People people in warriors)
-            {
-                if(people == null)
-                    continue;
-                
-                people.IdleAnim();
-            }
+        if (isBoss)
+        {
+            warriors = GetComponentsInChildren<People>().ToList();
+        }
+        foreach (People people in warriors)
+        {
+            if (people == null)
+                continue;
 
+            people.IdleAnim();
+        }
+        
         foreach (Turret turret in turrets)
         {
             turret.IdleAnim();
@@ -451,7 +448,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         {
             col.enabled = false;
         }
-        
+       
         Destroy(gameObject);
     }
 
@@ -545,5 +542,16 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     public IEnumerable<GameObject> GetPlatforms()
     {
         return platforms.Select(x => x.gameObject).Concat(turrets.Select(x => x.transform.parent.gameObject));
+    }
+    
+    private void OnDestroy()
+    {
+        Player.Died -= OnPlayerDied;
+    }
+
+    private void OnPlayerDied()
+    {
+        battle = false;
+        PlayIdleAnimation();
     }
 }

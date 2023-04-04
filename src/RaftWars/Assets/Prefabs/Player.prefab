@@ -68,7 +68,7 @@ MonoBehaviour:
   hpIncomeForPeople: 5
   damageIncomeForPeople: 5
   battleDamageOverTime: 1
-  speed: 7
+  speed: 3.5
   _group: {fileID: 5655730262444525566}
   _indicators:
   - {fileID: 3377585064699056743}
