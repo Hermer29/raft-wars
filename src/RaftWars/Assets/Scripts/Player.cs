@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.Serialization;
+using Visual;
 using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour, IPlatformsCarrier
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private MaterialsService _materialsService;
     private Material _material;
     private bool idleBehaviour;
-    private Edges _edges;
+    private EdgesAndAngleWaves edgesAndAngleWaves;
     public static event Action Died;
 
     private void Start()
@@ -92,9 +93,10 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void CreateEdges()
     {
-        _edges = gameObject.AddComponent<Edges>();
-        _edges.Construct(this, _material);
-        _edges.WarmupEdges();
+        edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
+        edgesAndAngleWaves.Construct(this, _material);
+        edgesAndAngleWaves.CreateEdges();
+        edgesAndAngleWaves.CreateWaves();
     }
 
     private void TryGenerateNickname()
@@ -128,7 +130,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     {
         battle = false;
         idleBehaviour = true;
-        foreach (var platform in enemyForBattle.platforms)  
+        foreach (var platform in enemyForBattle.platforms.Where(x => x != null))  
         {
             _group.RemoveMember(platform.transform);
         }
@@ -411,7 +413,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         platformCount++;
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
-        _edges.UpdateEdges(platform.gameObject);
+        edgesAndAngleWaves.UpdateVisual(platform.gameObject);
         _camera.m_Offset.z -= 1;
     }
 

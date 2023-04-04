@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Common;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -35,7 +36,7 @@ namespace DefaultNamespace
             ProcessPlatform(platform);
         }
 
-        public IEnumerable<(Vector3 position, Quaternion rotation)> GetEdges()
+        public IEnumerable<(Vector3 position, Quaternion rotation)> GetEdgeMiddlePoints()
         {
             var result = ExcludeIntersecting(_edges);
             foreach (var edge in result)
@@ -45,26 +46,33 @@ namespace DefaultNamespace
             }
         }
 
+        public IEnumerable<(Vector3 a, Vector3 b)> GetEdges()
+        {
+            var result = ExcludeIntersecting(_edges);
+            foreach (var edge in result)
+            {
+                yield return (edge.corners[0], edge.corners[1]);
+            }
+        }
+
         private static IEnumerable<(Vector3[] corners, Vector3 normal)> ExcludeIntersecting(IEnumerable<(Vector3[] corners, Vector3 normal)> source)
         {
             var result = source.Select(x => x);
-            foreach (var edge in source)
-            {
-                result = result.Where(sample => edge.normal == sample.normal || Approximately(edge.corners, sample.corners) == false);
-            }
 
-            return result;
+            return source.Aggregate(result, 
+                (current, edge) => 
+                    current.Where(sample => edge.normal == sample.normal || 
+                                            Approximately(edge.corners, sample.corners) == false));
         }
 
-        private static bool Approximately(Vector3[] cornersA, Vector3[] cornersB)
+        private static bool Approximately(IReadOnlyList<Vector3> cornersA, IReadOnlyList<Vector3> cornersB)
         {
-            return (AlmostEquals(cornersA[0], cornersB[0]) && AlmostEquals(cornersA[1], cornersB[1])) ||
-                   (AlmostEquals(cornersA[0], cornersB[1]) && AlmostEquals(cornersA[1], cornersB[0]));
+            return (GeoMaths.AlmostEquals(cornersA[0], cornersB[0]) && 
+                    GeoMaths.AlmostEquals(cornersA[1], cornersB[1])) ||
+                   (GeoMaths.AlmostEquals(cornersA[0], cornersB[1]) && 
+                    GeoMaths.AlmostEquals(cornersA[1], cornersB[0]));
         }
 
-        private static bool AlmostEquals(Vector3 a, Vector3 b)
-        {
-            return (a - b).sqrMagnitude < 2;
-        }
+        
     }
 }

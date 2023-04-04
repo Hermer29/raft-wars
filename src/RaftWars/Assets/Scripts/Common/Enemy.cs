@@ -8,6 +8,7 @@ using RaftWars.Infrastructure;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
+using Visual;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
@@ -87,9 +88,10 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     {
         if (_disableEdges)
             return;
-        var edges = gameObject.AddComponent<Edges>();
+        var edges = gameObject.AddComponent<EdgesAndAngleWaves>();
         edges.Construct(this, _material);
-        edges.WarmupEdges();
+        edges.CreateEdges();
+        edges.CreateWaves();
     }
 
     private void GenerateRandomColor(bool when)
