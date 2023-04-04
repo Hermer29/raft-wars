@@ -53,7 +53,8 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     public Material _material;
     private MaterialsService _materialService;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
-    
+    private const int ExclusionSqrDistanceToPlayer = 300;
+
     private int StatsSum => (int) (maximumHp + maximumDamage);
 
     public Material Material
@@ -186,10 +187,27 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         {
             _moveDirection = Vector3.Reflect(_moveDirection.Value, GetNormalToNearestBound());
         }
-
+        float sqrMagnitudeToPlayer = (_player.Position - transform.position).sqrMagnitude;
+        var escapeVector = -(_player.Position - transform.position).normalized;
+        
+        if (sqrMagnitudeToPlayer < ExclusionSqrDistanceToPlayer)
+        {
+            if (_player.ExistsEnemyThatAlreadyInExclusionZone && _player.EnemyInExclusionZone != this)
+            {
+                _moveDirection = escapeVector;
+            }
+            else
+            {
+                _player.RegisterAsEnemyInExclusionZone(this);
+            }
+        }
+        else if(_player.EnemyInExclusionZone == this)
+        {
+            _player.UnregisterEnemyInExclusionZone();
+        }
         if(_player.IsDead)
         {}
-        else if ((_player.Position - transform.position).sqrMagnitude < SqrMagnitudeDistanceToReactOnPlayer)
+        else if(sqrMagnitudeToPlayer < SqrMagnitudeDistanceToReactOnPlayer)
         {
             bool playerSuperior = _player.PlayerStatsSum >= StatsSum;
             if (playerSuperior)
@@ -200,13 +218,14 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
                     goto Exit;
                 }
 
-                _moveDirection = -(_player.Position - transform.position).normalized;
+                _moveDirection = escapeVector;
             }
             else
             {
                 _moveDirection = (_player.Position - transform.position).normalized;
             }
         }
+
         Exit:
         transform.position += _moveDirection.Value * (deltaTime * speed);
     }

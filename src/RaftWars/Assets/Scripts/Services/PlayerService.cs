@@ -7,6 +7,7 @@ namespace InputSystem
     {
         private Player _player;
         private readonly Camera _camera;
+        private Enemy _enemyInExclusionZone;
 
         public PlayerService(Player player, Camera camera)
         {
@@ -20,6 +21,8 @@ namespace InputSystem
         public bool GameStarted => _player.canPlay;
         public bool IsDead => _player.isDead;
         public bool InBattle => _player.battle;
+        public bool ExistsEnemyThatAlreadyInExclusionZone => _enemyInExclusionZone != null;
+        public Enemy EnemyInExclusionZone => _enemyInExclusionZone;
 
         public void AddPeople()
         {
@@ -29,6 +32,16 @@ namespace InputSystem
             var instance = GameObject.Instantiate(peoplePrefab, position, Quaternion.identity, platform.transform);
             _player.AddPeople(instance.GetComponent<People>());
             instance.GetComponent<People>().SetRelatedPlatform(platform.GetComponent<Platform>());
+        }
+
+        public void RegisterAsEnemyInExclusionZone(Enemy enemy)
+        {
+            _enemyInExclusionZone = enemy;
+        }
+
+        public void UnregisterEnemyInExclusionZone()
+        {
+            _enemyInExclusionZone = null;
         }
     }
 }
