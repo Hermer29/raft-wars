@@ -24,7 +24,7 @@ namespace InputSystem
 
         public void AddPeople()
         {
-            var peoplePrefab = Resources.Load<GameObject>("People");
+            var peoplePrefab = Resources.Load<GameObject>("Prefabs/People");
             var platform = _player.GetPlatforms().First();
             var position = Platform.FindPointOnPlatform(platform.transform.position);
             var instance = GameObject.Instantiate(peoplePrefab, position, Quaternion.identity, platform.transform);
@@ -40,6 +40,11 @@ namespace InputSystem
         public void UnregisterEnemyInExclusionZone()
         {
             _enemyInExclusionZone = null;
+        }
+
+        public void DoubleSpeed()
+        {
+            _player.speed *= 2;
         }
     }
 }

@@ -29,7 +29,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncomeForPeople = 5;
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncomeForPeople = 5;
     [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = .2f;
-    [SerializeField] private float speed;
+    [SerializeField] public float speed;
     public CinemachineTargetGroup CameraGroup;
     [SerializeField] private GameObject[] _indicators;
 

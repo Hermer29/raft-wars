@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RaftWars.Infrastructure
 {
@@ -18,7 +19,8 @@ namespace RaftWars.Infrastructure
             {
                 SceneManager.LoadScene(BootSceneName);
             }
-            _stateMachine.Enter<LoadLevelState, int>(1);
+            _stateMachine.Enter<LoadLevelState, int>(
+                Mathf.Clamp(CrossLevelServices.LevelService.Level, 1, 999));
         }
 
         public void Exit()

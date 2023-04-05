@@ -1,0 +1,181 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4400144776957621123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4400144776957621149}
+  - component: {fileID: 4400144776957621148}
+  m_Layer: 0
+  m_Name: Level5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4400144776957621149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4400144776957621123}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4400144776957621148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4400144776957621123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6e9a4bc3d00b034b85e4d12c60d35fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 665502603565056400, guid: 2fa91b54bf3e5bc49afd1b9e3e1eeaf9, type: 3}
+  enemiesToSpawn1:
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 1439582966004701254, guid: ac7d33296258c354b80baabf4f18eda6, type: 3}
+  - {fileID: 4684615808979959828, guid: bd419e2915b558b45af14f9e56fdef7c, type: 3}
+  enemiesToSpawn1Add:
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 6306774901328135489, guid: 0a39db167de1b5a4f983fd87761ee228, type: 3}
+  - {fileID: 1334188498042711010, guid: 22903628e33c8f94d8cde211e3f1cd00, type: 3}
+  enemiesToSpawn2:
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 6519269586158161364, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
+  - {fileID: 318412078378832142, guid: cb880ca2868babb4e8534d35f76a301f, type: 3}
+  - {fileID: 1439582966004701254, guid: ac7d33296258c354b80baabf4f18eda6, type: 3}
+  - {fileID: 4684615808979959828, guid: bd419e2915b558b45af14f9e56fdef7c, type: 3}
+  enemiesToSpawn2Add:
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 6306774901328135489, guid: 0a39db167de1b5a4f983fd87761ee228, type: 3}
+  - {fileID: 1334188498042711010, guid: 22903628e33c8f94d8cde211e3f1cd00, type: 3}
+  enemiesToSpawn3:
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 6519269586158161364, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
+  - {fileID: 318412078378832142, guid: cb880ca2868babb4e8534d35f76a301f, type: 3}
+  - {fileID: 318412078378832142, guid: cb880ca2868babb4e8534d35f76a301f, type: 3}
+  - {fileID: 6519269586158161364, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
+  - {fileID: 1439582966004701254, guid: ac7d33296258c354b80baabf4f18eda6, type: 3}
+  - {fileID: 3005512817920170124, guid: 68de11864560fc44882628bd93b26774, type: 3}
+  - {fileID: 4684615808979959828, guid: bd419e2915b558b45af14f9e56fdef7c, type: 3}
+  enemiesToSpawn3Add:
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 6306774901328135489, guid: 0a39db167de1b5a4f983fd87761ee228, type: 3}
+  - {fileID: 2244433636629771223, guid: 511cb2c951170834888498419c2e87db, type: 3}
+  - {fileID: 1334188498042711010, guid: 22903628e33c8f94d8cde211e3f1cd00, type: 3}
+  enemiesToSpawn4:
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 6519269586158161364, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
+  - {fileID: 318412078378832142, guid: cb880ca2868babb4e8534d35f76a301f, type: 3}
+  - {fileID: 6519269586158161364, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
+  - {fileID: 318412078378832142, guid: cb880ca2868babb4e8534d35f76a301f, type: 3}
+  - {fileID: 1439582966004701254, guid: ac7d33296258c354b80baabf4f18eda6, type: 3}
+  - {fileID: 3005512817920170124, guid: 68de11864560fc44882628bd93b26774, type: 3}
+  - {fileID: 3005512817920170124, guid: 68de11864560fc44882628bd93b26774, type: 3}
+  - {fileID: 4684615808979959828, guid: bd419e2915b558b45af14f9e56fdef7c, type: 3}
+  enemiesToSpawn4Add:
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 6306774901328135489, guid: 0a39db167de1b5a4f983fd87761ee228, type: 3}
+  - {fileID: 2244433636629771223, guid: 511cb2c951170834888498419c2e87db, type: 3}
+  - {fileID: 2244433636629771223, guid: 511cb2c951170834888498419c2e87db, type: 3}
+  - {fileID: 1334188498042711010, guid: 22903628e33c8f94d8cde211e3f1cd00, type: 3}
+  enemiesToSpawn5:
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 1795843246625334312, guid: c1b8c277307c6c846aef265efe29da52, type: 3}
+  - {fileID: 6519269586158161364, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
+  - {fileID: 6519269586158161364, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
+  - {fileID: 318412078378832142, guid: cb880ca2868babb4e8534d35f76a301f, type: 3}
+  - {fileID: 318412078378832142, guid: cb880ca2868babb4e8534d35f76a301f, type: 3}
+  - {fileID: 1439582966004701254, guid: ac7d33296258c354b80baabf4f18eda6, type: 3}
+  - {fileID: 3005512817920170124, guid: 68de11864560fc44882628bd93b26774, type: 3}
+  - {fileID: 3005512817920170124, guid: 68de11864560fc44882628bd93b26774, type: 3}
+  - {fileID: 3005512817920170124, guid: 68de11864560fc44882628bd93b26774, type: 3}
+  - {fileID: 4684615808979959828, guid: bd419e2915b558b45af14f9e56fdef7c, type: 3}
+  enemiesToSpawn5Add:
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 6306774901328135489, guid: 0a39db167de1b5a4f983fd87761ee228, type: 3}
+  - {fileID: 2244433636629771223, guid: 511cb2c951170834888498419c2e87db, type: 3}
+  - {fileID: 2244433636629771223, guid: 511cb2c951170834888498419c2e87db, type: 3}
+  - {fileID: 2244433636629771223, guid: 511cb2c951170834888498419c2e87db, type: 3}
+  - {fileID: 1334188498042711010, guid: 22903628e33c8f94d8cde211e3f1cd00, type: 3}
+  enemiesNumber: 0400000003000000020000000200000001000000
+  enemyPeopleNumber: 0400000006000000080000000a0000000c000000
+  hpIncrease: 0500000006000000070000000700000008000000
+  damageIncrease: 0500000006000000070000000700000008000000
+  enemyPlatformsNumber: 0300000004000000040000000400000005000000
+  enemyPeopleToSpawn:
+  - {fileID: 2043718015679735489, guid: 83b99612bc38b40448fd13cf89db7023, type: 3}
+  - {fileID: 2043718015679735489, guid: 83b99612bc38b40448fd13cf89db7023, type: 3}
+  - {fileID: 1344263094535560735, guid: b4631abeeb0d6c84d9efd035e663cc1f, type: 3}
+  enemyPeopleToSpawnAdd:
+  - {fileID: 127341308, guid: ad7903f375a780c46936cc8080bae6d8, type: 3}
+  - {fileID: 127341308, guid: ad7903f375a780c46936cc8080bae6d8, type: 3}
+  - {fileID: 3544780858931521117, guid: 8b0faed61de7c564bae6726b0f508630, type: 3}
+  bosses:
+  - {fileID: 5722120201407490041, guid: ea419b056afbc0b4b8e178b43a197d25, type: 3}
+  - {fileID: 5722120201407490041, guid: ea419b056afbc0b4b8e178b43a197d25, type: 3}
+  - {fileID: 5722120201407490041, guid: ea419b056afbc0b4b8e178b43a197d25, type: 3}
+  - {fileID: 5722120201407490041, guid: ea419b056afbc0b4b8e178b43a197d25, type: 3}
+  - {fileID: 6779876618700426149, guid: e7d9ad11df90bca41ad1f707140f612e, type: 3}
+  platformsToSpawn:
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 148774027670061433, guid: dfff0af315be7c743b41fa4d48584d11, type: 3}
+  - {fileID: 979317135551282225, guid: e82d3502e6ccc4f42ade417c994f6770, type: 3}
+  - {fileID: 251353194133685855, guid: 29e4f22a09a9cc84ba6d017204104ba8, type: 3}
+  - {fileID: 6306774901328135489, guid: 0a39db167de1b5a4f983fd87761ee228, type: 3}
+  - {fileID: 5292078119404677395, guid: 902ec57a46b8fc54c8cac66f92077d4c, type: 3}
+  - {fileID: 2244433636629771223, guid: 511cb2c951170834888498419c2e87db, type: 3}
+  - {fileID: 1334188498042711010, guid: 22903628e33c8f94d8cde211e3f1cd00, type: 3}
+  platformsNumber: 0300000002000000010000000100000001000000
+  peopleToSpawn:
+  - {fileID: 127341308, guid: ad7903f375a780c46936cc8080bae6d8, type: 3}
+  - {fileID: 127341308, guid: ad7903f375a780c46936cc8080bae6d8, type: 3}
+  - {fileID: 3544780858931521117, guid: 8b0faed61de7c564bae6726b0f508630, type: 3}
+  peopleNumber: 0600000004000000030000000200000001000000
+  coinsToSpawn: {fileID: 948171552318366063, guid: 80149e087e5da9e40b33c3d939203bd6, type: 3}
+  coinsNumber: 15
+  gemsToSpawn: {fileID: 1785471731770131168, guid: 2cd3a3d9b12ea6941a19e01312eadc69, type: 3}
+  gemsNumber: 3
+  barrelsToSpawn: {fileID: 4567766657959693494, guid: 2873240e46e611e4cbb7c212b6bf7628, type: 3}
+  barrelNumbers: 4
+  xBorderMax: 47
+  xBorderMin: 5
+  yBorderMax: 5
+  yBorderMin: 47

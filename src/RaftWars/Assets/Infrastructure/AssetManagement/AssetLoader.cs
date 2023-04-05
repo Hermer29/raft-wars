@@ -29,6 +29,7 @@ namespace RaftWars.Infrastructure.AssetManagement
 
         public static MapGenerator LoadLevelGenerator(int level)
         {
+            Debug.Log("Trying to load "+ AssetConstants.CreateLevelGeneratorPath(level));
             return Resources.Load<MapGenerator>(AssetConstants.CreateLevelGeneratorPath(level));
         }
 

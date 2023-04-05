@@ -37,7 +37,7 @@ namespace RaftWars.Infrastructure
                 _loading.SetSliderProcess(asyncOperation.progress);
                 yield return null;
             }
-            _loading.SetSliderProcess(.7f);
+            _loading.SetSliderProcess(1f);
             
             _stateMachine.Enter<CreateServicesState>();
         }

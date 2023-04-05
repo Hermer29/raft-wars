@@ -14,12 +14,17 @@ namespace RaftWars.Infrastructure
                 Destroy(gameObject);
                 return;
             }
-
             _exists = true;
             DontDestroyOnLoad(gameObject);
+            Execute();
+        }
 
-            var loadingScreen = GameFactory.CreateLoadingScreen();
+        private void Execute()
+        {
+            LoadingScreen loadingScreen = GameFactory.CreateLoadingScreen();
             var stateMachine = new StateMachine(this, loadingScreen);
+
+            stateMachine.Enter<ProjectInitialization>();
             stateMachine.Enter<BootstrapState>();
         }
 

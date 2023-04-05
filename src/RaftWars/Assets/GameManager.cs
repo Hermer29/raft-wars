@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         }
         else if(_stage != 5 && boss == null && !hud.stagePanel.activeSelf)
         {
-            WarmupStage();
+            IncrementStage();
         }
 
         for(var i = 0; i < _enemies.Count; i++)
@@ -81,8 +81,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void WarmupStage()
+    private void IncrementStage()
     {
+        _input.Disable();
         Player.instance.canPlay = false;
         hud.blackBG.SetActive(true);
         WarmupUiStats();
@@ -180,6 +181,7 @@ public class GameManager : MonoBehaviour
 
     public void NextStage()
     {
+        _input.Enable();
         hud.progressText.text = _stage + "/5";
         map.Generate(_stage);
         Player.instance.canPlay = true;
@@ -191,13 +193,14 @@ public class GameManager : MonoBehaviour
 
     public void Continue()
     {
-        SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level", 1));
+        CrossLevelServices.LevelService.Increment();
+        _stateMachine.Enter<LoadLevelState, int>(CrossLevelServices.LevelService.Level);
     }
 
     public void RestartLevel()
     {
         _advertising.ShowInterstitial();
-        _stateMachine.Enter<LoadLevelState, int>(PlayerPrefs.GetInt("Level", 1));
+        _stateMachine.Enter<LoadLevelState, int>(CrossLevelServices.LevelService.Level);
     }
 
     public void PlayerLost()
