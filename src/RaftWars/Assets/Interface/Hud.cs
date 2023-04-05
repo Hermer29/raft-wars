@@ -33,6 +33,7 @@ namespace Interface
         public Button Continue;
         public Button BuyDamage;
         public Button BuyHealth;
+        public Button NextStage;
 
         public void HideDiamondsCounter()
         {

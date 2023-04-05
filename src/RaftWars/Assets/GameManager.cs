@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         hud.Continue.onClick.AddListener(Continue);
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
+        hud.NextStage.onClick.AddListener(NextStage);
         _stateMachine = stateMachine;
         _input = Game.InputService;
         _input.Disable();

@@ -1177,6 +1177,7 @@ MonoBehaviour:
   Continue: {fileID: 9164477875725805253}
   BuyDamage: {fileID: 9164477876242939078}
   BuyHealth: {fileID: 9164477877600646959}
+  NextStage: {fileID: 9164477877130302678}
 --- !u!1 &9164477875961470073
 GameObject:
   m_ObjectHideFlags: 0
