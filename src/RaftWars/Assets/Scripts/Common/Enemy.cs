@@ -4,6 +4,7 @@ using System.Linq;
 using DefaultNamespace;
 using DG.Tweening;
 using InputSystem;
+using Interface;
 using RaftWars.Infrastructure;
 using UnityEngine;
 using TMPro;

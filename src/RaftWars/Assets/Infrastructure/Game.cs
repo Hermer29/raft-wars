@@ -1,6 +1,7 @@
 ﻿using DefaultNamespace;
 using InputSystem;
-using UnityEngine;
+using Interface;
+using RaftWars.Infrastructure.AssetManagement;
 
 namespace RaftWars.Infrastructure
 {
@@ -11,16 +12,19 @@ namespace RaftWars.Infrastructure
         public static MaterialsService MaterialsService;
         public static AdvertisingService AdverisingService;
         public static FeatureFlags FeatureFlags;
-        public static bool Initialized { get; private set; }
-        
-        public Game(Player player, Camera camera)
+        public static Hud Hud;
+        public static InputService InputService;
+        public static MapGenerator MapGenerator;
+
+        public Game(Player player)
         {
             CollectiblesService = new CollectiblesService();
-            PlayerService = new PlayerService(player, camera);
+            PlayerService = new PlayerService(player);
             MaterialsService = new MaterialsService();
             AdverisingService = new AdvertisingService();
-            FeatureFlags = Resources.Load<FeatureFlags>("FeatureFlags");
-            Initialized = true;
+            FeatureFlags = AssetLoader.LoadFeatureFlags();
+            Hud = GameFactory.CreateHud();
+            InputService = new InputService(Hud.Joystick);
         }
     }
 }

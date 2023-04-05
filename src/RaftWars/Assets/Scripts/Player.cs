@@ -5,6 +5,7 @@ using Cinemachine;
 using DefaultNamespace;
 using DG.Tweening;
 using InputSystem;
+using Interface;
 using RaftWars.Infrastructure;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncomeForPeople = 5;
     [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = .2f;
     [SerializeField] private float speed;
-    [SerializeField] private CinemachineTargetGroup _group;
+    public CinemachineTargetGroup CameraGroup;
     [SerializeField] private GameObject[] _indicators;
 
     private float damageClear = 10;
@@ -57,13 +58,17 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private Material _material;
     private bool idleBehaviour;
     private EdgesAndAngleWaves edgesAndAngleWaves;
+    private Hud _hud;
     public static event Action Died;
 
     private void Start()
     {
+        _input = Game.InputService;
+        _materialsService = Game.MaterialsService;
+        _hud = Game.Hud;
+        
         hp = 1;
         damage = 1;
-        _materialsService = Game.MaterialsService;
         _material = _materialsService.GetPlayerMaterial();
         MakePeopleRunAndColorize(_material);
         if (instance == null)
@@ -78,7 +83,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         RecountStats();
         CreateEdges();
         TryGenerateNickname();
-        CreateInput();
     }
 
     private void MakePeopleRunAndColorize(Material material)
@@ -112,11 +116,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         }
     }
 
-    private void CreateInput()
-    {
-        _input = gameObject.AddComponent<InputService>();
-    }
-
     private void Update()
     {
         if (!battle) return;
@@ -132,7 +131,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         idleBehaviour = true;
         foreach (var platform in enemyForBattle.platforms.Where(x => x != null))  
         {
-            _group.RemoveMember(platform.transform);
+            CameraGroup.RemoveMember(platform.transform);
         }
         PutInIdleAnimation();
     }
@@ -153,19 +152,19 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     public void AddCoins(int coins)
     {
         this.coins += coins;
-        coinsText.text = this.coins.ToString();
+        _hud.ShowCoins(this.coins);
     }
 
     public void SpendCoins(int coins)
     {
         this.coins -= coins;
-        coinsText.text = this.coins.ToString();
+        _hud.ShowCoins(this.coins);
     }
 
     public void AddGems(int gems)
     {
         this.gems += gems;
-        gemsText.text = this.gems.ToString();
+        _hud.ShowGems(this.gems);
     }
 
     public void AddPeople(People warrior)
@@ -265,7 +264,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
         foreach (var platform in enemy.platforms)
         {
-            _group.AddMember(platform.transform, 1, 7);
+            CameraGroup.AddMember(platform.transform, 1, 7);
         }
         idleBehaviour = false;
         enemyForBattle = enemy;
@@ -363,7 +362,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         {
             indicator.SetActive(false);
         }
-        _group.m_Targets = Array.Empty<CinemachineTargetGroup.Target>();
+        CameraGroup.m_Targets = Array.Empty<CinemachineTargetGroup.Target>();
         _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
         transform.DOMoveY(-999, 3).SetSpeedBased(true);
     }
@@ -410,7 +409,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     {
         void AddPlatformToCameraTargetGroup()
         {
-            _group.AddMember(platform.transform, 1, 7);
+            CameraGroup.AddMember(platform.transform, 1, 7);
         }
 
         platformCount++;

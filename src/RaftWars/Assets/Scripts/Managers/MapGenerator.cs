@@ -55,7 +55,7 @@ public class MapGenerator : MonoBehaviour
     private MaterialsService _materials;
     private CollectiblesService _collectibles;
 
-    private void Awake()
+    public void Construct()
     {
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;

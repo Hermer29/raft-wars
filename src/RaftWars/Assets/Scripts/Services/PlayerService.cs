@@ -6,13 +6,11 @@ namespace InputSystem
     public class PlayerService
     {
         private Player _player;
-        private readonly Camera _camera;
         private Enemy _enemyInExclusionZone;
 
-        public PlayerService(Player player, Camera camera)
+        public PlayerService(Player player)
         {
             _player = player;
-            _camera = camera;
         }
 
         public float PlayerStatsSum => _player.damage + _player.hp;

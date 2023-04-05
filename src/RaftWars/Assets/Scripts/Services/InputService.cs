@@ -2,20 +2,29 @@
 
 namespace InputSystem
 {
-    public class InputService : MonoBehaviour
+    public class InputService
     {
         private Joystick _joystick;
-        private Player _player;
 
+        public InputService(Joystick joystick)
+        {
+            _joystick = joystick;
+        }
+        
         public float Vertical 
             => Mathf.Clamp(_joystick.Vertical + UnityEngine.Input.GetAxis("Vertical"), -1, 1);
 
         public float Horizontal
             => Mathf.Clamp(_joystick.Horizontal + UnityEngine.Input.GetAxis("Horizontal"), -1, 1);
 
-        private void Start()
+        public void Disable()
         {
-            _joystick = FindObjectOfType<Joystick>(true);
+            _joystick.gameObject.SetActive(false);
+        }
+
+        public void Enable()
+        {
+            _joystick.gameObject.SetActive(true);
         }
     }
 }

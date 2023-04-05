@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using DefaultNamespace.Common;
 using InputSystem;
+using Interface;
 using RaftWars.Infrastructure;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,26 +12,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     private bool _started;
     
-    [Header("UI")]
-    [SerializeField] private GameObject tapToPlay;
-    [SerializeField] private GameObject winPanel;
-    [SerializeField] private GameObject failedPanel;
-    [SerializeField] private GameObject blackBG;
-    [SerializeField] private GameObject stagePanel;
-    [SerializeField] private Image progressFill;
-    [Space]
-    [SerializeField] private Text damagePercentText, damageCostText, hpPercentText, hpCostText;
-    [SerializeField] private Text progressText;
-    [SerializeField] private Text platformsCountPrev, platformsCountAdd;
-    [SerializeField] private Text warriorsCountPrev, warriorsCountAdd;
-    [SerializeField] private Text powerCountPrev, powerCountAdd;
-    [SerializeField] private Text healthCountPrev, healthCountAdd;
-    [SerializeField] private Image _healthUpgradeVideoIcon;
-    [SerializeField] private Image _damageUpgradeVideoIcon;
-    [SerializeField] private Image _damageUpgradeCoin;
-    [SerializeField] private Image _healthUpgradeCoin;
-    [SerializeField] private GameObject _joystick;
-
     private int platformsCountOnStart = 1;
     private int warriorsCountOnStart = 2;
     private int powerCountOnStart = 10;
@@ -47,10 +27,23 @@ public class GameManager : MonoBehaviour
     private float buyableDamagePercent = 0.2f, buyableHealthPercent = 0.2f;
     private int damageCost = 10, healthAmplificationCost = 10;
     private AdvertisingService _advertising;
+    private Hud hud;
+    private InputService _input;
 
+    private StateMachine _stateMachine;
 
-    private void Awake()
+    public void Construct(MapGenerator mapGenerator, StateMachine stateMachine)
     {
+        map = mapGenerator;
+        hud = Game.Hud;
+
+        hud.Replay.onClick.AddListener(RestartLevel);
+        hud.Continue.onClick.AddListener(Continue);
+        hud.BuyHealth.onClick.AddListener(IncreaseHealth);
+        hud.BuyDamage.onClick.AddListener(IncreaseDamage);
+        _stateMachine = stateMachine;
+        _input = Game.InputService;
+        _input.Disable();
         _advertising = Game.AdverisingService;
         if (instance == null)
         {
@@ -64,20 +57,19 @@ public class GameManager : MonoBehaviour
 
         map.Generate(_stage);
         map.GenerateBoss();
-        _joystick.gameObject.SetActive(false);
     }
-    
+
     private void Update()
     {
         if (!_started)
         {
             StartGameOnClick();
         }
-        else if(_stage == 5 && boss == null && !stagePanel.activeSelf)
+        else if(_stage == 5 && boss == null && !hud.stagePanel.activeSelf)
         {
             WinTheGame();
         }
-        else if(_stage != 5 && boss == null && !stagePanel.activeSelf)
+        else if(_stage != 5 && boss == null && !hud.stagePanel.activeSelf)
         {
             WarmupStage();
         }
@@ -92,42 +84,42 @@ public class GameManager : MonoBehaviour
     private void WarmupStage()
     {
         Player.instance.canPlay = false;
-        blackBG.SetActive(true);
+        hud.blackBG.SetActive(true);
         WarmupUiStats();
         WarmupStats();
-        stagePanel.SetActive(true);
-        progressFill.fillAmount = _stage / 5f;
+        hud.stagePanel.SetActive(true);
+        hud.progressFill.fillAmount = _stage / 5f;
         _stage++;
     }
 
     private void WarmupStats()
     {
-        platformsCountAdd.text = "+" + (Player.instance.platformCount - platformsCountOnStart);
+        hud.platformsCountAdd.text = "+" + (Player.instance.platformCount - platformsCountOnStart);
         if (Player.instance.warriorsCount - warriorsCountOnStart >= 0)
         {
-            warriorsCountAdd.text = "+" + (Player.instance.warriorsCount - warriorsCountOnStart);
+            hud.warriorsCountAdd.text = "+" + (Player.instance.warriorsCount - warriorsCountOnStart);
         }
         else
         {
-            warriorsCountAdd.text = (Player.instance.warriorsCount - warriorsCountOnStart).ToString();
+            hud.warriorsCountAdd.text = (Player.instance.warriorsCount - warriorsCountOnStart).ToString();
         }
 
         if (Player.instance.damage - powerCountOnStart >= 0)
         {
-            powerCountAdd.text = "+" + (Player.instance.damage - powerCountOnStart);
+            hud.powerCountAdd.text = "+" + (Player.instance.damage - powerCountOnStart);
         }
         else
         {
-            powerCountAdd.text = (Player.instance.damage - powerCountOnStart).ToString();
+            hud.powerCountAdd.text = (Player.instance.damage - powerCountOnStart).ToString();
         }
 
         if (Player.instance.hp - healthCountOnStart >= 0)
         {
-            healthCountAdd.text = "+" + (Player.instance.hp - healthCountOnStart);
+            hud.healthCountAdd.text = "+" + (Player.instance.hp - healthCountOnStart);
         }
         else
         {
-            healthCountAdd.text = (Player.instance.hp - healthCountOnStart).ToString();
+            hud.healthCountAdd.text = (Player.instance.hp - healthCountOnStart).ToString();
         }
 
         warriorsCountOnStart = Player.instance.warriorsCount;
@@ -138,17 +130,17 @@ public class GameManager : MonoBehaviour
 
     private void WarmupUiStats()
     {
-        platformsCountPrev.text = platformsCountOnStart.ToString();
-        warriorsCountPrev.text = warriorsCountOnStart.ToString();
-        powerCountPrev.text = powerCountOnStart.ToString();
-        healthCountPrev.text = healthCountOnStart.ToString();
+        hud.platformsCountPrev.text = platformsCountOnStart.ToString();
+        hud.warriorsCountPrev.text = warriorsCountOnStart.ToString();
+        hud.powerCountPrev.text = powerCountOnStart.ToString();
+        hud.healthCountPrev.text = healthCountOnStart.ToString();
     }
 
     private void WinTheGame()
     {
         Player.instance.canPlay = false;
-        blackBG.SetActive(true);
-        winPanel.SetActive(true);
+        hud.blackBG.SetActive(true);
+        hud.winPanel.SetActive(true);
         IncrementLevel();
         _advertising.ShowInterstitial();
     }
@@ -174,11 +166,11 @@ public class GameManager : MonoBehaviour
 
     private void StartGameOnClick()
     {
+        _input.Enable();
         if (!Input.GetMouseButtonUp(0)) return;
         _started = true;
-        tapToPlay.SetActive(false);
+        hud.tapToPlay.SetActive(false);
         Player.instance.canPlay = true;
-        _joystick.gameObject.SetActive(true);
     }
 
     public void AddEnemy(Enemy enemy)
@@ -188,11 +180,11 @@ public class GameManager : MonoBehaviour
 
     public void NextStage()
     {
-        progressText.text = _stage + "/5";
+        hud.progressText.text = _stage + "/5";
         map.Generate(_stage);
         Player.instance.canPlay = true;
-        blackBG.SetActive(false);
-        stagePanel.SetActive(false);
+        hud.blackBG.SetActive(false);
+        hud.stagePanel.SetActive(false);
         map.GenerateBoss();
         _advertising.ShowInterstitial();
     }
@@ -205,13 +197,14 @@ public class GameManager : MonoBehaviour
     public void RestartLevel()
     {
         _advertising.ShowInterstitial();
-        SceneManager.LoadScene("Level" + PlayerPrefs.GetInt("Level", 1));
+        _stateMachine.Enter<LoadLevelState, int>(PlayerPrefs.GetInt("Level", 1));
     }
 
     public void PlayerLost()
     {
-        blackBG.SetActive(true);
-        failedPanel.SetActive(true);
+        hud.blackBG.SetActive(true);
+        hud.failedPanel.SetActive(true);
+        _input.Disable();
     }
 
     public void IncreaseHealth()
@@ -221,7 +214,7 @@ public class GameManager : MonoBehaviour
             return Player.instance.coins < healthAmplificationCost;
         }
 
-        if (_healthUpgradeVideoIcon.gameObject.activeInHierarchy)
+        if (hud._healthUpgradeVideoIcon.gameObject.activeInHierarchy)
         {
             _advertising.ShowRewarded(() =>
             {
@@ -243,31 +236,31 @@ public class GameManager : MonoBehaviour
         {
             buyableHealthPercent += 0.1f;
             var integerPercent = (int)(buyableHealthPercent * 100);
-            hpPercentText.text = $"+{integerPercent}%";
+            hud.hpPercentText.text = $"+{integerPercent}%";
         }
 
         void IncreaseHealthUpgradeCost()
         {
             if (RandomExtension.ProbabilityCheck(.7f))
             {
-                _healthUpgradeVideoIcon.gameObject.SetActive(true);
-                hpCostText.enabled = false;
-                _healthUpgradeCoin.gameObject.SetActive(false);
+                hud._healthUpgradeVideoIcon.gameObject.SetActive(true);
+                hud.hpCostText.enabled = false;
+                hud._healthUpgradeCoin.gameObject.SetActive(false);
             }
             else
             {
-                _healthUpgradeVideoIcon.gameObject.SetActive(false);
-                hpCostText.enabled = true;
-                _healthUpgradeCoin.gameObject.SetActive(true);
+                hud._healthUpgradeVideoIcon.gameObject.SetActive(false);
+                hud.hpCostText.enabled = true;
+                hud._healthUpgradeCoin.gameObject.SetActive(true);
             }
             healthAmplificationCost += 10;
-            hpCostText.text = healthAmplificationCost.ToString();
+            hud.hpCostText.text = healthAmplificationCost.ToString();
         }
         
         MakeNextHealthUpgradeMorePowerful();
         IncreaseHealthUpgradeCost();
     }
-    
+
     public void IncreaseDamage()
     {
         bool IsNotEnoughCoinsToAmplifyDamage()
@@ -275,7 +268,7 @@ public class GameManager : MonoBehaviour
             return Player.instance.coins < damageCost;
         }
 
-        if (_damageUpgradeVideoIcon.gameObject.activeInHierarchy)
+        if (hud._damageUpgradeVideoIcon.gameObject.activeInHierarchy)
         {
             _advertising.ShowRewarded(() =>
             {
@@ -298,25 +291,25 @@ public class GameManager : MonoBehaviour
         {
             buyableDamagePercent += 0.1f;
             var integerPercent = (int) (buyableDamagePercent * 100);
-            damagePercentText.text = $"+{integerPercent}%";
+            hud.damagePercentText.text = $"+{integerPercent}%";
         }
         
         void IncreaseNextDamageAmplificationCost()
         {
             if (RandomExtension.ProbabilityCheck(.7f))
             {
-                _damageUpgradeVideoIcon.gameObject.SetActive(true);
-                damageCostText.enabled = false;
-                _damageUpgradeCoin.enabled = false;
+                hud._damageUpgradeVideoIcon.gameObject.SetActive(true);
+                hud.damageCostText.enabled = false;
+                hud._damageUpgradeCoin.enabled = false;
             }
             else
             {
-                _damageUpgradeVideoIcon.gameObject.SetActive(false);
-                damageCostText.enabled = true;
-                _damageUpgradeCoin.enabled = true;
+                hud._damageUpgradeVideoIcon.gameObject.SetActive(false);
+                hud.damageCostText.enabled = true;
+                hud._damageUpgradeCoin.enabled = true;
             }
             damageCost += 10;
-            damageCostText.text = damageCost.ToString();
+            hud.damageCostText.text = damageCost.ToString();
         }
 
         IncreaseNextDamageAmplification();

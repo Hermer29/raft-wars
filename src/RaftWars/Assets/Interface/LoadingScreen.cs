@@ -12,7 +12,7 @@ public class LoadingScreen : MonoBehaviour
     
     private float _targetSliderT;
     
-    private void Start()
+    private void Awake()
     {
         DontDestroyOnLoad(gameObject);
         _canvas.interactable = true;
@@ -26,7 +26,7 @@ public class LoadingScreen : MonoBehaviour
 
     public void FadeIn()
     {
-        StartCoroutine(ProcessCoroutine(1, (process) =>
+        StartCoroutine(ProcessCoroutine(0, (process) =>
         {
             _canvas.alpha = process;
         }));

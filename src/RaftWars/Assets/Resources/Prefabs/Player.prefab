@@ -69,7 +69,7 @@ MonoBehaviour:
   damageIncomeForPeople: 5
   battleDamageOverTime: 0.2
   speed: 5.39
-  _group: {fileID: 5655730262444525566}
+  CameraGroup: {fileID: 5655730262444525566}
   _indicators:
   - {fileID: 3377585064699056743}
   - {fileID: 3377585064894652293}

@@ -2,6 +2,8 @@
 using System.Linq;
 using Common;
 using DefaultNamespace;
+using RaftWars.Infrastructure;
+using RaftWars.Infrastructure.AssetManagement;
 using UnityEngine;
 
 namespace Visual
@@ -14,8 +16,6 @@ namespace Visual
         private Material _color;
 
         private const float HeightOffset = .6f;
-        private const string CornerWavesResourcesPath = "CornerWaves";
-        private const string EdgeResourcesPath = "Edge";
         private const string EdgesParentName = "Edges";
         private const string WavesParentName = "Waves";
 
@@ -59,10 +59,8 @@ namespace Visual
 
         private GameObject CreateEdge()
         {
-            GameObject prefab = GetPrefab(EdgeResourcesPath);
-            Transform parent = GetOrCreateParentWithName(EdgesParentName);
-
-            GameObject edge = Instantiate(prefab, parent);
+            GameObject edge = GameFactory.CreatePlatformEdge();
+            edge.transform.parent = GetOrCreateParentWithName(EdgesParentName);
             edge.GetComponent<MeshRenderer>().material = _color;
             return edge;
         }
@@ -79,10 +77,8 @@ namespace Visual
 
         private GameObject CreateWave()
         {
-            GameObject prefab = GetPrefab(CornerWavesResourcesPath);
-            Transform parent = GetOrCreateParentWithName(WavesParentName);
-            
-            GameObject waves = Instantiate(prefab, parent);
+            GameObject waves = GameFactory.CreateCornerWaves().gameObject;
+            waves.transform.parent = GetOrCreateParentWithName(WavesParentName);
             return waves;
         }
 

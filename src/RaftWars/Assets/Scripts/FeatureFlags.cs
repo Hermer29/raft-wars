@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace DefaultNamespace
 {
@@ -6,5 +7,6 @@ namespace DefaultNamespace
     public class FeatureFlags : ScriptableObject
     {
         [field: SerializeField] public bool IMGUIEnabled { get; private set; }
+        [field: SerializeField] public bool DiamondsEnabledInGame { get; private set; }
     }
 }
