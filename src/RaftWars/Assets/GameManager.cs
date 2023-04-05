@@ -140,6 +140,7 @@ public class GameManager : MonoBehaviour
 
     private void WinTheGame()
     {
+        _input.Disable();
         Player.instance.canPlay = false;
         hud.blackBG.SetActive(true);
         hud.winPanel.SetActive(true);
