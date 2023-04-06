@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using Cinemachine;
+﻿using Cinemachine;
 using Infrastructure.States;
 using InputSystem;
-using RaftWars.Infrastructure.AssetManagement;
 using UnityEngine;
 
 namespace RaftWars.Infrastructure
@@ -46,11 +44,6 @@ namespace RaftWars.Infrastructure
             camera.m_LookAt = transform;
             player._camera = camera.GetComponent<CinemachineCameraOffset>();
             player.Construct(materialsService.GetPlayerMaterial());
-            
-            player.ApplyHat(AssetLoader.LoadHatSkins().ElementAt(3));
-            player.ApplyPlatformSkin(AssetLoader.LoadPlatformSkins().ElementAt(3));
-            player.RepaintWith(AssetLoader.LoadPlayerColors().ElementAt(3));
-            
             return player;
         }
     }
