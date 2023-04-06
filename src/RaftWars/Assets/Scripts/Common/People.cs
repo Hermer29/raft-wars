@@ -165,6 +165,7 @@ public class People : MonoBehaviour
             Destroy(_hat.gameObject);
         }
 
-        _hat = Instantiate(hat, HatPosition).gameObject;
+        if(hat != null)
+            _hat = Instantiate(hat, HatPosition).gameObject;
     }
 }

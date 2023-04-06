@@ -32,12 +32,14 @@ namespace Visual
         {
             if (EdgesDisabled)
                 return;
+            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().ToArray());
             foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdgeMiddlePoints())
             {
                 GameObject edge = CreateEdge();
                 edge.transform.position = position + Vector3.up * HeightOffset;
                 edge.transform.rotation = rotation;
             }
+            _angles = new PlatformAngles(_edges);
         }
 
         public void UpdateVisual(GameObject newPlatform)

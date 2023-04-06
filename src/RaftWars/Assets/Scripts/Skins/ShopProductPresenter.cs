@@ -33,19 +33,36 @@ namespace Skins
 
             if (propertyService.IsOwned(_product))
             {
+                if (_usingService.IsUsed(_product))
+                {
+                    _entry.Use.interactable = false;
+                }
                 MarkAsBought();
             }
             else
             {
                 MarkAsUnbought();
             }
+
+            _usingService.Used += UpdateRequested;
         }
 
         private void OnUse()
         {
             if (_propertyService.IsOwned(_product) == false)
                 throw new InvalidOperationException("Trying to use item, when it is not bought");
+            
             _usingService.Use(_product);
+            _entry.Use.interactable = false;
+        }
+
+        private void UpdateRequested((EquippedType, IShopProduct) product)
+        {
+            bool sameType = _product.GetType() == product.Item2.GetType();
+            if (product.Item2 != _product && sameType && _entry.Use.gameObject.activeInHierarchy)
+            {
+                _entry.Use.interactable = true;
+            }
         }
 
         private void OnBuyWithYans()

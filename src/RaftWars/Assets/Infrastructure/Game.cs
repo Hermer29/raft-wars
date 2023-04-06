@@ -31,7 +31,7 @@ namespace RaftWars.Infrastructure
             Hud = GameFactory.CreateHud();
             InputService = new InputService(Hud.Joystick);
             IAPService = new YandexIAPService();
-            MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService);
+            MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService, Hud);
             PropertyService = new PropertyService(CrossLevelServices.PrefsService);
         }
     }

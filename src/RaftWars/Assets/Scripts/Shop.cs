@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace.Skins;
 using InputSystem;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
 using Services;
 using Skins;
+using Skins.Hats;
 using UnityEngine;
 
 public class Shop : MonoBehaviour
@@ -31,10 +33,26 @@ public class Shop : MonoBehaviour
         _playerUsingService = playerUsingService;
         _propertyService = propertyService;
         _entries = new List<ShopProductPresenter>();
-        
-        ShowShopEntries(AssetLoader.LoadHatSkins(), _hatsParent);
-        ShowShopEntries(AssetLoader.LoadPlatformSkins(), _raftsParent);
-        ShowShopEntries(AssetLoader.LoadPlayerColors(), _colorsParent);
+
+        //TODO: Извлечение метода
+        var hats = AssetLoader.LoadHatSkins();
+        if (hats.Any(x => _playerUsingService.IsUsed(x)) == false)
+        {
+            _playerUsingService.Use(hats.First(x => x.OwnedByDefault));
+        }
+        ShowShopEntries(hats, _hatsParent);
+        var platformSkins = AssetLoader.LoadPlatformSkins();
+        if (platformSkins.Any(x => _playerUsingService.IsUsed(x)) == false)
+        {
+            _playerUsingService.Use(platformSkins.First(x => x.OwnedByDefault));
+        }
+        ShowShopEntries(platformSkins, _raftsParent);
+        var colors = AssetLoader.LoadPlayerColors();
+        if (colors.Any(x => _playerUsingService.IsUsed(x)) == false)
+        {
+            _playerUsingService.Use(colors.First(x => x.OwnedByDefault));
+        }
+        ShowShopEntries(colors, _colorsParent);
         HideImmediately();
     }
 

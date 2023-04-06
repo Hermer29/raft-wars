@@ -165,8 +165,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     public void SpendCoins(int coins)
     {
-        this.coins -= coins;
-        _hud.ShowCoins(this.coins);
+        Game.MoneyService.Spend(coins);
     }
 
     public void AddGems(int gems)

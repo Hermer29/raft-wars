@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
     {
         bool IsNotEnoughMoneyToIncreaseHealth()
         {
-            return Player.instance.coins < healthAmplificationCost;
+            return Game.MoneyService.Amount < healthAmplificationCost;
         }
 
         if (hud._healthUpgradeVideoIcon.gameObject.activeInHierarchy)
@@ -210,7 +210,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         if (IsNotEnoughMoneyToIncreaseHealth()) return;
-
+        
         Player.instance.SpendCoins(healthAmplificationCost);
         Player.instance.IncreaseHealth((float)buyableHealthPercent);
         UpdateNextHealthUpgrade();

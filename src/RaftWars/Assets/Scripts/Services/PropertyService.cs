@@ -14,6 +14,9 @@ namespace Services
 
         public bool IsOwned(IOwnable ownable)
         {
+            if (ownable.OwnedByDefault)
+                return true;
+            
             if (_prefsService.HasKey(ownable.Guid) == false)
                 return false;
             

@@ -7,11 +7,12 @@ namespace DefaultNamespace.Skins
         Sprite ShopImage { get; }
         int CoinsCost { get; }
         int YansCost { get; }
-        bool OwnedByDefault { get;}
     }
 
     public interface IOwnable
     {
         string Guid { get; }
+        
+        bool OwnedByDefault { get;}
     }
 }
