@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DefaultNamespace.Common;
 using InputSystem;
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     private InputService _input;
 
     private StateMachine _stateMachine;
+    public event Action GameStarted;
 
     public void Construct(MapGenerator mapGenerator, StateMachine stateMachine)
     {
@@ -64,7 +66,6 @@ public class GameManager : MonoBehaviour
     {
         if (!_started)
         {
-            StartGameOnClick();
         }
         else if(_stage == 5 && boss == null && !hud.stagePanel.activeSelf)
         {
@@ -144,33 +145,14 @@ public class GameManager : MonoBehaviour
         Player.instance.canPlay = false;
         hud.blackBG.SetActive(true);
         hud.winPanel.SetActive(true);
-        IncrementLevel();
         _advertising.ShowInterstitial();
+        CrossLevelServices.LevelService.Increment();
     }
 
-    private static void IncrementLevel()
+    public void StartGameOnClick()
     {
-        void Increment()
-        {
-            PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") + 1);
-        }
-
-        //Increment();
-        LoopLevelsOnOverflow();
-    }
-
-    private static void LoopLevelsOnOverflow()
-    {
-        if (PlayerPrefs.GetInt("Level") == 6)
-        {
-            PlayerPrefs.SetInt("Level", 1);
-        }
-    }
-
-    private void StartGameOnClick()
-    {
+        GameStarted?.Invoke();
         _input.Enable();
-        if (!Input.GetMouseButtonUp(0)) return;
         _started = true;
         hud.tapToPlay.SetActive(false);
         Player.instance.canPlay = true;
@@ -195,7 +177,6 @@ public class GameManager : MonoBehaviour
 
     public void Continue()
     {
-        CrossLevelServices.LevelService.Increment();
         _stateMachine.Enter<LoadLevelState, int>(CrossLevelServices.LevelService.Level);
     }
 

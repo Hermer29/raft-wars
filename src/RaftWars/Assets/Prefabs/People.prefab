@@ -51,10 +51,12 @@ MonoBehaviour:
   animator: {fileID: 7798488577578427249}
   bulletPrefab: {fileID: -8588107189933345300, guid: 33afb2f29cde573409c578f56730c140, type: 3}
   shootPoint: {fileID: 1662162535736052206}
+  battle: 0
   isFlamer: 0
   flame: {fileID: 2117833302022570091}
   audio: {fileID: 5056865882718878280}
   shootEffect: {fileID: 160696, guid: fac9ad46c0307484fba6960de846139d, type: 3}
+  HatPosition: {fileID: 7970257671418820084}
 --- !u!82 &5056865882718878280
 AudioSource:
   m_ObjectHideFlags: 0
@@ -371,6 +373,11 @@ Animator:
 --- !u!137 &7898618954451356355 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5822821947120931875, guid: 09713b0346c85254ab41b485061b6172, type: 3}
+  m_PrefabInstance: {fileID: 4418974215730912992}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7970257671418820084 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6039136598254185236, guid: 09713b0346c85254ab41b485061b6172, type: 3}
   m_PrefabInstance: {fileID: 4418974215730912992}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6301305207384988456

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace RaftWars.Infrastructure
@@ -18,9 +19,9 @@ namespace RaftWars.Infrastructure
             _coroutines = coroutines;
         }
         
-        public void Enter(int level)
+        public void Enter(int material)
         {
-            Game.MapGenerator = GameFactory.CreateMapGenerator(level);
+            Game.MapGenerator = GameFactory.CreateMapGenerator(material);
             _coroutines.StartCoroutine(Load());
         }
 
@@ -31,7 +32,7 @@ namespace RaftWars.Infrastructure
 
         private IEnumerator Load()
         {
-            var asyncOperation = SceneManager.LoadSceneAsync(GameplayScene);
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(GameplayScene);
             while (asyncOperation.isDone == false)
             {
                 _loading.SetSliderProcess(asyncOperation.progress);

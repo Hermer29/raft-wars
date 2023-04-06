@@ -3,7 +3,6 @@ using System.Linq;
 using Common;
 using DefaultNamespace;
 using RaftWars.Infrastructure;
-using RaftWars.Infrastructure.AssetManagement;
 using UnityEngine;
 
 namespace Visual
@@ -23,26 +22,32 @@ namespace Visual
         {
             _platformsCarrier = platformsCarrier;
             _color = selectedColor;
+            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().Select(x => x.gameObject).ToArray());
+            _angles = new PlatformAngles(_edges);
         }
+        
+        public bool EdgesDisabled { get; private set; }
 
         public void CreateEdges()
         {
-            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().Select(x => x.gameObject).ToArray());
+            if (EdgesDisabled)
+                return;
             foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdgeMiddlePoints())
             {
                 GameObject edge = CreateEdge();
                 edge.transform.position = position + Vector3.up * HeightOffset;
                 edge.transform.rotation = rotation;
             }
-
-            _angles = new PlatformAngles(_edges);
         }
 
         public void UpdateVisual(GameObject newPlatform)
         {
             _edges.Add(newPlatform);
-            DestroyChildrenOfObjectWithName(EdgesParentName);
-            CreateEdges();
+            if (EdgesDisabled == false)
+            {
+                DestroyChildrenOfObjectWithName(EdgesParentName);
+                CreateEdges();
+            }
             DestroyChildrenOfObjectWithName(WavesParentName);
             CreateWaves();
         }
@@ -102,27 +107,6 @@ namespace Visual
             }
         }
 
-        public static float AngleOffAroundAxis(Vector3 v, Vector3 forward, Vector3 axis, bool clockwise = false)
-        {
-            Vector3 right;
-            if(clockwise)
-            {
-                right = Vector3.Cross(forward, axis);
-                forward = Vector3.Cross(axis, right);
-            }
-            else
-            {
-                right = Vector3.Cross(axis, forward);
-                forward = Vector3.Cross(right, axis);
-            }
-            return Mathf.Atan2(Vector3.Dot(v, right), Vector3.Dot(v, forward)) * Mathf.Rad2Deg;
-        }
-
-        private static GameObject GetPrefab(string resourcesPath)
-        {
-            return Resources.Load<GameObject>(resourcesPath);
-        }
-
         private void OnDrawGizmos()
         {
             if (_edges == null)
@@ -146,6 +130,41 @@ namespace Visual
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(position + direction, .2f);
             }
+        }
+
+        public void ChangeMaterial(Material material)
+        {
+            _color = material;
+            RepaintEdges(material);
+        }
+
+        private void RepaintEdges(Material material)
+        {
+            var edgesParent = GetOrCreateParentWithName(EdgesParentName);
+            foreach (MeshRenderer edge in edgesParent.Cast<Transform>().Select(x => x.GetComponent<MeshRenderer>()))
+            {
+                edge.material = material;
+            }
+        }
+
+        public void DisableEdges()
+        {
+            if (EdgesDisabled)
+                throw new InvalidOperationException("Already disabled");
+            Transform edgesParent = GetOrCreateParentWithName(EdgesParentName);
+            EdgesDisabled = true;
+            foreach (Transform edge in edgesParent.Cast<Transform>())
+            {
+                Destroy(edge.gameObject);
+            }
+        }
+        
+        public void EnableEdges()
+        {
+            if (EdgesDisabled == false)
+                throw new InvalidOperationException("Already enabled");
+            EdgesDisabled = false;
+            CreateEdges();
         }
     }
 }

@@ -11,6 +11,9 @@
         public const string CornerWavesResourcesPath = "Prefabs/CornerWaves";
         public const string EdgeResourcesPath = "Prefabs/Edge";
         public const string PlayerVirtualCameraPath = "Prefabs/PlayerVirtualCamera";
+        public const string PlatformSkinsPath = "Skins/PlatformModels";
+        public const string HatSkinsPath = "Skins/PeopleHat";
+        public const string PlayerColorsPath = "Skins/PlayerColors";
 
         public static string CreateLevelGeneratorPath(int level)
         {

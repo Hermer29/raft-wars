@@ -1,4 +1,8 @@
-﻿using Cinemachine;
+﻿using System.Linq;
+using Cinemachine;
+using Infrastructure.States;
+using InputSystem;
+using RaftWars.Infrastructure.AssetManagement;
 using UnityEngine;
 
 namespace RaftWars.Infrastructure
@@ -21,15 +25,19 @@ namespace RaftWars.Infrastructure
 
         public void Enter()
         {
-            Player player = CreatePlayer();
+            var materialService = new MaterialsService();
+            Player player = CreatePlayer(materialService);
+            Game.MaterialsService = materialService;
             var game = new Game(player);
-            GameManager manager = GameFactory.CreateGameManager();
+            Game.GameManager = GameFactory.CreateGameManager();
             Game.MapGenerator.Construct();
-            manager.Construct(Game.MapGenerator, _stateMachine);
+            Game.GameManager.Construct(Game.MapGenerator, _stateMachine);
+            Game.UsingService = new PlayerUsingService(Game.PlayerService);
             _stateMachine.Enter<CreateIMGUIState>();
+            _stateMachine.Enter<CreateShopState>();
         }
 
-        private static Player CreatePlayer()
+        private static Player CreatePlayer(MaterialsService materialsService)
         {
             Player player = GameFactory.CreatePlayer();
             CinemachineVirtualCamera camera = GameFactory.CreatePlayerVirtualCamera();
@@ -37,6 +45,12 @@ namespace RaftWars.Infrastructure
             camera.m_Follow = transform;
             camera.m_LookAt = transform;
             player._camera = camera.GetComponent<CinemachineCameraOffset>();
+            player.Construct(materialsService.GetPlayerMaterial());
+            
+            player.ApplyHat(AssetLoader.LoadHatSkins().ElementAt(3));
+            player.ApplyPlatformSkin(AssetLoader.LoadPlatformSkins().ElementAt(3));
+            player.RepaintWith(AssetLoader.LoadPlayerColors().ElementAt(3));
+            
             return player;
         }
     }

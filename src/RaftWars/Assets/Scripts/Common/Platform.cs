@@ -1,4 +1,6 @@
+using System;
 using DefaultNamespace;
+using Skins.Platforms;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -12,6 +14,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     public bool ishospital;
     private Enemy _relatedEnemy;
     private Material _material;
+    private PlatformSkin _skin;
+    private MeshRenderer _meshRenderer;
 
     public Material Material
     {
@@ -22,6 +26,11 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             turret?.DrawInMyColor(_material);
         }
         get => _material;
+    }
+
+    private void Awake()
+    {
+        _meshRenderer = GetComponent<MeshRenderer>();
     }
 
     private void Start()
@@ -110,27 +119,29 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
                 spawnPos.z -= Constants.PlatformSize;
         }
         
-        GameObject _platform = Instantiate(platform, spawnPos, Quaternion.identity, transform.parent);
-        _platform.GetComponent<Platform>().Material = _material;
+        GameObject platformInstance = Instantiate(platform, spawnPos, Quaternion.identity, transform.parent);
+        var platformComponent = platformInstance.GetComponent<Platform>();
+        platformComponent.Material = _material;
+        if(_skin != null)
+            platformComponent.ApplySkin(_skin);
 
         if (GetComponentInParent<Player>() != null)
         {
-            if (_platform.GetComponent<Platform>().isTurret)
+            if (platformInstance.GetComponent<Platform>().isTurret)
             {
-                _platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
-                if (!_platform.GetComponent<Platform>().isWind)
-                    GetComponentInParent<Player>().AddTurret(_platform.GetComponentInChildren<Turret>(),
-                        _platform.GetComponentInChildren<Turret>().damageIncrease,
-                        _platform.GetComponentInChildren<Turret>().healthIncrease);
+                platformInstance.GetComponentInChildren<Turret>().DrawInMyColor(_material);
+                if (!platformInstance.GetComponent<Platform>().isWind)
+                    GetComponentInParent<Player>().AddTurret(platformInstance.GetComponentInChildren<Turret>(),
+                        platformInstance.GetComponentInChildren<Turret>().damageIncrease,
+                        platformInstance.GetComponentInChildren<Turret>().healthIncrease);
                 else
-                    GetComponentInParent<Player>().AddFastTurret(_platform.GetComponentInChildren<Turret>(), _platform.GetComponentInChildren<Turret>().millSpeed);
+                    GetComponentInParent<Player>().AddFastTurret(platformInstance.GetComponentInChildren<Turret>(), platformInstance.GetComponentInChildren<Turret>().millSpeed);
             }
-            GetComponentInParent<Player>().AddPlatform(_platform.GetComponent<Platform>());
-            _platform.layer = LayerMask.NameToLayer("Player");
-                
+            GetComponentInParent<Player>().AddPlatform(platformInstance.GetComponent<Platform>());
+            platformInstance.layer = LayerMask.NameToLayer("Player");
         }
         else
-            _platform.layer = LayerMask.NameToLayer("Enemy");
+            platformInstance.layer = LayerMask.NameToLayer("Enemy");
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -141,16 +152,14 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         if (!isEnemy) return;
         if (collision.gameObject.TryGetComponent(out Player player) == false) return;
-        if (IsNotInBattle())
+        if (!IsNotInBattle()) return;
+        var enemy = GetComponentInParent<Enemy>();
+        if (enemy != null)
         {
-            var enemy = GetComponentInParent<Enemy>();
-            if (enemy != null)
-            {
-                if (enemy.isDead)
-                    return;
-            }
-            player.StartBattle(_relatedEnemy);
+            if (enemy.isDead)
+                return;
         }
+        player.StartBattle(_relatedEnemy);
     }
 
     public void TakeCoins(int coins)
@@ -175,5 +184,14 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             GetComponentInParent<Player>().GetDamage(damage);
         }
+    }
+
+    public void ApplySkin(PlatformSkin skin)
+    {
+        if(_skin != null)
+            Destroy(_skin.gameObject);
+        
+        _skin = Instantiate(skin, transform);
+        _meshRenderer.enabled = false;
     }
 }

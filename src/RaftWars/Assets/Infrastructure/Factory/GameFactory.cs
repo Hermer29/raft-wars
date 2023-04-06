@@ -1,55 +1,56 @@
 ﻿using Cinemachine;
 using Interface;
-using RaftWars.Infrastructure.AssetManagement;
 using UnityEngine;
+using static RaftWars.Infrastructure.AssetManagement.AssetLoader;
+using static UnityEngine.Object;
 
 namespace RaftWars.Infrastructure
 {
-    public class GameFactory
+    public static class GameFactory
     {
         public static Player CreatePlayer()
         {
-            return GameObject.Instantiate(AssetLoader.LoadPlayer());
+            return Instantiate(LoadPlayer());
         }
 
         public static Hud CreateHud()
         {
-            return GameObject.Instantiate(AssetLoader.LoadHud());
+            return Instantiate(LoadHud());
         }
 
         public static GameObject CreateIMGUI()
         {
-            return GameObject.Instantiate(AssetLoader.LoadIMGUI());
+            return Instantiate(LoadIMGUI());
         }
 
         public static MapGenerator CreateMapGenerator(int level)
         {
-            return GameObject.Instantiate(AssetLoader.LoadLevelGenerator(level));
+            return Instantiate(LoadLevelGenerator(level));
         }
 
         public static GameManager CreateGameManager()
         {
-            return GameObject.Instantiate(AssetLoader.LoadGameManager());
+            return Instantiate(LoadGameManager());
         }
 
         public static LoadingScreen CreateLoadingScreen()
         {
-            return GameObject.Instantiate(AssetLoader.LoadLoadingScreen());
+            return Instantiate(LoadLoadingScreen());
         }
 
         public static GameObject CreatePlatformEdge()
         {
-            return GameObject.Instantiate(AssetLoader.LoadPlatformEdge());
+            return Instantiate(LoadPlatformEdge());
         }
 
         public static ParticleSystem CreateCornerWaves()
         {
-            return GameObject.Instantiate(AssetLoader.LoadCornerWaves());
+            return Instantiate(LoadCornerWaves());
         }
 
         public static CinemachineVirtualCamera CreatePlayerVirtualCamera()
         {
-            return GameObject.Instantiate(AssetLoader.LoadPlayerVirtualCamera());
+            return Instantiate(LoadPlayerVirtualCamera());
         }
     }
 }

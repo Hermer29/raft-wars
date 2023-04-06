@@ -7,6 +7,9 @@ using DG.Tweening;
 using InputSystem;
 using Interface;
 using RaftWars.Infrastructure;
+using Skins;
+using Skins.Hats;
+using Skins.Platforms;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -59,8 +62,16 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private bool idleBehaviour;
     private EdgesAndAngleWaves edgesAndAngleWaves;
     private Hud _hud;
+    private HatSkin _hat;
     public static event Action Died;
 
+    public void Construct(Material color)
+    {
+        _material = color;
+        edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
+        edgesAndAngleWaves.Construct(this, _material);
+    }
+    
     private void Start()
     {
         _input = Game.InputService;
@@ -69,7 +80,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         
         hp = 1;
         damage = 1;
-        _material = _materialsService.GetPlayerMaterial();
         MakePeopleRunAndColorize(_material);
         if (instance == null)
             instance = this;
@@ -97,8 +107,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void CreateEdges()
     {
-        edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
-        edgesAndAngleWaves.Construct(this, _material);
         edgesAndAngleWaves.CreateEdges();
         edgesAndAngleWaves.CreateWaves();
     }
@@ -174,6 +182,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         damage += damageIncomeForPeople * (1 + damageAdditive);
         warrior.Material = _material;
         RecountStats();
+        warrior.ApplyHat(_hat);
     }
 
     public void AddHealTurret(float healthIncrease)
@@ -435,5 +444,56 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     public IEnumerable<GameObject> GetPlatforms()
     {
         return platforms.Select(x => x.gameObject);
+    }
+
+    public void RepaintWith(PlayerColors colors)
+    {
+        _material = colors.Color;
+        edgesAndAngleWaves?.ChangeMaterial(colors.Color);
+        RepaintPlatforms(colors.Color);
+        RepaintPeople(colors.Color);
+    }
+
+    public void ApplyHat(HatSkin hat)
+    {
+        _hat = hat;
+        foreach (People warrior in warriors)
+        {
+            warrior.ApplyHat(hat);
+        }
+    }
+
+    public void ApplyPlatformSkin(PlatformSkin skin)
+    {
+        switch (skin.HasEdges)
+        {
+            case false when edgesAndAngleWaves.EdgesDisabled == false:
+                edgesAndAngleWaves.DisableEdges();
+                break;
+            case true when edgesAndAngleWaves.EdgesDisabled:
+                edgesAndAngleWaves.EnableEdges();
+                break;
+        }
+
+        foreach (Platform platform in platforms)
+        {
+            platform.ApplySkin(skin);
+        }
+    }
+
+    private void RepaintPeople(Material material)
+    {
+        foreach (People warrior in warriors)
+        {
+            warrior.Material = material;
+        }
+    }
+
+    private void RepaintPlatforms(Material material)
+    {
+        foreach (Platform platform in platforms)
+        {
+            platform.Material = material;
+        }
     }
 }

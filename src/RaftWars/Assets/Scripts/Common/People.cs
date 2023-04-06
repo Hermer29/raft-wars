@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DefaultNamespace;
+using Skins.Hats;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -26,6 +27,8 @@ public class People : MonoBehaviour
     public GameObject shootEffect;
     private Platform _platform;
     private Coroutine _movingOnPlatform;
+    public Transform HatPosition;
+    private GameObject _hat;
 
     public Material Material
     {
@@ -80,8 +83,9 @@ public class People : MonoBehaviour
     {
         _platform = platform;
         Material = platform.Material;
-        transform.localScale = new Vector3(1 / platform.transform.lossyScale.x, 
-            1 / platform.transform.lossyScale.y, 1 / platform.transform.lossyScale.z);
+        Transform transform1 = platform.transform;
+        transform.localScale = new Vector3(1 / transform1.lossyScale.x, 
+            1 / transform1.lossyScale.y, 1 / transform1.lossyScale.z);
         _movingOnPlatform = StartCoroutine(MoveOnPlatformOverTime());
     }
 
@@ -152,5 +156,15 @@ public class People : MonoBehaviour
         StopCoroutine(_movingOnPlatform);
         animator.Play("Death");
         Destroy(gameObject, 2.5f);
+    }
+
+    public void ApplyHat(HatSkin hat)
+    {
+        if (_hat != null)
+        {
+            Destroy(_hat.gameObject);
+        }
+
+        _hat = Instantiate(hat, HatPosition).gameObject;
     }
 }

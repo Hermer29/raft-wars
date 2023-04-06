@@ -1,0 +1,11 @@
+Model Information:
+* title:	Wet Raft
+* source:	https://sketchfab.com/3d-models/wet-raft-f6e9f7ecb4784c81b26105f2567732d4
+* author:	Elephai (https://sketchfab.com/elephai)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Wet Raft" (https://sketchfab.com/3d-models/wet-raft-f6e9f7ecb4784c81b26105f2567732d4) by Elephai (https://sketchfab.com/elephai) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

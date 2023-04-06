@@ -34,5 +34,10 @@ namespace RaftWars.Infrastructure.Services
         {
             throw new NotImplementedException();
         }
+
+        public bool HasKey(string key)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

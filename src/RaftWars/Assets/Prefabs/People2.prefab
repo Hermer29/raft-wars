@@ -874,10 +874,12 @@ MonoBehaviour:
   animator: {fileID: 3620115377113714828}
   bulletPrefab: {fileID: -8588107189933345300, guid: 33afb2f29cde573409c578f56730c140, type: 3}
   shootPoint: {fileID: 7161023765035481407}
+  battle: 0
   isFlamer: 1
   flame: {fileID: 6416854461321836662}
   audio: {fileID: 0}
   shootEffect: {fileID: 6416854461321836662}
+  HatPosition: {fileID: 7250077569502488893}
 --- !u!1 &2386918667098430293
 GameObject:
   m_ObjectHideFlags: 0

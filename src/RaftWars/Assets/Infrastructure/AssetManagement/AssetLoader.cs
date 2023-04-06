@@ -1,7 +1,12 @@
-﻿using Cinemachine;
+﻿using System.Collections.Generic;
+using Cinemachine;
 using DefaultNamespace;
 using Interface;
+using Skins;
+using Skins.Hats;
+using Skins.Platforms;
 using UnityEngine;
+using static RaftWars.Infrastructure.AssetManagement.AssetConstants;
 
 namespace RaftWars.Infrastructure.AssetManagement
 {
@@ -9,53 +14,68 @@ namespace RaftWars.Infrastructure.AssetManagement
     {
         public static Player LoadPlayer()
         {
-            return Resources.Load<Player>(AssetConstants.PlayerPath);
+            return Resources.Load<Player>(PlayerPath);
         }
 
         public static Hud LoadHud()
         {
-            return Resources.Load<Hud>(AssetConstants.HudPath);
+            return Resources.Load<Hud>(HudPath);
         }
 
         public static FeatureFlags LoadFeatureFlags()
         {
-            return Resources.Load<FeatureFlags>(AssetConstants.FeatureFlagsPath);
+            return Resources.Load<FeatureFlags>(FeatureFlagsPath);
         }
 
         public static GameObject LoadIMGUI()
         {
-            return Resources.Load<GameObject>(AssetConstants.IMGUIPath);
+            return Resources.Load<GameObject>(IMGUIPath);
         }
 
         public static MapGenerator LoadLevelGenerator(int level)
         {
-            Debug.Log("Trying to load "+ AssetConstants.CreateLevelGeneratorPath(level));
-            return Resources.Load<MapGenerator>(AssetConstants.CreateLevelGeneratorPath(level));
+            Debug.Log("Trying to load "+ CreateLevelGeneratorPath(level));
+            return Resources.Load<MapGenerator>(CreateLevelGeneratorPath(level));
         }
 
         public static GameManager LoadGameManager()
         {
-            return Resources.Load<GameManager>(AssetConstants.GameManagerPath);
+            return Resources.Load<GameManager>(GameManagerPath);
         }
 
         public static LoadingScreen LoadLoadingScreen()
         {
-            return Resources.Load<LoadingScreen>(AssetConstants.LoadingScreenPath);
+            return Resources.Load<LoadingScreen>(LoadingScreenPath);
         }
 
         public static GameObject LoadPlatformEdge()
         {
-            return Resources.Load<GameObject>(AssetConstants.EdgeResourcesPath);
+            return Resources.Load<GameObject>(EdgeResourcesPath);
         }
 
         public static ParticleSystem LoadCornerWaves()
         {
-            return Resources.Load<ParticleSystem>(AssetConstants.CornerWavesResourcesPath);
+            return Resources.Load<ParticleSystem>(CornerWavesResourcesPath);
         }
 
         public static CinemachineVirtualCamera LoadPlayerVirtualCamera()
         {
-            return Resources.Load<CinemachineVirtualCamera>(AssetConstants.PlayerVirtualCameraPath);
+            return Resources.Load<CinemachineVirtualCamera>(PlayerVirtualCameraPath);
+        }
+
+        public static IEnumerable<PlatformSkin> LoadPlatformSkins()
+        {
+            return Resources.LoadAll<PlatformSkin>(PlatformSkinsPath);
+        }
+
+        public static IEnumerable<PlayerColors> LoadPlayerColors()
+        {
+            return Resources.LoadAll<PlayerColors>(PlayerColorsPath);
+        }
+
+        public static IEnumerable<HatSkin> LoadHatSkins()
+        {
+            return Resources.LoadAll<HatSkin>(HatSkinsPath);
         }
     }
 }

@@ -111,5 +111,5 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 1
-  _viewportBtnPosition: {x: 0.01, y: 0.12}
+  _viewportBtnPosition: {x: 0.01, y: 0.27}
   _viewPortBtnSize: {x: 8.52, y: 18.62}

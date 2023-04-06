@@ -7,9 +7,9 @@ namespace RaftWars.Infrastructure
         public static LevelService LevelService;
         public static IPrefsService PrefsService;
         
-        public CrossLevelServices()
+        public CrossLevelServices(ICoroutineRunner coroutineRunner)
         {
-            PrefsService = new PlayerPrefsService();
+            PrefsService = new PlayerPrefsService(coroutineRunner);
             LevelService = new LevelService(PrefsService);
         }
     }

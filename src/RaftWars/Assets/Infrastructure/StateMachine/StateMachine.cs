@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Infrastructure.States;
+using InputSystem;
+using Services;
 
 namespace RaftWars.Infrastructure
 {
@@ -16,7 +19,8 @@ namespace RaftWars.Infrastructure
                 [typeof(LoadLevelState)] = new LoadLevelState(this, coroutineRunner, loadingScreen),
                 [typeof(CreateServicesState)] = new CreateServicesState(this, loadingScreen),
                 [typeof(CreateIMGUIState)] = new CreateIMGUIState(),
-                [typeof(ProjectInitialization)] = new ProjectInitialization()
+                [typeof(ProjectInitialization)] = new ProjectInitialization(coroutineRunner),
+                [typeof(CreateShopState)] = new CreateShopState()
             };
         }
 
