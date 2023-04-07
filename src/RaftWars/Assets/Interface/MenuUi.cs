@@ -13,7 +13,7 @@ namespace Interface
         
         private Shop _shop;
         private Hud _hud;
-        private bool _inFightState;
+        private bool _inFightState = true;
         private Coroutine _waitingForHideButtons;
 
         public void Construct(Shop shop, GameManager gameManager, Hud hud)
