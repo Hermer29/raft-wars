@@ -35,6 +35,7 @@ namespace RaftWars.Infrastructure
         public Shop CreateShop()
         {
             var shop = Instantiate(_loader.LoadShop());
+            shop.HideImmediately();
             var loadMenu = Instantiate(_loader.LoadMenu());
             shop.Construct(this, _iapService, _playerMoneyService, _playerUsingService, _propertyService, _coroutineRunner);
             loadMenu.Construct(shop, Game.GameManager, Game.Hud);
