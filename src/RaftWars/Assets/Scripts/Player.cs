@@ -192,6 +192,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     public void AddTurret(Turret tur, float damageIncrease, float healthIncrease)
     {
+        AddPlatform(tur.GetComponentInParent<Platform>());
         turrets.Add(tur);
         platformHp += healthIncrease;
         hp += healthIncrease * (1 + hpAdditive);
@@ -201,6 +202,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     
     public void AddFastTurret(Turret tur, float speed)
     {
+        AddPlatform(tur.GetComponentInParent<Platform>());
         this.speed += speed;
     }
 

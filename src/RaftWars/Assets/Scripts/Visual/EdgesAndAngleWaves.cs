@@ -32,19 +32,20 @@ namespace Visual
         {
             if (EdgesDisabled)
                 return;
-            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().ToArray());
             foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdgeMiddlePoints())
             {
                 GameObject edge = CreateEdge();
                 edge.transform.position = position + Vector3.up * HeightOffset;
                 edge.transform.rotation = rotation;
             }
-            _angles = new PlatformAngles(_edges);
         }
 
         public void UpdateVisual(GameObject newPlatform)
         {
             _edges.Add(newPlatform);
+            
+            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().ToArray());
+            _angles = new PlatformAngles(_edges);
             if (EdgesDisabled == false)
             {
                 DestroyChildrenOfObjectWithName(EdgesParentName);
