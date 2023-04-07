@@ -10,16 +10,19 @@
     <canvas id="unity-canvas"style="background: {{{ BACKGROUND_FILENAME ? 'url(\'Build/' + BACKGROUND_FILENAME.replace(/'/g, '%27') + '\') center / cover' : BACKGROUND_COLOR }}}"></canvas>
     <script src="Build/{{{ LOADER_FILENAME }}}"></script>
     <script>
+      const canvas = document.querySelector("#unity-canvas");
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
         document.getElementsByTagName('head')[0].appendChild(meta);
-
-        var canvas = document.querySelector("#unity-canvas");
-
+        canvas.classList.add("handheld");
         document.body.style.textAlign = "left";
+      }
+      else
+      {
+        canvas.classList.add("desktop");
       }
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
