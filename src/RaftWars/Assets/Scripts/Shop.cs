@@ -38,22 +38,11 @@ public class Shop : MonoBehaviour
         _propertyService = propertyService;
         _entries = new List<ShopProductPresenter>();
         _runner = runner;
-        
-        _runner.StartCoroutine(WaitForNextFrameAndSpawn());
+        CreateEntries();
     }
 
     [field: SerializeField] public ScrollDetector Detector;
-    
-    private IEnumerator WaitForNextFrameAndSpawn()
-    {
-        Canvas.ForceUpdateCanvases();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-        CreateEntries();
-    }
+
 
     private void CreateEntries()
     {
