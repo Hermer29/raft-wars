@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 8808913224929406610}
   - component: {fileID: 8808913224929406609}
   - component: {fileID: 8808913224929406611}
+  - component: {fileID: 2839866462080341645}
   m_Layer: 5
   m_Name: bg
   m_TagString: Untagged
@@ -304,6 +305,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &2839866462080341645
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8808913224929406623}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8808913225077184856
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _onClickGoFight: {fileID: 3457753084851867425}
   _onClickGoShop: {fileID: 8808913225233051278}
+  _canvas: {fileID: 2839866462080341645}
 --- !u!1 &8808913226588342449
 GameObject:
   m_ObjectHideFlags: 0

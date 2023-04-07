@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.Skins;
 using InputSystem;
+using Interface;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
 using Services;
@@ -41,6 +42,8 @@ public class Shop : MonoBehaviour
         _runner.StartCoroutine(WaitForNextFrameAndSpawn());
     }
 
+    [field: SerializeField] public ScrollDetector Detector;
+    
     private IEnumerator WaitForNextFrameAndSpawn()
     {
         Canvas.ForceUpdateCanvases();
