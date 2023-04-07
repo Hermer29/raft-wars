@@ -1,5 +1,5 @@
-﻿.desktop {
-    height: 98vh;
+﻿.unity-container.desktop {
+    height: 100vh;
     aspect-ratio: 9 / 16;
     position: absolute;
     top: 50%;
@@ -7,12 +7,17 @@
     transform: translate(-50%, -50%);
 }
 
-.handheld {
+.unity-container.handheld {
     height: 100%;
     width: 100%;
 }
 
 html, body {
+    height: 100vh;
+    width: 100vw;
+}
+
+#unity-canvas{
     height: 100%;
     width: 100%;
 }
