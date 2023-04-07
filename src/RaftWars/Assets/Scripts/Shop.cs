@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.Skins;
@@ -9,6 +10,7 @@ using Services;
 using Skins;
 using Skins.Hats;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
@@ -23,9 +25,10 @@ public class Shop : MonoBehaviour
     private PlayerMoneyService _playerMoneyService;
     private PlayerUsingService _playerUsingService;
     private PropertyService _propertyService;
+    private ICoroutineRunner _runner;
 
     public void Construct(UiFactory factory, YandexIAPService iapService, PlayerMoneyService playerMoneyService, PlayerUsingService playerUsingService,
-        PropertyService propertyService)
+        PropertyService propertyService, ICoroutineRunner runner)
     {
         _factory = factory;
         _iapService = iapService;
@@ -33,25 +36,44 @@ public class Shop : MonoBehaviour
         _playerUsingService = playerUsingService;
         _propertyService = propertyService;
         _entries = new List<ShopProductPresenter>();
+        _runner = runner;
+        
+        _runner.StartCoroutine(WaitForNextFrameAndSpawn());
+    }
 
-        //TODO: Извлечение метода
+    private IEnumerator WaitForNextFrameAndSpawn()
+    {
+        Canvas.ForceUpdateCanvases();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
+        CreateEntries();
+    }
+
+    private void CreateEntries()
+    {
         var hats = AssetLoader.LoadHatSkins();
         if (hats.Any(x => _playerUsingService.IsUsed(x)) == false)
         {
             _playerUsingService.Use(hats.First(x => x.OwnedByDefault));
         }
+
         ShowShopEntries(hats, _hatsParent);
         var platformSkins = AssetLoader.LoadPlatformSkins();
         if (platformSkins.Any(x => _playerUsingService.IsUsed(x)) == false)
         {
             _playerUsingService.Use(platformSkins.First(x => x.OwnedByDefault));
         }
+
         ShowShopEntries(platformSkins, _raftsParent);
         var colors = AssetLoader.LoadPlayerColors();
         if (colors.Any(x => _playerUsingService.IsUsed(x)) == false)
         {
             _playerUsingService.Use(colors.First(x => x.OwnedByDefault));
         }
+
         ShowShopEntries(colors, _colorsParent);
         HideImmediately();
     }
@@ -83,7 +105,7 @@ public class Shop : MonoBehaviour
     {
         Entry entry = _factory.CreateEntry();
         entry.Show(product);
-        entry.transform.SetParent(uiParent, worldPositionStays: true);
+        entry.transform.SetParent(uiParent, worldPositionStays: false);
         return entry;
     }
 }

@@ -20,7 +20,7 @@ namespace RaftWars.Infrastructure
                 [typeof(CreateServicesState)] = new CreateServicesState(this, loadingScreen),
                 [typeof(CreateIMGUIState)] = new CreateIMGUIState(),
                 [typeof(ProjectInitialization)] = new ProjectInitialization(coroutineRunner),
-                [typeof(CreateShopState)] = new CreateShopState()
+                [typeof(CreateShopState)] = new CreateShopState(coroutineRunner)
             };
         }
 

@@ -7,6 +7,13 @@ namespace Infrastructure.States
 {
     public class CreateShopState : IState
     {
+        private readonly ICoroutineRunner _coroutineRunner;
+
+        public CreateShopState(ICoroutineRunner coroutineRunner)
+        {
+            _coroutineRunner = coroutineRunner;
+        }
+        
         public void Exit()
         {
             
@@ -20,7 +27,8 @@ namespace Infrastructure.States
             PropertyService propertyService = Game.PropertyService;
             
             var uiAssets = new UiAssetLoader();
-            var uiFactory = new UiFactory(uiAssets, yandexIapService, moneyService, usingService, propertyService);
+            var uiFactory = new UiFactory(uiAssets, yandexIapService, moneyService, 
+                usingService, propertyService, _coroutineRunner);
             Shop shop = uiFactory.CreateShop();
         }
     }

@@ -14,15 +14,17 @@ namespace RaftWars.Infrastructure
         private readonly YandexIAPService _iapService;
         private readonly PlayerUsingService _playerUsingService;
         private readonly PropertyService _propertyService;
+        private readonly ICoroutineRunner _coroutineRunner;
 
         public UiFactory(UiAssetLoader loader, YandexIAPService iapService, PlayerMoneyService playerMoneyService, 
-            PlayerUsingService playerUsingService, PropertyService propertyService)
+            PlayerUsingService playerUsingService, PropertyService propertyService, ICoroutineRunner coroutineRunner)
         {
             _loader = loader;
             _playerMoneyService = playerMoneyService;
             _iapService = iapService;
             _playerUsingService = playerUsingService;
             _propertyService = propertyService;
+            _coroutineRunner = coroutineRunner;
         }
 
         public Entry CreateEntry()
@@ -34,7 +36,7 @@ namespace RaftWars.Infrastructure
         {
             var shop = Instantiate(_loader.LoadShop());
             var loadMenu = Instantiate(_loader.LoadMenu());
-            shop.Construct(this, _iapService, _playerMoneyService, _playerUsingService, _propertyService);
+            shop.Construct(this, _iapService, _playerMoneyService, _playerUsingService, _propertyService, _coroutineRunner);
             loadMenu.Construct(shop, Game.GameManager, Game.Hud);
             return shop;
         }
