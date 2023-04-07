@@ -46,6 +46,7 @@ namespace Interface
             {
                 StopCoroutine(_waitingForHideButtons);
             }
+            Show();
         }
 
         private IEnumerator HideTimeout()
@@ -75,6 +76,8 @@ namespace Interface
 
         private void Hide()
         {
+            if(_inFightState)
+                return;
             _canvas.alpha = 0;
             _canvas.interactable = false;
             _canvas.blocksRaycasts = false;
