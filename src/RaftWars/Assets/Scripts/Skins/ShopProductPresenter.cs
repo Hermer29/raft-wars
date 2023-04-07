@@ -36,6 +36,7 @@ namespace Skins
                 if (_usingService.IsUsed(_product))
                 {
                     _entry.Use.interactable = false;
+                    _usingService.Use(_product);
                 }
                 MarkAsBought();
             }

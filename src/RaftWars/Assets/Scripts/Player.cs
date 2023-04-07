@@ -65,11 +65,10 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private HatSkin _hat;
     public static event Action Died;
 
-    public void Construct(Material color)
+    public void Construct()
     {
-        _material = color;
         edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
-        edgesAndAngleWaves.Construct(this, _material);
+        edgesAndAngleWaves.Construct(this);
     }
     
     private void Start()

@@ -18,7 +18,7 @@ namespace Visual
         private const string EdgesParentName = "Edges";
         private const string WavesParentName = "Waves";
 
-        public void Construct(IPlatformsCarrier platformsCarrier, Material selectedColor)
+        public void Construct(IPlatformsCarrier platformsCarrier, Material selectedColor = null)
         {
             _platformsCarrier = platformsCarrier;
             _color = selectedColor;

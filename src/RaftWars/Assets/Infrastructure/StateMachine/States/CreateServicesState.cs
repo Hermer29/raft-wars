@@ -24,7 +24,7 @@ namespace RaftWars.Infrastructure
         public void Enter()
         {
             var materialService = new MaterialsService();
-            Player player = CreatePlayer(materialService);
+            Player player = CreatePlayer();
             Game.MaterialsService = materialService;
             var game = new Game(player);
             Game.GameManager = GameFactory.CreateGameManager();
@@ -35,7 +35,7 @@ namespace RaftWars.Infrastructure
             _stateMachine.Enter<CreateShopState>();
         }
 
-        private static Player CreatePlayer(MaterialsService materialsService)
+        private static Player CreatePlayer()
         {
             Player player = GameFactory.CreatePlayer();
             CinemachineVirtualCamera camera = GameFactory.CreatePlayerVirtualCamera();
@@ -43,7 +43,7 @@ namespace RaftWars.Infrastructure
             camera.m_Follow = transform;
             camera.m_LookAt = transform;
             player._camera = camera.GetComponent<CinemachineCameraOffset>();
-            player.Construct(materialsService.GetPlayerMaterial());
+            player.Construct();
             return player;
         }
     }
