@@ -128,7 +128,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8538133811924846094}
   - component: {fileID: 8538133811924846092}
-  - component: {fileID: 8538133811924846093}
   m_Layer: 5
   m_Name: color-container
   m_TagString: Untagged
@@ -169,8 +168,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 40
+    m_Right: 40
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
@@ -180,20 +179,6 @@ MonoBehaviour:
   m_Spacing: {x: 50, y: 50}
   m_Constraint: 1
   m_ConstraintCount: 4
---- !u!114 &8538133811924846093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8538133811924846095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
 --- !u!1 &8538133811951005396
 GameObject:
   m_ObjectHideFlags: 0
@@ -447,7 +432,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8538133812077290709}
   - component: {fileID: 8538133812077290708}
-  - component: {fileID: 6021430475763469470}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -510,20 +494,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &6021430475763469470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8538133812077290710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
 --- !u!1 &8538133812273736080
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,7 +1057,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8538133813263628234}
   - component: {fileID: 8538133813263628232}
-  - component: {fileID: 8538133813263628233}
   m_Layer: 5
   m_Name: hats-container
   m_TagString: Untagged
@@ -1128,8 +1097,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 40
+    m_Right: 40
     m_Top: 0
     m_Bottom: -1043
   m_ChildAlignment: 0
@@ -1139,20 +1108,6 @@ MonoBehaviour:
   m_Spacing: {x: 50, y: 50}
   m_Constraint: 1
   m_ConstraintCount: 4
---- !u!114 &8538133813263628233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8538133813263628235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
 --- !u!1 &8538133813351542838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1375,8 +1330,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 40
+    m_Right: 40
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
