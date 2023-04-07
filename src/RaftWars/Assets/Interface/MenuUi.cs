@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Infrastructure;
 
 namespace Interface
 {
@@ -21,12 +22,15 @@ namespace Interface
             _shop = shop;
             _hud = hud;
             
+            if(RaftWars.Infrastructure.Game.FeatureFlags.MenuButtonsFading)
+            {
+                shop.Detector.ScrolledDown += OnScrollDown;
+                shop.Detector.ScrolledUp += OnScrollUp;
+            }
+            
             _onClickGoFight.onClick.AddListener(ShopClosed);
             _onClickGoShop.onClick.AddListener(ShopOpened);
             gameManager.GameStarted += () => gameObject.SetActive(false);
-            
-            shop.Detector.ScrolledDown += OnScrollDown;
-            shop.Detector.ScrolledUp += OnScrollUp;
         }
 
         private void ShopOpened()

@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IMGUIEnabled>k__BackingField: 0
   <DiamondsEnabledInGame>k__BackingField: 0
+  <MenuButtonsFading>k__BackingField: 0
