@@ -22,6 +22,7 @@ namespace RaftWars.Infrastructure
         private void Execute()
         {
             LoadingScreen loadingScreen = GameFactory.CreateLoadingScreen();
+            loadingScreen.FadeInImmediately();
             var stateMachine = new StateMachine(this, loadingScreen);
 
             stateMachine.Enter<ProjectInitialization>();

@@ -60,4 +60,9 @@ public class LoadingScreen : MonoBehaviour
         _canvas.interactable = false;
         _canvas.blocksRaycasts = false;
     }
+
+    public void FadeInImmediately()
+    {
+        _canvas.alpha = 1;
+    }
 }
