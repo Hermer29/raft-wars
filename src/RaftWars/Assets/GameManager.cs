@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGameOnClick()
     {
-        _arrow.Construct(player, boss.gameObject, _camera);
+        _arrow.Construct(player, _camera);
         GameStarted?.Invoke();
         _input.Enable();
         _started = true;

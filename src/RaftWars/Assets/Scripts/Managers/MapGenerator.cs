@@ -51,17 +51,28 @@ public class MapGenerator : MonoBehaviour
     [Header("Other Prefs")]    
     [SerializeField] private float xBorderMax, xBorderMin, yBorderMax, yBorderMin;
 
+    public static Action<Enemy> BossCreated;
+
     private bool _diamondsEnabled;
     private int stage = 1;
     private MaterialsService _materials;
     private CollectiblesService _collectibles;
+    private PlayerService _player;
 
     public void Construct()
     {
         _diamondsEnabled = Game.FeatureFlags.DiamondsEnabledInGame;
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;
+        _player = Game.PlayerService;
         _collectibles.NoCollectiblesLeft += SpawnMiscellaneous;
+    }
+
+    private IEnumerator SpawnOnPlayersPathRandom()
+    {
+        while(true)
+        {
+        }
     }
 
     public void Generate(int stage)
@@ -392,6 +403,7 @@ public class MapGenerator : MonoBehaviour
             enemy.Material = _materials.GetRandom();
             enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1] + 1, damageIncrease[stage - 1] + 1, platformAdditive, peopleAdditive);
             GameManager.instance.boss = enemy;
+            BossCreated?.Invoke(enemy);
             break;
         }
     }

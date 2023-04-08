@@ -18,12 +18,17 @@ public class Arrow : MonoBehaviour
     private PlayerService _playerService;
     private GameObject _boss;
 
-    public void Construct(PlayerService playerService, GameObject boss, Camera camera)
+    public void Construct(PlayerService playerService, Camera camera)
     {
         _playerService = playerService;
-        _boss = boss;
         _camera = camera;
         _rectTransform = GetComponent<RectTransform>();
+        MapGenerator.BossCreated += SetBoss;
+    }
+
+    private void SetBoss(Enemy enemy)
+    {
+        _boss = enemy.gameObject;
     }
     
     private void Start()
@@ -44,7 +49,10 @@ public class Arrow : MonoBehaviour
     private void Update()
     {
         if (_boss == null)
+        {
+            _fading.alpha = 0;
             return;
+        }
         ShowTowards(_playerService.Position, _boss.transform.position);
         SlerpTowardsTarget(Time.deltaTime);
     }
