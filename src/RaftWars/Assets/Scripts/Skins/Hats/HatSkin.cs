@@ -12,6 +12,7 @@ namespace Skins.Hats
         [field: SerializeField] public int YansCost { get; private set; } = 2;
         [field: SerializeField] public bool OwnedByDefault { get; private set; }
         [field: SerializeField] public string Guid { get; private set; }
+        [field: SerializeField] public Vector2 OverrideEntryDeltaSize { get; private set; }
 
         private void OnValidate()
         {

@@ -45,6 +45,7 @@ namespace Skins
                 MarkAsUnbought();
             }
 
+            _entry.ApplyPositionDeltaSize(_product.OverrideEntryDeltaSize);
             _usingService.Used += UpdateRequested;
         }
 

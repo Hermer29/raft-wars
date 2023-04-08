@@ -33,5 +33,11 @@ namespace Skins
         {
             _usingBlock.SetActive(state);
         }
+
+        public void ApplyPositionDeltaSize(Vector2 deltaSize)
+        {
+            var rect = _image.rectTransform.rect;
+            _image.rectTransform.sizeDelta += deltaSize;
+        }
     }
 }

@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84430423e21342dab2e8a188ba5a863b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ShopImage>k__BackingField: {fileID: 21300000, guid: acd3d40ea4f9f2d4093ae0e02be39206, type: 3}
+  <ShopImage>k__BackingField: {fileID: 1867820339, guid: acd3d40ea4f9f2d4093ae0e02be39206, type: 3}
   <CoinsCost>k__BackingField: 300
   <YansCost>k__BackingField: 2
   <OwnedByDefault>k__BackingField: 0
