@@ -82,6 +82,7 @@ namespace Skins
         {
             _propertyService.Own(_product);
             MarkAsBought();
+            OnUse();
         }
 
         private void MarkAsBought()
