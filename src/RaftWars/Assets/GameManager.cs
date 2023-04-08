@@ -179,7 +179,6 @@ public class GameManager : MonoBehaviour
         hud.blackBG.SetActive(false);
         hud.stagePanel.SetActive(false);
         map.GenerateBoss();
-        _advertising.ShowInterstitial();
     }
 
     public void Continue()

@@ -66,6 +66,8 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private HatSkin _hat;
     public static event Action Died;
 
+    public Vector3 MoveDirection => new Vector3(_input.Horizontal, 0, _input.Vertical);
+
     public void Construct()
     {
         edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
@@ -254,7 +256,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         
         if (!battle)
         {
-            rb.velocity = new Vector3(_input.Horizontal, 0, _input.Vertical) * speed;
+            rb.velocity = MoveDirection * speed;
         }
         else
         {
@@ -462,7 +464,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
         edgesAndAngleWaves.UpdateVisual(platform.gameObject);
-        _camera.m_Offset.z -= 1f / platforms.Count;
+        _camera.m_Offset.z = edgesAndAngleWaves.Bounds * -1;
         speed += .5f;
     }
 

@@ -16,8 +16,6 @@
             get
             {
                 int level = _prefsService.GetInt(LevelPrefsKey, defaultValue: 1);
-                if (level <= 0)
-                    level = 1;
                 return level;
             }
             private set => _prefsService.SetInt(LevelPrefsKey, value);

@@ -32,6 +32,8 @@ public class FightService
 
     public void FightEnded()
     {
+        if(_temporalTargetGroup == null)
+            return;
         Object.Destroy(_temporalTargetGroup.gameObject);
         _virtualCamera.Priority = -10;
     }

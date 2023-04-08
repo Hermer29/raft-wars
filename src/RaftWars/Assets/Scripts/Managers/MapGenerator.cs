@@ -72,6 +72,7 @@ public class MapGenerator : MonoBehaviour
     {
         while(true)
         {
+            //_player.MoveDirection.
         }
     }
 

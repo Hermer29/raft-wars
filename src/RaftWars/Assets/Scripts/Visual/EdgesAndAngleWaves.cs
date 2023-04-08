@@ -27,6 +27,18 @@ namespace Visual
         }
         
         public bool EdgesDisabled { get; private set; }
+        public float Bounds 
+        {
+            get 
+            {
+                var angles = _edges.GetEdges().SelectMany(x => new Vector3[] {x.a, x.b});
+                var maxX = angles.Select(x => x.x).Max();
+                var minX = angles.Select(x => x.x).Min();
+                var maxZ = angles.Select(x => x.z).Max();
+                var minZ = angles.Select(x => x.z).Min();
+                return Mathf.Max(maxX - minX, maxZ - minZ);
+            }
+        }
 
         public void CreateEdges()
         {
