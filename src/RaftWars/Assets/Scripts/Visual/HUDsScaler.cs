@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+
+using UnityEngine;
 
 namespace Visual
 {
-    public class HUDsScaler : MonoBehaviour
+    public class HUDsScaler
     {
         
     }
