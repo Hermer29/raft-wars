@@ -135,6 +135,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void OnBattleEnded()
     {
+        Game.FightService.FightEnded();
         battle = false;
         idleBehaviour = true;
         foreach (var platform in enemyForBattle.platforms.Where(x => x != null))  
@@ -269,6 +270,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         {
             return f >= enemyHealth1 && enemyDamage1 >= hp;
         }
+        Game.FightService.FightStarted(this, enemy);
         
         if (battle) return;
 
@@ -354,6 +356,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void Dead()
     {
+        Game.FightService.FightEnded();
         isDead = true;
         canPlay = false;
         battle = false;

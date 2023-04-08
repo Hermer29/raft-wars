@@ -21,6 +21,7 @@ namespace RaftWars.Infrastructure
         public static PlayerUsingService UsingService;
         public static PropertyService PropertyService;
         public static GameManager GameManager;
+        public static FightService FightService;
 
         public Game(Player player)
         {
@@ -33,6 +34,7 @@ namespace RaftWars.Infrastructure
             IAPService = new YandexIAPService();
             MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService, Hud);
             PropertyService = new PropertyService(CrossLevelServices.PrefsService);
+            FightService = new FightService(GameFactory.CreatePlayerVirtualCamera());
         }
     }
 }
