@@ -112,7 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 0}
   isEnemy: 0
   isTurret: 1
   isWind: 0
@@ -297,7 +296,7 @@ PrefabInstance:
     - target: {fileID: 190970472019985201, guid: e7b9e1b5c6266214c9a7d31caa728855, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
+      objectReference: {fileID: 2100000, guid: 2ed898af28418fe4f9aac3f59817a098, type: 2}
     - target: {fileID: 2791477566096053091, guid: e7b9e1b5c6266214c9a7d31caa728855, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.132
