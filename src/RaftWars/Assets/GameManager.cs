@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
         map.GenerateBoss();
     }
 
+private bool _wonTheGame;
+
     private void Update()
     {
         if (!_started)
@@ -75,6 +77,9 @@ public class GameManager : MonoBehaviour
         }
         else if(_stage == 5 && boss == null && !hud.stagePanel.activeSelf)
         {
+            if(_wonTheGame)
+                return;
+            _wonTheGame = true;
             WinTheGame();
         }
         else if(_stage != 5 && boss == null && !hud.stagePanel.activeSelf)
@@ -157,7 +162,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGameOnClick()
     {
-        _arrow.Construct(player, _camera);
+        _arrow.Construct(player, _camera, GameManager.instance.boss);
         GameStarted?.Invoke();
         _input.Enable();
         _started = true;

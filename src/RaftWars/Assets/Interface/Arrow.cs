@@ -18,8 +18,9 @@ public class Arrow : MonoBehaviour
     private PlayerService _playerService;
     private GameObject _boss;
 
-    public void Construct(PlayerService playerService, Camera camera)
+    public void Construct(PlayerService playerService, Camera camera, Enemy boss)
     {
+        SetBoss(boss);
         _playerService = playerService;
         _camera = camera;
         _rectTransform = GetComponent<RectTransform>();
