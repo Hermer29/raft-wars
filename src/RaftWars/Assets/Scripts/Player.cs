@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
@@ -371,9 +372,39 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         {
             indicator.SetActive(false);
         }
-        CameraGroup.m_Targets = Array.Empty<CinemachineTargetGroup.Target>();
-        _camera.GetComponent<CinemachineVirtualCamera>().Follow = null;
-        transform.DOMoveY(-999, 3).SetSpeedBased(true);
+        foreach(Platform platform in enemyForBattle.platforms)
+        {   
+            CameraGroup.RemoveMember(platform.transform);
+        }
+
+        StartCoroutine(CreateExplosions());
+    
+        var virtualCamera = _camera.GetComponent<CinemachineVirtualCamera>();
+        virtualCamera.m_Follow = null;
+        virtualCamera.m_LookAt = CameraGroup.transform;
+        transform.DOMoveY(-999, 1f).SetSpeedBased(true);
+    }
+
+    private IEnumerator CreateExplosions()
+    {
+        const float explosionFrequency = .5f;
+        int explosionCountAtATime = 2 * Math.Clamp(platforms.Count, 1, 999);
+        
+        while (true)
+        {
+            for (var i = 0; i < explosionCountAtATime; i++)
+            {
+                Explosion explosion = GameFactory.CreateExplosion();
+                explosion.transform.position = GetScaledRandomPointAmongAllPlatforms();
+            }
+            yield return new WaitForSeconds(explosionFrequency);
+        }
+    }
+
+    private Vector3 GetScaledRandomPointAmongAllPlatforms()
+    {
+        Platform randomPlatform = platforms.ElementAt(Random.Range(0, platforms.Count));
+        return randomPlatform.GetRandomPoint();
     }
 
     private void PutTurretsInIdleAnimation()

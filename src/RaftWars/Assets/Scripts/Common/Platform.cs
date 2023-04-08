@@ -194,4 +194,17 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         _skin = Instantiate(skin, transform);
         _meshRenderer.enabled = false;
     }
+
+    public static Vector3 GetRandomPoint(float platformSizeModifier = 5)
+    {
+        return new Vector3(
+            Random.Range(-Constants.PlatformSize / platformSizeModifier, Constants.PlatformSize / platformSizeModifier),
+            .5f,
+            Random.Range(-Constants.PlatformSize / platformSizeModifier, Constants.PlatformSize / platformSizeModifier));
+    }
+
+    public Vector3 GetRandomPoint()
+    {
+        return transform.position + Platform.GetRandomPoint();
+    }
 }

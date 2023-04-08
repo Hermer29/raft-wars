@@ -8,6 +8,11 @@ namespace RaftWars.Infrastructure
 {
     public static class GameFactory
     {
+        public static Explosion CreateExplosion()
+        {
+            return Instantiate(LoadExplosion());
+        }
+
         public static Player CreatePlayer()
         {
             return Instantiate(LoadPlayer());

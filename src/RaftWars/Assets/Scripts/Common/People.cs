@@ -55,11 +55,7 @@ public class People : MonoBehaviour
 
         while (true)
         {
-            const float platformSizeModifier = 5;
-            Vector3 nextPoint = new Vector3(
-                Random.Range(-Constants.PlatformSize / platformSizeModifier, Constants.PlatformSize / platformSizeModifier),
-                    .5f,
-                Random.Range(-Constants.PlatformSize / platformSizeModifier, Constants.PlatformSize / platformSizeModifier));
+            Vector3 nextPoint = Platform.GetRandomPoint(platformSizeModifier: 5);
             transform.rotation = Quaternion.LookRotation(nextPoint - transform.localPosition);
             PlayRunAnimation();
             while (Vector3.SqrMagnitude(nextPoint - transform.localPosition) > Mathf.Epsilon)

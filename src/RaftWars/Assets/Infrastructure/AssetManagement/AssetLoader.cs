@@ -77,5 +77,10 @@ namespace RaftWars.Infrastructure.AssetManagement
         {
             return Resources.LoadAll<HatSkin>(HatSkinsPath);
         }
+
+        public static Explosion LoadExplosion()
+        {
+            return Resources.Load<Explosion>(ExplosionPath);
+        }
     }
 }
