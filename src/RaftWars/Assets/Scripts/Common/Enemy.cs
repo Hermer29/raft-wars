@@ -177,20 +177,18 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         if (isDead)
             return;
 
-        if (_moveDirection == null)
+        if(Bounds.IsInBounds(transform) == false)
+        {
+            _moveDirection = (Bounds.VectorToCenter(transform.position) + 
+            new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5))).normalized;
+        }
+        else
+        {
+            if (_moveDirection == null)
         {
             MoveInRandomDirection();
         }
-
-        bool ReachedWorldBounds()
-        {
-            return (GetNearestPointOnBound() - transform.position).sqrMagnitude <= 1f;
-        }
-
-        if (ReachedWorldBounds())
-        {
-            _moveDirection = Vector3.Reflect(_moveDirection.Value, GetNormalToNearestBound());
-        }
+        
         float sqrMagnitudeToPlayer = (_player.Position - transform.position).sqrMagnitude;
         var escapeVector = -(_player.Position - transform.position).normalized;
         
@@ -216,12 +214,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             bool playerSuperior = _player.PlayerStatsSum >= StatsSum;
             if (playerSuperior)
             {
-                if(ReachedWorldBounds())
-                {
-                    MoveInRandomDirection();
-                    goto Exit;
-                }
-
                 _moveDirection = escapeVector;
             }
             else
@@ -229,8 +221,9 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
                 _moveDirection = (_player.Position - transform.position).normalized;
             }
         }
+        }
 
-        Exit:
+        
         transform.position += _moveDirection.Value * (deltaTime * speed);
     }
 
