@@ -7,6 +7,9 @@ public class Arrow : MonoBehaviour
     [SerializeField, Range(0, 1)] private float _normalizedOffsetFromCenter = 0.6f;
     [SerializeField, Min(.1f)] private float _speed = .1f;
     [SerializeField] private CanvasGroup _fading;
+    [Header("Additional target")]
+    [SerializeField] private RectTransform _additionalRectTransform;
+    [SerializeField, Range(0, 1)] private float _additionalNormalizedOffsetFromCenter = 0.6f;
     
     private RectTransform _rectTransform;
     private Vector2? _targetDirection;
@@ -25,6 +28,7 @@ public class Arrow : MonoBehaviour
     
     private void Start()
     {
+        _fading.alpha = 0;
         _fading.interactable = false;
         _fading.blocksRaycasts = false;
     }
@@ -48,8 +52,10 @@ public class Arrow : MonoBehaviour
     private void SlerpTowardsTarget(float deltaTime)
     {
         var direction = (Vector2)Vector3.Slerp(_previousDirection, _targetDirection.Value, deltaTime * _speed);
-        Vector2 screenPoint = DirectionToScreenPoint(direction);
+        Vector2 screenPoint = DirectionToScreenPoint(direction, _normalizedOffsetFromCenter);
+        Vector2 additionalScreenPoint = DirectionToScreenPoint(direction, _additionalNormalizedOffsetFromCenter);
         _rectTransform.position = screenPoint;
+        _additionalRectTransform.position = additionalScreenPoint;
         _rectTransform.rotation = CalculateRotationTowards(direction);
     }
 
@@ -75,7 +81,7 @@ public class Arrow : MonoBehaviour
         void DrawSphereInDirection(Vector2 direction)
         {
             Gizmos.color = Color.red;
-            Vector2 screen = DirectionToScreenPoint(direction);
+            Vector2 screen = DirectionToScreenPoint(direction, _normalizedOffsetFromCenter);
             
             Gizmos.DrawWireSphere(_camera.ScreenPointToRay(screen).GetPoint(5), .5f);
         }
@@ -89,9 +95,9 @@ public class Arrow : MonoBehaviour
         DrawSphereInDirection(Vector2.left);
     }
 
-    private Vector2 DirectionToScreenPoint(Vector2 direction)
+    private Vector2 DirectionToScreenPoint(Vector2 direction, float normalizedOffsetFromCenter)
     {
-        return ToScreenPosition(direction.NormalizedDirectionToViewport(_normalizedOffsetFromCenter));
+        return ToScreenPosition(direction.NormalizedDirectionToViewport(normalizedOffsetFromCenter));
     }
 }
 
