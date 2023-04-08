@@ -63,6 +63,8 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         }
     }
 
+    public float Extents => GetComponent<EdgesAndAngleWaves>().Bounds;
+
     private void Start()
     {
         _player = Game.PlayerService;

@@ -67,6 +67,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     public static event Action Died;
 
     public Vector3 MoveDirection => new Vector3(_input.Horizontal, 0, _input.Vertical);
+    public float Bounds => edgesAndAngleWaves.Bounds;
 
     public void Construct()
     {
