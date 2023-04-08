@@ -22,9 +22,11 @@ namespace RaftWars.Infrastructure
         public static PropertyService PropertyService;
         public static GameManager GameManager;
         public static FightService FightService;
+        public static StateMachine StateMachine;
 
-        public Game(Player player)
+        public Game(Player player, StateMachine stateMachine)
         {
+            StateMachine = stateMachine;
             CollectiblesService = new CollectiblesService();
             PlayerService = new PlayerService(player);
             AdverisingService = new AdvertisingService();

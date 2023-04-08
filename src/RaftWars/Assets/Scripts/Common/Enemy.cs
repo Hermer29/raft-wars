@@ -420,6 +420,11 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         if(_enemyHud == null)
         {
             _enemyHud = GetComponentInChildren<EnemyHud>();
+            if(_enemyHud == null)
+            {
+                _enemyHud = GameFactory.CreateBossHud();
+                _enemyHud.transform.SetParent(transform, worldPositionStays: false);
+            }
         }
 
         _enemyHud.hpText.text = Mathf.RoundToInt(maximumHp).ToString();

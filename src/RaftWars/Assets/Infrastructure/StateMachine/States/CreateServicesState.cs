@@ -2,6 +2,7 @@
 using Infrastructure.States;
 using InputSystem;
 using UnityEngine;
+using Visual;
 
 namespace RaftWars.Infrastructure
 {
@@ -26,7 +27,7 @@ namespace RaftWars.Infrastructure
             var materialService = new MaterialsService();
             Player player = CreatePlayer();
             Game.MaterialsService = materialService;
-            var game = new Game(player);
+            var game = new Game(player, _stateMachine);
             Game.GameManager = GameFactory.CreateGameManager();
             Game.MapGenerator.Construct();
             Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main);
@@ -42,7 +43,9 @@ namespace RaftWars.Infrastructure
             Transform transform = player.CameraGroup.transform;
             camera.m_Follow = transform;
             camera.m_LookAt = transform;
-            player._camera = camera.GetComponent<CinemachineCameraOffset>();
+            var cameraOffset = camera.GetComponent<CinemachineCameraOffset>();
+            player._camera = cameraOffset;
+            //new GameObject().AddComponent<HUDsScaler>().Construct(cameraOffset);
             player.Construct();
             return player;
         }

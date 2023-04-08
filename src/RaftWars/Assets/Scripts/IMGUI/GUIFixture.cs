@@ -14,6 +14,14 @@ namespace DefaultNamespace.IMGUI
         [SerializeField] private GUIStyle _style;
         [SerializeField] private Vector2 _viewportBtnPosition;
         [SerializeField] private Vector2 _viewPortBtnSize;
+        [Header("Jump lvl:")]
+        [SerializeField] private int _level;
+
+        [NaughtyAttributes.Button]
+        public void Jump()
+        {
+            Game.StateMachine.Enter<LoadLevelState, int>(_level);
+        }
 
         private void Start()
         {

@@ -695,7 +695,7 @@ GameObject:
   - component: {fileID: -1945570038332417819}
   m_Layer: 0
   m_Name: EnemyHud
-  m_TagString: Untagged
+  m_TagString: WorldSpaceHud
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
