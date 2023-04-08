@@ -184,7 +184,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
         bool ReachedWorldBounds()
         {
-            return Vector3.Distance(GetNearestPointOnBound(), transform.position) <= 1f;
+            return (GetNearestPointOnBound() - transform.position).sqrMagnitude <= 1f;
         }
 
         if (ReachedWorldBounds())

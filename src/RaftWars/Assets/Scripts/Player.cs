@@ -372,11 +372,14 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         {
             indicator.SetActive(false);
         }
-        foreach(Platform platform in enemyForBattle.platforms)
-        {   
-            CameraGroup.RemoveMember(platform.transform);
+        if(enemyForBattle != null)
+        {
+            foreach(Platform platform in enemyForBattle.platforms)
+            {   
+                CameraGroup.RemoveMember(platform.transform);
+            }
         }
-
+        
         StartCoroutine(CreateExplosions());
     
         var virtualCamera = _camera.GetComponent<CinemachineVirtualCamera>();
