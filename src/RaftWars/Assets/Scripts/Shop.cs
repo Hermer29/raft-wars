@@ -46,6 +46,7 @@ public class Shop : MonoBehaviour
 
     private void CreateEntries()
     {
+        // Извлечение метода
         var hats = AssetLoader.LoadHatSkins();
         if (hats.Any(x => _playerUsingService.IsUsed(x)) == false)
         {
