@@ -29,7 +29,7 @@ namespace RaftWars.Infrastructure
             var game = new Game(player);
             Game.GameManager = GameFactory.CreateGameManager();
             Game.MapGenerator.Construct();
-            Game.GameManager.Construct(Game.MapGenerator, _stateMachine);
+            Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main);
             Game.UsingService = new PlayerUsingService(Game.PlayerService, CrossLevelServices.PrefsService);
             _stateMachine.Enter<CreateIMGUIState>();
             _stateMachine.Enter<CreateShopState>();

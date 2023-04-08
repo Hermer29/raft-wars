@@ -101,7 +101,6 @@ public class MapGenerator : MonoBehaviour
         const float height = .5f;
         for (var i = 0; i < barrelNumbers / stage; i++)
         {
-            
             Vector3 posToSpawn = GetRandomSpawnPosition() + Vector3.up * height;
             Instantiate(barrelsToSpawn, posToSpawn, Quaternion.identity);
         }

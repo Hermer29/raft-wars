@@ -32,12 +32,18 @@ public class GameManager : MonoBehaviour
     private InputService _input;
 
     private StateMachine _stateMachine;
+    private PlayerService player;
+    private Arrow _arrow;
+    private Camera _camera;
     public event Action GameStarted;
 
-    public void Construct(MapGenerator mapGenerator, StateMachine stateMachine)
+    public void Construct(MapGenerator mapGenerator, StateMachine stateMachine, Arrow arrow, Camera camera)
     {
         map = mapGenerator;
         hud = Game.Hud;
+        player = Game.PlayerService;
+        _arrow = arrow;
+        _camera = camera;
 
         hud.Replay.onClick.AddListener(RestartLevel);
         hud.Continue.onClick.AddListener(Continue);
@@ -151,6 +157,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGameOnClick()
     {
+        _arrow.Construct(player, boss.gameObject, _camera);
         GameStarted?.Invoke();
         _input.Enable();
         _started = true;
