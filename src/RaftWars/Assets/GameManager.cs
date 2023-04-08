@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
         }
         if (IsNotEnoughMoneyToIncreaseHealth()) return;
         
-        Player.instance.SpendCoins(healthAmplificationCost);
+        Game.MoneyService.Spend(healthAmplificationCost);
         Player.instance.IncreaseHealth((float)buyableHealthPercent);
         UpdateNextHealthUpgrade();
     }
@@ -258,7 +258,7 @@ public class GameManager : MonoBehaviour
     {
         bool IsNotEnoughCoinsToAmplifyDamage()
         {
-            return Player.instance.coins < damageCost;
+            return Game.MoneyService.Amount < damageCost;
         }
 
         if (hud._damageUpgradeVideoIcon.gameObject.activeInHierarchy)
@@ -273,7 +273,7 @@ public class GameManager : MonoBehaviour
         
         if (IsNotEnoughCoinsToAmplifyDamage()) return;
         
-        Player.instance.SpendCoins(damageCost);
+        Game.MoneyService.Spend(damageCost);
         Player.instance.AmplifyDamage(buyableDamagePercent);
         UpdateNextDamageUpgrade();
     }
