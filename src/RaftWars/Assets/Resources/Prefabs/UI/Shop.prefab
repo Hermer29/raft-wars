@@ -827,7 +827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1468983436039290469, guid: 1ac822632491b3f4faf34f2a31a08b1b, type: 3}
       propertyPath: m_text
-      value: Hats
+      value: Unit
       objectReference: {fileID: 0}
     - target: {fileID: 1468983436039290469, guid: 1ac822632491b3f4faf34f2a31a08b1b, type: 3}
       propertyPath: m_fontSize
