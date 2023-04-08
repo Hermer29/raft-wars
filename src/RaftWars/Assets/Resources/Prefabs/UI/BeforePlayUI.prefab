@@ -304,7 +304,7 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ReverseArrangement: 1
 --- !u!225 &2839866462080341645
 CanvasGroup:
   m_ObjectHideFlags: 0
