@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using RaftWars.Infrastructure;
 
 namespace Interface
 {
@@ -34,6 +35,21 @@ namespace Interface
         public Button BuyDamage;
         public Button BuyHealth;
         public Button NextStage;
+
+        private void Start()
+        {
+            if(Game.FeatureFlags.DiamondsEnabledInGame == false)
+            {
+                HideDiamondsCounter();
+            }
+            else
+            {
+                foreach (GameObject counter in _diamondsCounter)
+                {
+                    counter.SetActive(true);
+                }
+            }
+        }
 
         public void HideDiamondsCounter()
         {

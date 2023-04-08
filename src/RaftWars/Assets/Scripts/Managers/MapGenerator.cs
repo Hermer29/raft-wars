@@ -51,12 +51,14 @@ public class MapGenerator : MonoBehaviour
     [Header("Other Prefs")]    
     [SerializeField] private float xBorderMax, xBorderMin, yBorderMax, yBorderMin;
 
+    private bool _diamondsEnabled;
     private int stage = 1;
     private MaterialsService _materials;
     private CollectiblesService _collectibles;
 
     public void Construct()
     {
+        _diamondsEnabled = Game.FeatureFlags.DiamondsEnabledInGame;
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;
         _collectibles.NoCollectiblesLeft += SpawnMiscellaneous;
@@ -107,6 +109,8 @@ public class MapGenerator : MonoBehaviour
 
     private void CreateGems(int stage)
     {
+        if(_diamondsEnabled == false)
+            return;
         const float height = .5f;
         for (var i = 0; i < gemsNumber / stage; i++)
         {
