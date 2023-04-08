@@ -42,7 +42,7 @@ namespace InputSystem
         public bool HasEnoughCoins(int amount)
         {
             int previous = _prefsService.GetInt(MoneyKey);
-            return previous > amount;
+            return previous >= amount;
         }
     }
 }
