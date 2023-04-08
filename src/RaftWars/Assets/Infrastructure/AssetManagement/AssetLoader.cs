@@ -82,5 +82,15 @@ namespace RaftWars.Infrastructure.AssetManagement
         {
             return Resources.Load<Explosion>(ExplosionPath);
         }
+
+        public static EnemyHud LoadBossHud()
+        {
+            return Resources.Load<EnemyHud>(BossHudPath);
+        }
+
+        public static EnemyHud LoadEnemyHud()
+        {
+            return Resources.Load<EnemyHud>(EnemyHudPath);
+        }
     }
 }

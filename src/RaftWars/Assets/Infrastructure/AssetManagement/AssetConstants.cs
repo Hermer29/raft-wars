@@ -15,6 +15,8 @@
         public const string HatSkinsPath = "Skins/PeopleHat";
         public const string PlayerColorsPath = "Skins/PlayerColors";
         public const string ExplosionPath = "Prefabs/Explosion";
+        public const string BossHudPath = "Prefabs/BossHud";
+        public const string EnemyHudPath = "Prefabs/EnemyHud";
 
         public static string CreateLevelGeneratorPath(int level)
         {

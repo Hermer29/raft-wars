@@ -57,5 +57,15 @@ namespace RaftWars.Infrastructure
         {
             return Instantiate(LoadPlayerVirtualCamera());
         }
+
+        public static EnemyHud CreateBossHud()
+        {
+            return Instantiate(LoadBossHud());
+        }
+
+        public static EnemyHud CreateEnemyHud()
+        {
+            return Instantiate(LoadEnemyHud());
+        }
     }
 }

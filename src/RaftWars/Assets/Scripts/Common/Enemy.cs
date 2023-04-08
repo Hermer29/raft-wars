@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
-using DG.Tweening;
 using InputSystem;
-using Interface;
 using RaftWars.Infrastructure;
 using UnityEngine;
 using TMPro;
@@ -17,9 +15,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Enemy : MonoBehaviour, IPlatformsCarrier
 {
-    [SerializeField] private TextMeshPro hpText;
-    [SerializeField] private TextMeshPro damageText;
-    [SerializeField] private TextMeshPro nickname;
     [SerializeField] public List<Platform> platforms = new List<Platform>();
     [FormerlySerializedAs("fullDamage")] public float maximumDamage;
     [SerializeField] private float hpIncrease = 5;
@@ -53,6 +48,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     private bool _fleeingPlayer;
     public Material _material;
     private MaterialsService _materialService;
+    private EnemyHud _enemyHud;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     private const int ExclusionSqrDistanceToPlayer = 300*2;
 
@@ -71,7 +67,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     {
         _player = Game.PlayerService;
         _materialService = Game.MaterialsService;
-        TryGenerateNickname(when: !isBoss);
         GenerateRandomColor(when: isBoss && _material == null);
         WarmupEdges();
         Player.Died += OnPlayerDied;
@@ -143,14 +138,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             turretDamage += platform.GetComponentInChildren<Turret>().damageIncrease;
             currentHp += platform.GetComponentInChildren<Turret>().healthIncrease;
         }
-    }
-
-    private void TryGenerateNickname(bool when)
-    {
-        if (!when)
-            return;
-        
-        nickname.text = "Player" + Random.Range(1000, 10000);
     }
 
     private void Update()
@@ -328,6 +315,20 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     public void SpawnEnvironment(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<AttachablePlatform> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
     {
+        if (isBoss)
+        {
+            _enemyHud = GameFactory.CreateBossHud();
+        }
+        else
+        {
+            _enemyHud = GameFactory.CreateEnemyHud();
+            var nick = _enemyHud.transform.Cast<Transform>()
+                .First(x => x.name == "NicknameText")
+                .GetComponent<TextMeshPro>();
+            nick.text = "Player" + Random.Range(1000, 10000);
+        }
+        _enemyHud.transform.SetParent(transform, worldPositionStays: false);
+    
         if (boss5Stage) return;
         platformsAdditive = platformsAdd;
         peopleAdditive = peopleAdd;
@@ -411,8 +412,13 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     private void RecountStats()
     {
-        hpText.text = Mathf.RoundToInt(maximumHp).ToString();
-        damageText.text = Mathf.RoundToInt(maximumDamage).ToString();
+        if(_enemyHud == null)
+        {
+            _enemyHud = GetComponentInChildren<EnemyHud>();
+        }
+
+        _enemyHud.hpText.text = Mathf.RoundToInt(maximumHp).ToString();
+        _enemyHud.damageText.text = Mathf.RoundToInt(maximumDamage).ToString();
     }
 
     public void AddPeople(People warrior)
@@ -474,7 +480,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             warriors[i].PlayDyingAnimation();
             warriors.RemoveAt(i);
             damageClear -= damageIncrease;
-            damageText.text = damageClear.ToString();
+            _enemyHud.damageText.text = damageClear.ToString();
         }
 
         var collider = GetComponent<Collider>();
