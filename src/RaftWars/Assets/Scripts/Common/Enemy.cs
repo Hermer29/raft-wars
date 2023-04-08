@@ -63,7 +63,17 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         }
     }
 
-    public float Extents => GetComponent<EdgesAndAngleWaves>().Bounds;
+    public float Extents{
+        get
+        {
+            var edgesAndWaves  = GetComponent<EdgesAndAngleWaves>();
+            if(edgesAndWaves == null)
+                return 3;
+            else 
+                return edgesAndWaves.Bounds;
+        }
+     
+}
 
     private void Start()
     {
