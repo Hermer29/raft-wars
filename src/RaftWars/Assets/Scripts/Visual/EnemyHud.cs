@@ -14,10 +14,13 @@ public class EnemyHud : MonoBehaviour
     private void LateUpdate()
     {
         if(Target == null)
+        {
+            CanvasGroup.alpha = 0;
             return;
+        }
 
         float distance = (Game.PlayerService.PlayerInstance.transform.position - Target.transform.position).sqrMagnitude;
-        if (!(distance < 500))
+        if (!(distance < 800))
         {
             CanvasGroup.alpha = 0;
             return;

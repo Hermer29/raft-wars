@@ -477,6 +477,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
         hp = 0;
         isDead = true;
         InstantiateRewards();
+        _enemyHud.Target = null;
 
         for(int i = 0; i < warriors.Count; i++)
         {
