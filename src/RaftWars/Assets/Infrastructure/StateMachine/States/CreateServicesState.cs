@@ -10,10 +10,12 @@ namespace RaftWars.Infrastructure
     {
         private readonly StateMachine _stateMachine;
         private readonly LoadingScreen _loadingScreen;
+        private readonly ICoroutineRunner _coroutineRunner;
 
-        public CreateServicesState(StateMachine stateMachine, LoadingScreen loadingScreen)
+        public CreateServicesState(StateMachine stateMachine, LoadingScreen loadingScreen, ICoroutineRunner coroutineRunner)
         {
             _loadingScreen = loadingScreen;
+            _coroutineRunner = coroutineRunner;
             _stateMachine = stateMachine;
         }
         
@@ -27,7 +29,7 @@ namespace RaftWars.Infrastructure
             var materialService = new MaterialsService();
             Player player = CreatePlayer();
             Game.MaterialsService = materialService;
-            var game = new Game(player, _stateMachine);
+            var game = new Game(player, _stateMachine, _coroutineRunner);
             Game.GameManager = GameFactory.CreateGameManager();
             Game.MapGenerator.Construct();
             Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main);

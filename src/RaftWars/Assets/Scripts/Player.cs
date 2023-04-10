@@ -50,7 +50,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     public int gems;
     public int warriorsCount = 2;
     public CinemachineCameraOffset _camera;
-    private float damageToEnemy;
+    private float damageToPlayer;
     private const float WinningDamageCoefficient = .6f;
     private const float LoosingDamageCoefficient = .4f;
 
@@ -138,7 +138,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void OnBattleEnded()
     {
-        Game.FightService.FightEnded();
+        Game.FightService.End();
         battle = false;
         idleBehaviour = true;
         PutInIdleAnimation();
@@ -258,8 +258,8 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         else
         {
             rb.velocity = Vector3.zero;
-            damageToEnemy = enemyForBattle.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * WinningDamageCoefficient;
-            GetDamage(damageToEnemy);
+            //damageToPlayer = enemyForBattle.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * WinningDamageCoefficient;
+            //GetDamage(damageToPlayer);
         }
     }
 
@@ -269,7 +269,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         {
             return f >= enemyHealth1 && enemyDamage1 >= hp;
         }
-        Game.FightService.FightStarted(this, enemy);
+        Game.FightService.Start(enemy);
         
         if (battle) return;
 
@@ -280,33 +280,33 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         MakeTurretsShot(enemy);
         PushPlayerTowardsEnemy(enemy);
 
-        float playerDamage = 0, enemyDamage = 0;
-        float enemyHealth = enemy.maximumHp;
-        while (true)
-        {
-            playerDamage += battleDamageOverTime * damage * Time.fixedDeltaTime;
-            enemyDamage += battleDamageOverTime * enemy.maximumDamage * Time.fixedDeltaTime;
+        // float playerDamage = 0, enemyDamage = 0;
+        // float enemyHealth = enemy.maximumHp;
+        // while (true)
+        // {
+        //     playerDamage += battleDamageOverTime * damage * Time.fixedDeltaTime;
+        //     enemyDamage += battleDamageOverTime * enemy.maximumDamage * Time.fixedDeltaTime;
 
-            if (ControversialBattle(playerDamage, enemyHealth, enemyDamage))
-            {
-                bool playerSuperior = playerDamage >= enemyDamage;
-                WhenControversialBattle_PlayerSuperior(enemy, when: playerSuperior);
-                WhenControversialBattle_EnemySuperior(enemy, when: !playerSuperior);
-                break;
-            }
+        //     if (ControversialBattle(playerDamage, enemyHealth, enemyDamage))
+        //     {
+        //         bool playerSuperior = playerDamage >= enemyDamage;
+        //         WhenControversialBattle_PlayerSuperior(enemy, when: playerSuperior);
+        //         WhenControversialBattle_EnemySuperior(enemy, when: !playerSuperior);
+        //         break;
+        //     }
 
-            if (playerDamage > enemyHealth)
-            {
-                damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
-                enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
-                break;
-            }
+        //     if (playerDamage > enemyHealth)
+        //     {
+        //         damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
+        //         enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
+        //         break;
+        //     }
 
-            if (!(enemyDamage >= hp)) continue;
-            damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
-            enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
-            break;
-        }
+        //     if (!(enemyDamage >= hp)) continue;
+        //     damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
+        //     enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
+        //     break;
+        // }
     }
 
     private void WhenControversialBattle_EnemySuperior(Enemy enemy, bool when)
@@ -314,7 +314,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         if (!when)
             return;
         
-        damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
+        this.damageToPlayer = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
         float damageToPlayer = damage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
         enemy.AttackPlayer(damageToPlayer, this);
     }
@@ -324,7 +324,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         if (!when)
             return;
         
-        damageToEnemy = enemy.maximumDamage * battleDamageOverTime * LoosingDamageCoefficient * Time.fixedDeltaTime;
+        damageToPlayer = enemy.maximumDamage * battleDamageOverTime * LoosingDamageCoefficient * Time.fixedDeltaTime;
         enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
     }
 
@@ -351,7 +351,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void Dead()
     {
-        Game.FightService.FightEnded();
+        Game.FightService.End();
         isDead = true;
         canPlay = false;
         battle = false;

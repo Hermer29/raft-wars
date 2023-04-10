@@ -481,7 +481,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         PlayShotAnimation(target);
     }
 
-    private void Dead()
+    public void Dead()
     {
         InstantiateRewards();
 

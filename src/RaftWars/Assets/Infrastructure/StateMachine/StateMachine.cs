@@ -17,7 +17,7 @@ namespace RaftWars.Infrastructure
             {
                 [typeof(BootstrapState)] = new BootstrapState(this),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, coroutineRunner, loadingScreen),
-                [typeof(CreateServicesState)] = new CreateServicesState(this, loadingScreen),
+                [typeof(CreateServicesState)] = new CreateServicesState(this, loadingScreen, coroutineRunner),
                 [typeof(CreateIMGUIState)] = new CreateIMGUIState(),
                 [typeof(ProjectInitialization)] = new ProjectInitialization(coroutineRunner),
                 [typeof(CreateShopState)] = new CreateShopState(coroutineRunner)

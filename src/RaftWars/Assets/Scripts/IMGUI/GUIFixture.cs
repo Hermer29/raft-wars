@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
@@ -49,6 +50,16 @@ namespace DefaultNamespace.IMGUI
             if (GUI.Button(new Rect(nextNextButtonPosition, size), "Add 300 coins", _style))
             {
                 _moneyService.AddCoins(300);
+            }
+
+            foreach (Enemy enemy in FindObjectsOfType<Enemy>())
+            {
+                var fromCamera = Camera.main.WorldToScreenPoint(enemy.platforms[0].transform.position);
+                Vector2 positionOnScreen = fromCamera;
+                if(GUI.Button(new Rect(positionOnScreen, size), "Kill", _style))
+                {
+                    enemy.Dead();
+                }
             }
         }
     }
