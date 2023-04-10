@@ -260,7 +260,7 @@ public class Player : FighterRaft, IPlatformsCarrier
 
     private void MakeRandomPeopleDie()
     {
-        if (warriors.Count == 0)
+        if (warriors.Count == 1)
             return;
 
         People warrior = warriors[Random.Range(0, warriors.Count)];
