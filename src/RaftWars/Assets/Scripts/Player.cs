@@ -359,10 +359,8 @@ public class Player : FighterRaft, IPlatformsCarrier
         {
             collider.enabled = false;
         }
-        foreach (GameObject indicator in _indicators)
-        {
-            indicator.SetActive(false);
-        }
+
+        _enemyHud.Target = null;
         if(enemyForBattle != null)
         {
             foreach(Platform platform in enemyForBattle.platforms)
