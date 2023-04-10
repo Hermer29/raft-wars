@@ -17,6 +17,7 @@
         public const string ExplosionPath = "Prefabs/Explosion";
         public const string BossHudPath = "Prefabs/BossHud";
         public const string EnemyHudPath = "Prefabs/EnemyHud";
+        public const string GreyDeathMaterialPath = "DiedPeopleMaterial";
 
         public static string CreateLevelGeneratorPath(int level)
         {

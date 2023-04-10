@@ -177,8 +177,8 @@ public class Player : FighterRaft, IPlatformsCarrier
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        hp += (int) (hpIncomeForPeople * (1 + hpAdditive));
-        damage += (int) (damageIncomeForPeople * (1 + damageAdditive));
+        hp += 6;
+        damage += 6;
         warrior.Material = _material;
         RecountStats();
         warrior.ApplyHat(_hat);
@@ -193,14 +193,16 @@ public class Player : FighterRaft, IPlatformsCarrier
 
     public void DealDamage(int amount = 1)
     {
+        const int damageAdditive = 6;
+
         bool IsRandomPeopleMustDie()
         {
-            return (int) hp % hpAdditive == 0;
+            return hp % damageAdditive == 0;
         }
         if (IsRandomPeopleMustDie())
         {
             MakeRandomPeopleDie();
-            damage -= (int) damageAdditive;
+            damage -= damageAdditive;
             if (damage <= 0)
                 damage = 0;
         }
@@ -260,9 +262,21 @@ public class Player : FighterRaft, IPlatformsCarrier
     {
         if (warriors.Count == 0)
             return;
+
         People warrior = warriors[Random.Range(0, warriors.Count)];
-        warrior.PlayDyingAnimation();
+        warrior.PlayDyingAnimation(!TryThrowPeopleInWater(warrior));
+        warrior.MakeGrey();
         warriors.Remove(warrior);
+    }
+
+    private bool TryThrowPeopleInWater(People people)
+    {
+        bool randomBool = Random.Range(0, 2) == 1;
+        if (randomBool)
+        {
+            people.ThrowAway();
+        }
+        return randomBool;
     }
 
     private void FixedUpdate()

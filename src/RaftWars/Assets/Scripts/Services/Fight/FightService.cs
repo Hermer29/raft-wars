@@ -40,6 +40,8 @@ namespace Services
             do
             {
                 yield return new WaitForSeconds(CalculatePlayerAttackFrequency());
+                if (FightStarted == false)
+                    break;
                 _currentFightEnemy.DealDamage();
             } while (IsParticipantsAlive());
         }
@@ -49,6 +51,8 @@ namespace Services
             do
             {
                 yield return new WaitForSeconds(CalculateEnemyAttackFrequency());
+                if (FightStarted == false)
+                    break;
                 _player.DealDamage();
             } while (IsParticipantsAlive());
             End();
@@ -63,14 +67,14 @@ namespace Services
         {
             float fromDifference = CalculatePlayerSuperiority() * FightConstants.DifferenceWeight;
             float fromDamage = _currentFightEnemy.damage * FightConstants.DamageWeight;
-            return MathF.Abs((fromDamage + fromDifference) * FightConstants.Damage2AttackTime);
+            return MathF.Abs(1 * FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
         }
 
         private float CalculatePlayerAttackFrequency()
         {
             float fromDifference = -CalculatePlayerSuperiority() * FightConstants.DifferenceWeight;
             float fromDamage = _player.PlayerInstance.damage * FightConstants.DamageWeight;
-            return MathF.Abs((fromDamage + fromDifference) * FightConstants.Damage2AttackTime);
+            return MathF.Abs(1 * FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
         }
 
         private bool IsParticipantsAlive()

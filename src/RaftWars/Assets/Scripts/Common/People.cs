@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DefaultNamespace;
+using RaftWars.Infrastructure.AssetManagement;
 using Skins.Hats;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -146,12 +147,14 @@ public class People : MonoBehaviour
         battle = false;
     }
 
-    public void PlayDyingAnimation()
+    public void PlayDyingAnimation(bool andDestroy = true)
     {
         isDead = true;
         StopCoroutine(_movingOnPlatform);
         animator.Play("Death");
+        //TODO: if(andDestroy)
         Destroy(gameObject, 2.5f);
+            
     }
 
     public void ApplyHat(HatSkin hat)
@@ -163,5 +166,26 @@ public class People : MonoBehaviour
 
         if(hat != null)
             _hat = Instantiate(hat, HatPosition).gameObject;
+    }
+
+    public void MakeGrey()
+    {
+        Material = AssetLoader.LoadGreyDeathMaterial();
+    }
+
+    public void ThrowAway()
+    {
+        //TODO: StartCoroutine(ThrowProcess());
+    }
+
+    private IEnumerator ThrowProcess()
+    {
+        const float height = 3f;
+        var randomRadian = Random.Range(0, 360) * Mathf.Deg2Rad;
+        var randomDirection = new Vector3(Mathf.Sin(randomRadian), 0, Mathf.Cos(randomRadian));
+        while (true)
+        {
+            
+        }
     }
 }

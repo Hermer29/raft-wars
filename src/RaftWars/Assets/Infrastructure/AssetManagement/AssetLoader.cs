@@ -92,5 +92,10 @@ namespace RaftWars.Infrastructure.AssetManagement
         {
             return Resources.Load<EnemyHud>(EnemyHudPath);
         }
+
+        public static Material LoadGreyDeathMaterial()
+        {
+            return Resources.Load<Material>(GreyDeathMaterialPath);
+        }
     }
 }

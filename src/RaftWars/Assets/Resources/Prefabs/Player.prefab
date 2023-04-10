@@ -63,7 +63,6 @@ MonoBehaviour:
   damage: 0
   hpIncomeForPeople: 5
   damageIncomeForPeople: 5
-  battleDamageOverTime: 0.2
   speed: 7
   CameraGroup: {fileID: 5655730262444525566}
   _indicators:
@@ -168,7 +167,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6052506301913874477, guid: 35a046cd56065db4b9317da481fdd846, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.78
       objectReference: {fileID: 0}
     - target: {fileID: 6052506301913874477, guid: 35a046cd56065db4b9317da481fdd846, type: 3}
       propertyPath: m_LocalPosition.z

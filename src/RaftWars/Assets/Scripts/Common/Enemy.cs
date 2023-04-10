@@ -573,6 +573,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
         if(warriors.Count == 0)
             return;
         People warrior = warriors[Random.Range(0, warriors.Count)];
+        warrior.MakeGrey();
         warrior.PlayDyingAnimation();
         warriors.Remove(warrior);
     }
