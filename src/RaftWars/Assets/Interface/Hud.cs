@@ -36,6 +36,7 @@ namespace Interface
         public Button BuyHealth;
         public Button NextStage;
         public Arrow Arrow;
+        public Button PauseButton;
 
         private void Start()
         {

@@ -232,7 +232,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier
             }
         }
 
-
+        if (GameManager.instance.GamePaused)
+            return;
         transform.position += _moveDirection.Value * (deltaTime * speed);
     }
 

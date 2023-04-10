@@ -17,6 +17,7 @@ public class Arrow : MonoBehaviour
     private Camera _camera;
     private PlayerService _playerService;
     private GameObject _boss;
+    private bool _disabled;
 
     public void Construct(PlayerService playerService, Camera camera, Enemy boss)
     {
@@ -49,6 +50,8 @@ public class Arrow : MonoBehaviour
 
     private void Update()
     {
+        if (_disabled)
+            return;
         if (_boss == null)
         {
             _fading.alpha = 0;
@@ -78,6 +81,17 @@ public class Arrow : MonoBehaviour
     {
         _fading.alpha = 0;
         _targetDirection = null;
+    }
+
+    public void Disable()
+    {
+        _fading.alpha = 0;
+        _disabled = true;
+    }
+
+    public void Enable()
+    {
+        _disabled = false;
     }
 
     private Vector2 ToScreenPosition(Vector2 viewport)

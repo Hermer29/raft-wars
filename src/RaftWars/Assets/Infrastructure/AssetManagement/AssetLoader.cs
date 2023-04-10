@@ -97,5 +97,10 @@ namespace RaftWars.Infrastructure.AssetManagement
         {
             return Resources.Load<Material>(GreyDeathMaterialPath);
         }
+
+        public static Pause LoadPauseMenu()
+        {
+            return Resources.Load<Pause>(PauseMenuPath);
+        }
     }
 }

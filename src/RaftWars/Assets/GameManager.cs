@@ -37,8 +37,10 @@ public class GameManager : MonoBehaviour
     private Camera _camera;
     public event Action GameStarted;
 
-    public void Construct(MapGenerator mapGenerator, StateMachine stateMachine, Arrow arrow, Camera camera)
+    public void Construct(MapGenerator mapGenerator, StateMachine stateMachine, Arrow arrow, Camera camera,
+        Pause pause)
     {
+        _pause = pause;
         map = mapGenerator;
         hud = Game.Hud;
         player = Game.PlayerService;
@@ -69,8 +71,10 @@ public class GameManager : MonoBehaviour
     }
 
 private bool _wonTheGame;
+public bool GamePaused;
+private Pause _pause;
 
-    private void Update()
+private void Update()
     {
         if (!_started)
         {
@@ -168,6 +172,7 @@ private bool _wonTheGame;
         _started = true;
         hud.tapToPlay.SetActive(false);
         Player.instance.canPlay = true;
+        _pause.ShowButton();
     }
 
     public void AddEnemy(Enemy enemy)

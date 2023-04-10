@@ -67,5 +67,10 @@ namespace RaftWars.Infrastructure
         {
             return Instantiate(LoadEnemyHud());
         }
+
+        public static Pause CreatePauseMenu()
+        {
+            return Instantiate(LoadPauseMenu());
+        }
     }
 }
