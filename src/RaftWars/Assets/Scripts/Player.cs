@@ -141,10 +141,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         Game.FightService.FightEnded();
         battle = false;
         idleBehaviour = true;
-        foreach (var platform in enemyForBattle.platforms.Where(x => x != null))  
-        {
-            CameraGroup.RemoveMember(platform.transform);
-        }
         PutInIdleAnimation();
     }
 
@@ -277,10 +273,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         
         if (battle) return;
 
-        foreach (var platform in enemy.platforms)
-        {
-            CameraGroup.AddMember(platform.transform, 1, 7);
-        }
         idleBehaviour = false;
         enemyForBattle = enemy;
         battle = true;
