@@ -33,6 +33,7 @@ namespace Services
             _fightCamera.FightStarted(_player.PlayerInstance, enemy);
             _runner.StartCoroutine(PlayerFightProcess());
             _runner.StartCoroutine(EnemyFightProcess());
+            enemy.StartFight();
         }
         
         private IEnumerator PlayerFightProcess()

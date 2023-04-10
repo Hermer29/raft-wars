@@ -552,22 +552,6 @@ public class Enemy : FighterRaft, IPlatformsCarrier
         }
     }
 
-    private void CheckHP()
-    {
-        if (warriorsCount > 0)
-        {
-            if (hp - currentHp <= (warriors.Count - 1) * hpIncrease )
-            {
-                if (warriors.Count > 0)
-                {
-                    MakeRandomPeopleDie();
-                    damage -= damageIncrease;
-                }
-            }
-        }
-        RecountStats();
-    }
-
     private void MakeRandomPeopleDie()
     {
         if(warriors.Count == 0)
@@ -578,17 +562,6 @@ public class Enemy : FighterRaft, IPlatformsCarrier
         warriors.Remove(warrior);
     }
 
-    public void GetDamage(float damage)
-    {
-        hp -= damage;
-        CheckHP();
-        if (hp <= 0)
-        {
-            battle = false;
-            Dead();
-        }
-    }
-    
     public IEnumerable<GameObject> GetPlatforms()
     {
         return platforms.Select(x => x.gameObject).Concat(turrets.Select(x => x.transform.parent.gameObject));
@@ -638,6 +611,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
 
     public void StartFight()
     {
-        
+        battle = true;
+        PlayShotAnimation(_player.PlayerInstance);
     }
 }
