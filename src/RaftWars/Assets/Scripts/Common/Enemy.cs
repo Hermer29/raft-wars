@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
@@ -13,10 +14,10 @@ using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 
-public class Enemy : MonoBehaviour, IPlatformsCarrier
+public class Enemy : FighterRaft, IPlatformsCarrier
 {
     [SerializeField] public List<Platform> platforms = new List<Platform>();
-    [FormerlySerializedAs("fullDamage")] public float maximumDamage;
+    [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public float damage;
     [SerializeField] private float hpIncrease = 5;
     [SerializeField] private float damageIncrease = 5;
     [SerializeField] private bool _disableEdges;
@@ -27,7 +28,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     private float damageClear = 0;
     private float turretDamage = 0;
     private float currentHp = 0;
-    [FormerlySerializedAs("fullHp")] public float maximumHp;
+    [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public float hp;
     public bool battle = false;
     private float speed = 5 - 5/4;
     private Player player;
@@ -51,8 +52,10 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     private EnemyHud _enemyHud;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     private const int ExclusionSqrDistanceToPlayer = 300*2;
+    private const int HpAdditive = 6;
 
-    private int StatsSum => (int) (maximumHp + maximumDamage);
+    private int StatsSum => (int) (hp + damage);
+
 
     public Material Material
     {
@@ -63,17 +66,16 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         }
     }
 
-    public float Extents{
+    public float Extents
+    {
         get
         {
-            var edgesAndWaves  = GetComponent<EdgesAndAngleWaves>();
-            if(edgesAndWaves == null)
+            var edgesAndWaves = GetComponent<EdgesAndAngleWaves>();
+            if (edgesAndWaves == null)
                 return 3;
-            else 
-                return edgesAndWaves.Bounds;
+            return edgesAndWaves.Bounds;
         }
-     
-}
+    }
 
     private void Start()
     {
@@ -86,7 +88,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         WarmupPlatforms();
         AssignRelatedPeople();
         RecountStats();
-        
     }
 
     private void TeleportFromOutOfBounds()
@@ -182,60 +183,56 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         if (_player.InBattle)
             return;
         if (_player.IsDead)
-        { }
+        {
+        }
         else if (_player.GameStarted == false)
             return;
 
         if (isDead)
             return;
 
-        if(Bounds.IsInBounds(transform) == false)
+        if (Bounds.IsInBounds(transform) == false)
         {
-            _moveDirection = (Bounds.VectorToCenter(transform.position) + 
-            new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5))).normalized;
+            _moveDirection = (Bounds.VectorToCenter(transform.position) +
+                              new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5))).normalized;
         }
         else
         {
             if (_moveDirection == null)
-        {
-            MoveInRandomDirection();
-        }
-        
-        float sqrMagnitudeToPlayer = (_player.Position - transform.position).sqrMagnitude;
-        var escapeVector = -(_player.Position - transform.position).normalized;
-        
-        if (sqrMagnitudeToPlayer < ExclusionSqrDistanceToPlayer)
-        {
-            if (_player.ExistsEnemyThatAlreadyInExclusionZone && _player.EnemyInExclusionZone != this)
             {
-                _moveDirection = escapeVector;
+                MoveInRandomDirection();
             }
-            else
+
+            float sqrMagnitudeToPlayer = (_player.Position - transform.position).sqrMagnitude;
+            Vector3 escapeVector = -(_player.Position - transform.position).normalized;
+
+            if (sqrMagnitudeToPlayer < ExclusionSqrDistanceToPlayer)
             {
-                _player.RegisterAsEnemyInExclusionZone(this);
+                if (_player.ExistsEnemyThatAlreadyInExclusionZone && _player.EnemyInExclusionZone != this)
+                {
+                    _moveDirection = escapeVector;
+                }
+                else
+                {
+                    _player.RegisterAsEnemyInExclusionZone(this);
+                }
             }
-        }
-        else if(_player.EnemyInExclusionZone == this)
-        {
-            _player.UnregisterEnemyInExclusionZone();
-        }
-        if(_player.IsDead)
-        {}
-        else if(sqrMagnitudeToPlayer < SqrMagnitudeDistanceToReactOnPlayer)
-        {
-            bool playerSuperior = _player.PlayerStatsSum >= StatsSum;
-            if (playerSuperior)
+            else if (_player.EnemyInExclusionZone == this)
             {
-                _moveDirection = escapeVector;
+                _player.UnregisterEnemyInExclusionZone();
             }
-            else
+
+            if (_player.IsDead)
             {
-                _moveDirection = (_player.Position - transform.position).normalized;
             }
-        }
+            else if (sqrMagnitudeToPlayer < SqrMagnitudeDistanceToReactOnPlayer)
+            {
+                bool playerSuperior = _player.PlayerStatsSum >= StatsSum;
+                _moveDirection = playerSuperior ? escapeVector : (_player.Position - transform.position).normalized;
+            }
         }
 
-        
+
         transform.position += _moveDirection.Value * (deltaTime * speed);
     }
 
@@ -310,14 +307,6 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
         throw new Exception("Unreachable");
     }
 
-    private void FixedUpdate()
-    {
-        if (battle)
-        {
-            GetDamage(playerDmg);
-        }
-    }
-
     public void SpawnEnvironment(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<AttachablePlatform> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
     {
         if (isBoss)
@@ -356,15 +345,15 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             if (plat.ishospital)
             {
                 currentHp += plat.GetComponentInChildren<Turret>().healthIncrease;
-                maximumHp += plat.GetComponentInChildren<Turret>().healthIncrease;
+                this.hp += plat.GetComponentInChildren<Turret>().healthIncrease;
             }
             else if (plat.isTurret)
             {
                 turrets.Add(plat.GetComponentInChildren<Turret>());
                 turretDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
-                maximumDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
+                this.damage += plat.GetComponentInChildren<Turret>().damageIncrease;
                 currentHp += plat.GetComponentInChildren<Turret>().healthIncrease;
-                maximumHp += plat.GetComponentInChildren<Turret>().healthIncrease;
+                this.hp += plat.GetComponentInChildren<Turret>().healthIncrease;
                 platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
             }
             else
@@ -427,15 +416,15 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             }
         }
 
-        _enemyHud.hpText.text = Mathf.RoundToInt(maximumHp).ToString();
-        _enemyHud.damageText.text = Mathf.RoundToInt(maximumDamage).ToString();
+        _enemyHud.hpText.text = Mathf.RoundToInt(hp).ToString();
+        _enemyHud.damageText.text = Mathf.RoundToInt(damage).ToString();
     }
 
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        maximumHp += hpIncrease;
-        maximumDamage += damageIncrease;
+        hp += hpIncrease;
+        damage += damageIncrease;
         RecountStats();
     }
 
@@ -451,7 +440,7 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
             turret.ShootAnim(target.transform);
         }
     }
-    
+
     private void PlayIdleAnimation()
     {
         if (isBoss)
@@ -483,6 +472,8 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
 
     public void Dead()
     {
+        hp = 0;
+        isDead = true;
         InstantiateRewards();
 
         for(int i = 0; i < warriors.Count; i++)
@@ -565,39 +556,43 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     {
         if (warriorsCount > 0)
         {
-            if (maximumHp - currentHp <= (warriors.Count - 1) * hpIncrease )
+            if (hp - currentHp <= (warriors.Count - 1) * hpIncrease )
             {
                 if (warriors.Count > 0)
                 {
-                    People warrior = warriors[Random.Range(0, warriors.Count)];
-                    warrior.PlayDyingAnimation();
-                    warriors.Remove(warrior);
-                    maximumDamage -= damageIncrease;
+                    MakeRandomPeopleDie();
+                    damage -= damageIncrease;
                 }
             }
         }
         RecountStats();
     }
 
+    private void MakeRandomPeopleDie()
+    {
+        if(warriors.Count == 0)
+            return;
+        People warrior = warriors[Random.Range(0, warriors.Count)];
+        warrior.PlayDyingAnimation();
+        warriors.Remove(warrior);
+    }
+
     public void GetDamage(float damage)
     {
-        maximumHp -= damage;
+        hp -= damage;
         CheckHP();
-        if (maximumHp <= 0)
+        if (hp <= 0)
         {
             battle = false;
-            maximumHp = 0;
-            isDead = true;
             Dead();
         }
     }
-
-
+    
     public IEnumerable<GameObject> GetPlatforms()
     {
         return platforms.Select(x => x.gameObject).Concat(turrets.Select(x => x.transform.parent.gameObject));
     }
-    
+
     private void OnDestroy()
     {
         Player.Died -= OnPlayerDied;
@@ -607,5 +602,41 @@ public class Enemy : MonoBehaviour, IPlatformsCarrier
     {
         battle = false;
         PlayIdleAnimation();
+    }
+
+    public void DealDamage()
+    {
+        bool IsRandomPeopleMustDie()
+        {
+            return (int) hp % hpIncrease == 0;
+        }
+        
+        if (IsRandomPeopleMustDie())
+        {
+            MakeRandomPeopleDie();
+            damage -= damageIncrease;
+            if (damage <= 0)
+                damage = 0;
+        }
+        hp -= 1;
+        if (hp <= 0)
+            hp = 0;
+        
+        RecountStats();
+    }
+
+    public override void Die()
+    {
+        Dead();
+    }
+
+    public override void StopFight()
+    {
+        OnPlayerDied();
+    }
+
+    public void StartFight()
+    {
+        
     }
 }

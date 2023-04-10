@@ -215,7 +215,7 @@ private bool _wonTheGame;
         {
             _advertising.ShowRewarded(() =>
             {
-                Player.instance.IncreaseHealth((float)buyableHealthPercent);
+                Player.instance.IncreaseHealth(buyableHealthPercent);
                 UpdateNextHealthUpgrade();
             });
             return;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
+using Common;
 using DefaultNamespace;
 using DG.Tweening;
 using InputSystem;
@@ -19,7 +20,7 @@ using UnityEngine.Serialization;
 using Visual;
 using Random = UnityEngine.Random;
 
-public class Player : MonoBehaviour, IPlatformsCarrier
+public class Player : FighterRaft, IPlatformsCarrier
 {
     [SerializeField] private List<People> warriors;
     [SerializeField] private List<Platform> platforms;
@@ -28,17 +29,16 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     [SerializeField] private TextMeshPro damageText;
     [SerializeField] private TextMeshPro nickname;
     [SerializeField] private Text coinsText, gemsText;
-    [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public float hp;
-    [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public float damage;
-    [FormerlySerializedAs("hpIncrease")] [SerializeField] private float hpIncomeForPeople = 5;
-    [FormerlySerializedAs("damageIncrease")] [SerializeField] private float damageIncomeForPeople = 5;
-    [FormerlySerializedAs("battleKoef")] public float battleDamageOverTime = .2f;
+    [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public int hp;
+    [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public int damage;
+    [FormerlySerializedAs("hpIncrease")] [SerializeField] private int hpIncomeForPeople = 5;
+    [FormerlySerializedAs("damageIncrease")] [SerializeField] private int damageIncomeForPeople = 5;
     [SerializeField] public float speed;
     public CinemachineTargetGroup CameraGroup;
     [SerializeField] private GameObject[] _indicators;
 
-    private float damageClear = 10;
-    private float platformHp;
+    private int damageClear = 10;
+    private int platformHp;
     private float hpAdditive;
     private float damageAdditive;
     public bool battle;
@@ -53,6 +53,7 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     private float damageToPlayer;
     private const float WinningDamageCoefficient = .6f;
     private const float LoosingDamageCoefficient = .4f;
+    private const int PushForceBeforeFightFromEnemy = 2;
 
     private Enemy enemyForBattle;
     private InputService _input;
@@ -138,7 +139,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void OnBattleEnded()
     {
-        Game.FightService.End();
         battle = false;
         idleBehaviour = true;
         PutInIdleAnimation();
@@ -177,27 +177,48 @@ public class Player : MonoBehaviour, IPlatformsCarrier
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        hp += hpIncomeForPeople * (1 + hpAdditive);
-        damage += damageIncomeForPeople * (1 + damageAdditive);
+        hp += (int) (hpIncomeForPeople * (1 + hpAdditive));
+        damage += (int) (damageIncomeForPeople * (1 + damageAdditive));
         warrior.Material = _material;
         RecountStats();
         warrior.ApplyHat(_hat);
     }
 
-    public void AddHealTurret(float healthIncrease)
+    public void AddHealTurret(int healthIncrease)
     {
         platformHp += healthIncrease;
-        hp += healthIncrease * (1 + hpAdditive);
+        hp += (int) (healthIncrease * (1 + hpAdditive));
         RecountStats();
     }
 
-    public void AddTurret(Turret tur, float damageIncrease, float healthIncrease)
+    public void DealDamage(int amount = 1)
+    {
+        bool IsRandomPeopleMustDie()
+        {
+            return (int) hp % hpAdditive == 0;
+        }
+        if (IsRandomPeopleMustDie())
+        {
+            MakeRandomPeopleDie();
+            damage -= (int) damageAdditive;
+            if (damage <= 0)
+                damage = 0;
+        }
+        hp -= amount;
+        if (Game.FightService.FightStarted == false && hp <= 0)
+        {
+            Die();
+        }
+        RecountStats();
+    }
+
+    public void AddTurret(Turret tur, int damageIncrease, int healthIncrease)
     {
         AddPlatform(tur.GetComponentInParent<Platform>());
         turrets.Add(tur);
         platformHp += healthIncrease;
-        hp += healthIncrease * (1 + hpAdditive);
-        damage += damageIncrease * (1 + damageAdditive);
+        hp += (int) (healthIncrease * (1 + hpAdditive));
+        damage += (int) (damageIncrease * (1 + damageAdditive));
         RecountStats();
     }
     
@@ -227,14 +248,21 @@ public class Player : MonoBehaviour, IPlatformsCarrier
             {
                 if (warriors.Count > 0)
                 {
-                    People warrior = warriors[Random.Range(0, warriors.Count)];
-                    warrior.PlayDyingAnimation();
-                    warriors.Remove(warrior);
-                    damage -= damageIncomeForPeople * (1 + damageAdditive);
+                    MakeRandomPeopleDie();
+                    damage -= (int) (damageIncomeForPeople * (1 + damageAdditive));
                 }
             }
         }
         RecountStats();
+    }
+
+    private void MakeRandomPeopleDie()
+    {
+        if (warriors.Count == 0)
+            return;
+        People warrior = warriors[Random.Range(0, warriors.Count)];
+        warrior.PlayDyingAnimation();
+        warriors.Remove(warrior);
     }
 
     private void FixedUpdate()
@@ -258,18 +286,12 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         else
         {
             rb.velocity = Vector3.zero;
-            //damageToPlayer = enemyForBattle.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * WinningDamageCoefficient;
-            //GetDamage(damageToPlayer);
         }
     }
 
     public void StartBattle(Enemy enemy)
     {
-        bool ControversialBattle(float f, float enemyHealth1, float enemyDamage1)
-        {
-            return f >= enemyHealth1 && enemyDamage1 >= hp;
-        }
-        Game.FightService.Start(enemy);
+        Game.FightService.FightBeginningCollisionDetected(enemy);
         
         if (battle) return;
 
@@ -278,59 +300,12 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         battle = true;
         MakeWarriorsShot(enemy);
         MakeTurretsShot(enemy);
-        PushPlayerTowardsEnemy(enemy);
-
-        // float playerDamage = 0, enemyDamage = 0;
-        // float enemyHealth = enemy.maximumHp;
-        // while (true)
-        // {
-        //     playerDamage += battleDamageOverTime * damage * Time.fixedDeltaTime;
-        //     enemyDamage += battleDamageOverTime * enemy.maximumDamage * Time.fixedDeltaTime;
-
-        //     if (ControversialBattle(playerDamage, enemyHealth, enemyDamage))
-        //     {
-        //         bool playerSuperior = playerDamage >= enemyDamage;
-        //         WhenControversialBattle_PlayerSuperior(enemy, when: playerSuperior);
-        //         WhenControversialBattle_EnemySuperior(enemy, when: !playerSuperior);
-        //         break;
-        //     }
-
-        //     if (playerDamage > enemyHealth)
-        //     {
-        //         damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
-        //         enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
-        //         break;
-        //     }
-
-        //     if (!(enemyDamage >= hp)) continue;
-        //     damageToEnemy = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
-        //     enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
-        //     break;
-        // }
+        PushPlayerOutOfEnemy(enemy);
     }
-
-    private void WhenControversialBattle_EnemySuperior(Enemy enemy, bool when)
+    
+    private void PushPlayerOutOfEnemy(Enemy enemy)
     {
-        if (!when)
-            return;
-        
-        this.damageToPlayer = enemy.maximumDamage * battleDamageOverTime * Time.fixedDeltaTime;
-        float damageToPlayer = damage * battleDamageOverTime * Time.fixedDeltaTime * LoosingDamageCoefficient;
-        enemy.AttackPlayer(damageToPlayer, this);
-    }
-
-    private void WhenControversialBattle_PlayerSuperior(Enemy enemy, bool when)
-    {
-        if (!when)
-            return;
-        
-        damageToPlayer = enemy.maximumDamage * battleDamageOverTime * LoosingDamageCoefficient * Time.fixedDeltaTime;
-        enemy.AttackPlayer(damage * battleDamageOverTime * Time.fixedDeltaTime, this);
-    }
-
-    private void PushPlayerTowardsEnemy(Enemy enemy)
-    {
-        rb.AddForce((transform.position - enemy.transform.position).normalized * 2, ForceMode.Impulse);
+        rb.AddForce((transform.position - enemy.transform.position).normalized * PushForceBeforeFightFromEnemy, ForceMode.Impulse);
     }
 
     private void MakeTurretsShot(Enemy enemy)
@@ -351,7 +326,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     private void Dead()
     {
-        Game.FightService.End();
         isDead = true;
         canPlay = false;
         battle = false;
@@ -435,17 +409,6 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         return platforms[Random.Range(0, platformCount)];
     }
 
-    public void GetDamage(float damage)
-    {
-        hp -= damage;
-        CheckHp();
-        if (hp <= 0)
-        {
-            hp = 0;
-            Dead();
-        }
-    }
-
     public void AddPlatform(Platform platform)
     {
         void AddPlatformToCameraTargetGroup()
@@ -463,14 +426,14 @@ public class Player : MonoBehaviour, IPlatformsCarrier
 
     public void AmplifyDamage(float percent)
     {
-        damage += damage * (percent - damageAdditive);
+        damage += (int) (damage * (percent - damageAdditive));
         damageAdditive = percent;
     }
 
     public void IncreaseHealth(float bonus)
     {
-        hp += hp * (bonus - hpAdditive);
-        hpAdditive = bonus;
+        hp += (int) (hp * (bonus - hpAdditive));
+        hpAdditive = (int) bonus;
     }
 
     public IEnumerable<GameObject> GetPlatforms()
@@ -527,5 +490,15 @@ public class Player : MonoBehaviour, IPlatformsCarrier
         {
             platform.Material = material;
         }
+    }
+
+    public override void Die()
+    {
+        Dead();
+    }
+
+    public override void StopFight()
+    {
+        OnBattleEnded();
     }
 }

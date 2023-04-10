@@ -182,7 +182,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     {
         if(GetComponentInParent<Player>() != null)
         {
-            GetComponentInParent<Player>().GetDamage(damage);
+            GetComponentInParent<Player>().DealDamage(damage);
         }
     }
 

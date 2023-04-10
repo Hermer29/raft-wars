@@ -53,5 +53,10 @@ namespace InputSystem
         {
             PlayerInstance.RepaintWith(material);
         }
+
+        public void DealDamage()
+        {
+            PlayerInstance.DealDamage();
+        }
     }
 }
