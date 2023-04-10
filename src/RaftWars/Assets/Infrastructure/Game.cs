@@ -23,6 +23,7 @@ namespace RaftWars.Infrastructure
         public static GameManager GameManager;
         public static StateMachine StateMachine;
         public static FightService FightService;
+        public static UnityEngine.Canvas StatsCanvas;
 
         public Game(Player player, StateMachine stateMachine, ICoroutineRunner coroutineRunner)
         {
@@ -38,6 +39,7 @@ namespace RaftWars.Infrastructure
             PropertyService = new PropertyService(CrossLevelServices.PrefsService);
             FightService = new FightService(
                 new FightCameraService(GameFactory.CreatePlayerVirtualCamera()), PlayerService, coroutineRunner);
+            StatsCanvas = GameFactory.CreateStatsCanvas();
         }
     }
 }

@@ -102,5 +102,10 @@ namespace RaftWars.Infrastructure.AssetManagement
         {
             return Resources.Load<Pause>(PauseMenuPath);
         }
+
+        public static Canvas LoadStatsCanvas()
+        {
+            return Resources.Load<Canvas>(StatsCanvasPath);
+        }
     }
 }

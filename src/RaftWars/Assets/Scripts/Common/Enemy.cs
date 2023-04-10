@@ -319,10 +319,12 @@ public class Enemy : FighterRaft, IPlatformsCarrier
             _enemyHud = GameFactory.CreateEnemyHud();
             var nick = _enemyHud.transform.Cast<Transform>()
                 .First(x => x.name == "NicknameText")
-                .GetComponent<TextMeshPro>();
+                .GetComponent<TMP_Text>();
             nick.text = "Player" + Random.Range(1000, 10000);
         }
-        _enemyHud.transform.SetParent(transform, worldPositionStays: false);
+
+        _enemyHud.Target = transform;
+        _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
     
         if (boss5Stage) return;
         platformsAdditive = platformsAdd;
@@ -409,11 +411,10 @@ public class Enemy : FighterRaft, IPlatformsCarrier
     {
         if(_enemyHud == null)
         {
-            _enemyHud = GetComponentInChildren<EnemyHud>();
             if(_enemyHud == null)
             {
                 _enemyHud = GameFactory.CreateBossHud();
-                _enemyHud.transform.SetParent(transform, worldPositionStays: false);
+                _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
             }
         }
 

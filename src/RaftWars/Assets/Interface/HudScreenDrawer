@@ -1,0 +1,7 @@
+public class HudDrawer : MonoBehaviour
+{
+    private void Update()
+    {
+        var objects = GameObject.FindObjectsOfType<EnemyHud>();
+    }
+}

@@ -72,5 +72,10 @@ namespace RaftWars.Infrastructure
         {
             return Instantiate(LoadPauseMenu());
         }
+
+        public static Canvas CreateStatsCanvas()
+        {
+            return Instantiate(LoadStatsCanvas());
+        }
     }
 }

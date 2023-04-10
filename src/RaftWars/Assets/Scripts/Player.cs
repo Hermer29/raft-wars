@@ -65,6 +65,7 @@ public class Player : FighterRaft, IPlatformsCarrier
     private EdgesAndAngleWaves edgesAndAngleWaves;
     private Hud _hud;
     private HatSkin _hat;
+    private EnemyHud _enemyHud;
     public static event Action Died;
 
     public Vector3 MoveDirection => new Vector3(_input.Horizontal, 0, _input.Vertical);
@@ -78,6 +79,10 @@ public class Player : FighterRaft, IPlatformsCarrier
     
     private void Start()
     {
+        
+        _enemyHud = GameFactory.CreateEnemyHud();
+        _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
+        _enemyHud.Target = transform;
         _input = Game.InputService;
         _materialsService = Game.MaterialsService;
         _hud = Game.Hud;
@@ -119,12 +124,12 @@ public class Player : FighterRaft, IPlatformsCarrier
     {
         if (PlayerPrefs.HasKey("PlayerNick"))
         {
-            nickname.text = PlayerPrefs.GetString("PlayerNick");
+            _enemyHud.nickname.text = PlayerPrefs.GetString("PlayerNick");
         }
         else
         {
             PlayerPrefs.SetString("PlayerNick", "Player" + Random.Range(1000, 9999));
-            nickname.text = PlayerPrefs.GetString("PlayerNick");
+            _enemyHud.nickname.text = PlayerPrefs.GetString("PlayerNick");
         }
     }
 
@@ -232,8 +237,8 @@ public class Player : FighterRaft, IPlatformsCarrier
 
     private void RecountStats()
     {
-        hpText.text = Mathf.RoundToInt(Mathf.Clamp(hp, 0, 99999)).ToString();
-        damageText.text = Mathf.RoundToInt(Mathf.Clamp(damage, 0, 99999)).ToString();
+        _enemyHud.hpText.text = Mathf.RoundToInt(Mathf.Clamp(hp, 0, 99999)).ToString();
+        _enemyHud.damageText.text = Mathf.RoundToInt(Mathf.Clamp(damage, 0, 99999)).ToString();
         warriorsCount = warriors.Count;
     }
 

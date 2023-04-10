@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 5502548783190899025}
   - component: {fileID: 2498290719269179278}
   m_Layer: 5
-  m_Name: EnemyHud
+  m_Name: PlayerHud
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -616,7 +616,6 @@ MonoBehaviour:
   hpText: {fileID: 2293818996241228147}
   damageText: {fileID: 2293818995121248657}
   CanvasGroup: {fileID: 2498290719269179278}
-  nickname: {fileID: 2293818996291332724}
 --- !u!225 &2498290719269179278
 CanvasGroup:
   m_ObjectHideFlags: 0

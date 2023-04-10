@@ -19,6 +19,7 @@
         public const string EnemyHudPath = "Prefabs/EnemyHud";
         public const string GreyDeathMaterialPath = "DiedPeopleMaterial";
         public const string PauseMenuPath = "Prefabs/UI/PauseMenu";
+        public const string StatsCanvasPath = "Prefabs/UI/StatsCanvas";
 
         public static string CreateLevelGeneratorPath(int level)
         {
