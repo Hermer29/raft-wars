@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8273868254591338237}
   - component: {fileID: 5052961927787743136}
   - component: {fileID: 4567766657959693494}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,15 +91,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1000010753552304, guid: 1bfa92ca112491842ad5e3fb6b5ab535, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1000011186541578, guid: 1bfa92ca112491842ad5e3fb6b5ab535, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1000011809801598, guid: 1bfa92ca112491842ad5e3fb6b5ab535, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000013706004434, guid: 1bfa92ca112491842ad5e3fb6b5ab535, type: 3}
       propertyPath: m_RootOrder

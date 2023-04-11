@@ -582,7 +582,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
         PlayIdleAnimation();
     }
 
-    public void DealDamage()
+    public void DealDamage(int amount = 1)
     {
         bool IsRandomPeopleMustDie()
         {
@@ -596,7 +596,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
             if (damage <= 0)
                 damage = 0;
         }
-        hp -= 1;
+        hp -= amount;
         if (hp <= 0)
             hp = 0;
         

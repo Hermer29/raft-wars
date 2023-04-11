@@ -180,9 +180,17 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
 
     public void TakeBarrel(int damage)
     {
-        if(GetComponentInParent<Player>() != null)
+        var enemy = GetComponentInParent<Enemy>();
+        var player = GetComponentInParent<Player>();
+        if(enemy != null)
         {
-            GetComponentInParent<Player>().DealDamage(damage);
+            enemy.DealDamage(damage);
+            return;
+        }
+        if(player != null)
+        {
+            player.DealDamage(damage);
+            return;
         }
     }
 

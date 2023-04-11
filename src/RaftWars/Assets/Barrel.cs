@@ -12,14 +12,11 @@ public class Barrel : MonoBehaviour
     {
         if (other.GetComponent<ICanTakeBarrel>() != null && canTake)
         {
-            if (canTake)
-            {
-                canTake = false;
-                GameObject _effect = Instantiate(effect, transform.position, Quaternion.identity);
-                Destroy(_effect, 2f);
-                other.GetComponent<ICanTakeBarrel>().TakeBarrel(damage);
-                Destroy(gameObject);
-            }
+            canTake = false;
+            GameObject _effect = Instantiate(effect, transform.position, Quaternion.identity);
+            Destroy(_effect, 2f);
+            other.GetComponent<ICanTakeBarrel>().TakeBarrel(damage);
+            Destroy(gameObject);
         }
     }
 }
