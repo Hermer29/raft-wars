@@ -21,6 +21,11 @@ public class EnemyHud : MonoBehaviour
 
     private void LateUpdate()
     {
+        if(Player.instance.canPlay == false)
+        {
+            Hide();
+            return;
+        }
         if(Target == null)
         {
             Hide();
