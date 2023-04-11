@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using RaftWars.Infrastructure;
+using TMPro;
 
 namespace Interface
 {
@@ -27,7 +28,7 @@ namespace Interface
         public GameObject[] _diamondsCounter;
 
         public Joystick Joystick;
-        public Text coinsText;
+        public TMP_Text coinsText;
         public Text diamondsText;
 
         public Button Replay;
