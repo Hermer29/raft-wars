@@ -39,13 +39,10 @@ public class PeopleThatCanBeTaken : Pickable
     protected override void TriggerEntered(Collider other)
     {
         if (other.TryGetComponent(out ICanTakePeople otherTaker) == false || !canTake) return;
-        
-        if(otherTaker.TryTakePeople(warrior))
-        {
-            canTake = false;
-            CreateExplosion();
-            Destroy(gameObject);
-        }
+        if (!otherTaker.TryTakePeople(warrior)) return;
+        canTake = false;
+        CreateExplosion();
+        Destroy(gameObject);
     }
 
     private void CreateExplosion()

@@ -16,7 +16,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     private Material _material;
     private PlatformSkin _skin;
     private MeshRenderer _meshRenderer;
-    public int Capacity {get; private set;}
+    public int Capacity {get; set;}
 
     public Material Material
     {
@@ -43,14 +43,12 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     {
         Assert.IsNotNull(warrior);
         
-        if(Capacity == 4)
+        if (!isTurret && !ishospital && !isWind)
         {
-            TryFigureOutWhereSpawnPeopleInstead(warrior);
-            return false;
-        }
-
-        if (!isTurret)
-        {
+            if(Capacity == 4)
+            {
+                return TryFigureOutWhereSpawnPeopleInstead(warrior);
+            }
             Capacity++;
             Vector3 spawnPoint = transform.position;
             spawnPoint = FindPointOnPlatform(spawnPoint);
@@ -69,7 +67,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         else
         {
-            TryFigureOutWhereSpawnPeopleInstead(warrior);
+            return TryFigureOutWhereSpawnPeopleInstead(warrior);
         }
         return true;
     }
@@ -77,21 +75,31 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     private bool TryFigureOutWhereSpawnPeopleInstead(GameObject warrior)
     {
         var player = GetComponentInParent<Player>();
+        var enemy = GetComponentInParent<Enemy>();
         Platform platform;
-        if(player.TryFindNotFullPlatform(out platform) == false)
+        if(player != null)
         {
-            return false;
-        }
-        Vector3 spawnPoint = platform.transform.position;
-        spawnPoint = FindPointOnPlatform(spawnPoint);
-        People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform).GetComponent<People>();
-        if (transform.parent.GetComponent<Player>() != null)
-        {
-            transform.parent.GetComponent<Player>().AddPeople(people.GetComponent<People>());
+            if(player.TryFindNotFullPlatform(out platform) == false)
+            {
+                return false;
+            }
         }
         else
         {
-            transform.parent.GetComponent<Enemy>().AddPeople(people.GetComponent<People>());
+            platform = enemy.platforms[0];
+        }
+        
+        Vector3 spawnPoint = platform.transform.position;
+        spawnPoint = FindPointOnPlatform(spawnPoint);
+        People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform)
+            .GetComponent<People>();
+        if (player != null)
+        {
+            player.AddPeople(people);
+        }
+        else
+        {
+            enemy.AddPeople(people);
         }
 
         people.SetColor(_material);
@@ -115,8 +123,6 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
 
     public void TakePlatform(GameObject platform, Vector3 pos)
     {
-        if (isEnemy) return;
-
         Vector3 spawnPos = transform.position;
         Vector3 vectorFromPlayer = pos - transform.position;
         if (Mathf.Abs(vectorFromPlayer.x) > Mathf.Abs(vectorFromPlayer.z))

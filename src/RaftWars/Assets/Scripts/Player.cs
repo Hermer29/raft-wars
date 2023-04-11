@@ -76,6 +76,7 @@ public class Player : FighterRaft, IPlatformsCarrier
     {
         edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
         edgesAndAngleWaves.Construct(this);
+        platforms[0].Capacity = 2;
     }
     
     private void Start()
