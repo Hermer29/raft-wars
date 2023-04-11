@@ -11,23 +11,27 @@ public class EnemyHud : MonoBehaviour
     public CanvasGroup CanvasGroup;
     public TMP_Text nickname;
 
-    private bool _hidden;
+    private const float NormalizedDistanceToShow = .2f;
+    private static float HorizontalScreenDistanceToShow = Screen.width * NormalizedDistanceToShow;
+    private static float VerticalScreenDistanceToShow = Screen.height * NormalizedDistanceToShow;
+    private const float HudFollowingSpeed = 6;
+    private const float HudZTargetOffset = 2;
+
+    private bool _hidden = true;
 
     private void LateUpdate()
     {
         if(Target == null)
         {
-            CanvasGroup.alpha = 0;
+            Hide();
             return;
         }
-
-        float distance = (Game.PlayerService.PlayerInstance.transform.position - Target.transform.position).sqrMagnitude;
-        Vector2 screenPoint = Camera.main.WorldToScreenPoint(Target.position);
-        Vector2 center = new Vector2(Screen.width / 2, Screen.height / 2);
-        if((center - screenPoint).sqrMagnitude > 1500000)
+        var worldTarget = Target.position;
+        worldTarget.z += HudZTargetOffset; 
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(worldTarget);
+        if(IsCanBeShown(screenPoint) == false)
         {
-            CanvasGroup.alpha = 0;
-            _hidden = true;
+            Hide();
             return;
         }
         CanvasGroup.alpha = 1;
@@ -39,15 +43,30 @@ public class EnemyHud : MonoBehaviour
             _hidden = false;
             return;
         }
-        transform.position = Vector3.Lerp(transform.position, clamped, Time.deltaTime * 5);
+        transform.position = Vector3.Lerp(transform.position, clamped, Time.deltaTime * HudFollowingSpeed);
+    }
+
+    private void Hide()
+    {
+        CanvasGroup.alpha = 0;
+        _hidden = true;
+    }
+
+    private bool IsCanBeShown(Vector2 screenPoint)
+    {
+        var lessThanHorizontalMax = screenPoint.x < Screen.width + HorizontalScreenDistanceToShow;
+        var moreThanHorizontalMin = screenPoint.x > -HorizontalScreenDistanceToShow;
+        var lessThanVerticalMax = screenPoint.y < Screen.height + VerticalScreenDistanceToShow;
+        var moreThanVerticalMin = screenPoint.y > -VerticalScreenDistanceToShow;
+        return lessThanHorizontalMax && moreThanHorizontalMin && lessThanVerticalMax && moreThanVerticalMin; 
     }
 
     private Vector3 ClampScreenPoint(Vector3 screenPoint)
     {
         var viewportBoundsXMin = .2f;
         var viewportBoundsXMax = .8f;
-        var viewportBoundsYMin = .2f;
-        var viewportBoundsYMax = .8f;
+        var viewportBoundsYMin = .1f;
+        var viewportBoundsYMax = .9f;
         var screenBoundsXMin = Screen.width * viewportBoundsXMin;
         var screenBoundsXMax = Screen.width * viewportBoundsXMax;
         var screenBoundsYMin = Screen.height * viewportBoundsYMin;
