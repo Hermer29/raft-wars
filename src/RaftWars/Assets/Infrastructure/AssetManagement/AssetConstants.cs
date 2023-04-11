@@ -21,6 +21,7 @@
         public const string PauseMenuPath = "Prefabs/UI/PauseMenu";
         public const string StatsCanvasPath = "Prefabs/UI/StatsCanvas";
         public const string PlayerDeathMaterialPath = "PlayerColorOnDeath";
+        public const string TutorialPath = "Prefabs/UI/Tutorial";
 
         public static string CreateLevelGeneratorPath(int level)
         {

@@ -38,6 +38,13 @@ namespace RaftWars.Infrastructure
             Game.UsingService = new PlayerUsingService(Game.PlayerService, CrossLevelServices.PrefsService);
             _stateMachine.Enter<CreateIMGUIState>();
             _stateMachine.Enter<CreateShopState>();
+            
+            if(CrossLevelServices.PrefsService.GetInt("TutorialShown", 0) == 0)
+            {
+                var tutorial = GameFactory.CreateTutorial();
+                CrossLevelServices.PrefsService.SetInt("TutorialShown", 1);
+                Game.GameManager.GameStarted += () => GameObject.Destroy(tutorial.gameObject);
+            }
         }
 
         private static Player CreatePlayer()
