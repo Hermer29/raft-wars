@@ -107,5 +107,10 @@ namespace RaftWars.Infrastructure.AssetManagement
         {
             return Resources.Load<Canvas>(StatsCanvasPath);
         }
+
+        public static Material LoadPlayerDeathMaterial()
+        {
+            return Resources.Load<Material>(PlayerDeathMaterialPath);
+        }
     }
 }

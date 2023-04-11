@@ -19,6 +19,7 @@ using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using Visual;
 using Random = UnityEngine.Random;
+using Infrastructure;
 
 public class Player : FighterRaft, IPlatformsCarrier
 {
@@ -359,6 +360,7 @@ public class Player : FighterRaft, IPlatformsCarrier
         {
             collider.enabled = false;
         }
+        RepaintWith(RaftWars.Infrastructure.AssetManagement.AssetLoader.LoadPlayerDeathMaterial());
 
         _enemyHud.Target = null;
         if(enemyForBattle != null)
@@ -374,7 +376,7 @@ public class Player : FighterRaft, IPlatformsCarrier
         var virtualCamera = _camera.GetComponent<CinemachineVirtualCamera>();
         virtualCamera.m_Follow = null;
         virtualCamera.m_LookAt = CameraGroup.transform;
-        transform.DOMoveY(-999, 1f).SetSpeedBased(true);
+        transform.DOMoveY(-999, .65f).SetSpeedBased(true);
     }
 
     private IEnumerator CreateExplosions()
@@ -460,10 +462,15 @@ public class Player : FighterRaft, IPlatformsCarrier
 
     public void RepaintWith(PlayerColors colors)
     {
-        _material = colors.Color;
-        edgesAndAngleWaves?.ChangeMaterial(colors.Color);
-        RepaintPlatforms(colors.Color);
-        RepaintPeople(colors.Color);
+        RepaintWith(colors.Color);
+    }
+
+    public void RepaintWith(Material material)
+    {
+        _material = material;
+        edgesAndAngleWaves?.ChangeMaterial(material);
+        RepaintPlatforms(material);
+        RepaintPeople(material);
     }
 
     public void ApplyHat(HatSkin hat)

@@ -20,6 +20,7 @@
         public const string GreyDeathMaterialPath = "DiedPeopleMaterial";
         public const string PauseMenuPath = "Prefabs/UI/PauseMenu";
         public const string StatsCanvasPath = "Prefabs/UI/StatsCanvas";
+        public const string PlayerDeathMaterialPath = "PlayerColorOnDeath";
 
         public static string CreateLevelGeneratorPath(int level)
         {
