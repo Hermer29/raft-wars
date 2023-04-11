@@ -136,7 +136,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
     {
         foreach (People people in GetComponentsInChildren<People>())
         {
-            platforms[0].TakePeople(people.gameObject);
+            platforms[0].TryTakePeople(people.gameObject);
         }
     }
 
@@ -365,7 +365,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
 
         foreach (People man in people)
         {
-            this.platforms[Random.Range(0, this.platforms.Count)].TakePeople(man.gameObject);
+            this.platforms[Random.Range(0, this.platforms.Count)].TryTakePeople(man.gameObject);
         }
 
         RecountStats();

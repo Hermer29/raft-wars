@@ -16,6 +16,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     private Material _material;
     private PlatformSkin _skin;
     private MeshRenderer _meshRenderer;
+    public int Capacity {get; private set;}
 
     public Material Material
     {
@@ -38,12 +39,19 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         _relatedEnemy = GetComponentInParent<Enemy>();
     }
 
-    public void TakePeople(GameObject warrior)
+    public bool TryTakePeople(GameObject warrior)
     {
         Assert.IsNotNull(warrior);
         
+        if(Capacity == 4)
+        {
+            TryFigureOutWhereSpawnPeopleInstead(warrior);
+            return false;
+        }
+
         if (!isTurret)
         {
+            Capacity++;
             Vector3 spawnPoint = transform.position;
             spawnPoint = FindPointOnPlatform(spawnPoint);
             People people = Instantiate(warrior, spawnPoint, Quaternion.identity, transform).GetComponent<People>();
@@ -61,13 +69,19 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         else
         {
-            FigureOutWhereSpawnPeopleInstead(warrior);
+            TryFigureOutWhereSpawnPeopleInstead(warrior);
         }
+        return true;
     }
 
-    private void FigureOutWhereSpawnPeopleInstead(GameObject warrior)
+    private bool TryFigureOutWhereSpawnPeopleInstead(GameObject warrior)
     {
-        Platform platform = GetComponentInParent<Player>().GetPlatformWithoutTurret();
+        var player = GetComponentInParent<Player>();
+        Platform platform;
+        if(player.TryFindNotFullPlatform(out platform) == false)
+        {
+            return false;
+        }
         Vector3 spawnPoint = platform.transform.position;
         spawnPoint = FindPointOnPlatform(spawnPoint);
         People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform).GetComponent<People>();
@@ -82,6 +96,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
 
         people.SetColor(_material);
         people.SetRelatedPlatform(this);
+        return true;
     }
 
     public static Vector3 FindPointOnPlatform(Vector3 spawnPoint)

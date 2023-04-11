@@ -17,6 +17,8 @@ public class SosAnimation : MonoBehaviour
     {
         while(true)
         {
+            _text.text = "";
+            yield return new WaitForSeconds(.3f);
             _text.text = "s";
             yield return new WaitForSeconds(.3f);
             _text.text = "so";

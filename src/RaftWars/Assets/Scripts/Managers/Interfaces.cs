@@ -4,7 +4,7 @@ using UnityEngine;
 
 interface ICanTakePeople
 {
-    public void TakePeople(GameObject warrior);
+    public bool TryTakePeople(GameObject warrior);
 }
 
 interface ICanTakePlatform

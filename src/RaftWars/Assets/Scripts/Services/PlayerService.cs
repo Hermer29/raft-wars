@@ -27,11 +27,10 @@ namespace InputSystem
         public void AddPeople()
         {
             var peoplePrefab = Resources.Load<GameObject>("Prefabs/People");
-            var platform = PlayerInstance.GetPlatforms().First();
-            var position = Platform.FindPointOnPlatform(platform.transform.position);
-            var instance = GameObject.Instantiate(peoplePrefab, position, Quaternion.identity, platform.transform);
-            PlayerInstance.AddPeople(instance.GetComponent<People>());
-            instance.GetComponent<People>().SetRelatedPlatform(platform.GetComponent<Platform>());
+            var isFound = PlayerInstance.TryFindNotFullPlatform(out var platform);
+            if(isFound == false)
+                return;
+            platform.TryTakePeople(peoplePrefab);
         }
 
         public void RegisterAsEnemyInExclusionZone(Enemy enemy)

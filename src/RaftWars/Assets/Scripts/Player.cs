@@ -409,6 +409,19 @@ public class Player : FighterRaft, IPlatformsCarrier
         }
     }
 
+    public bool TryFindNotFullPlatform(out Platform platform)
+    {
+        platform = null;
+        foreach(Platform plat in platforms)
+        {
+            if (plat.Capacity == 4 || plat.isTurret || plat.ishospital ||
+                plat.isWind) continue;
+            platform = plat;
+            return true;
+        }
+        return false;
+    }
+
     public Platform GetPlatformWithoutTurret()
     {
         Platform _platform;

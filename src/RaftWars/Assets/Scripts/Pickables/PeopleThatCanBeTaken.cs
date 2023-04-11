@@ -40,10 +40,12 @@ public class PeopleThatCanBeTaken : Pickable
     {
         if (other.TryGetComponent(out ICanTakePeople otherTaker) == false || !canTake) return;
         
-        canTake = false;
-        CreateExplosion();
-        otherTaker.TakePeople(warrior);
-        Destroy(gameObject);
+        if(otherTaker.TryTakePeople(warrior))
+        {
+            canTake = false;
+            CreateExplosion();
+            Destroy(gameObject);
+        }
     }
 
     private void CreateExplosion()
