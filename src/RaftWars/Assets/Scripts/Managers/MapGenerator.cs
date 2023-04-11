@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
+using RaftWars.Pickables;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -100,7 +102,9 @@ public class MapGenerator : MonoBehaviour
             {
                 Debug.Log($"Spawned collectable on way");
                 Vector3 spawnPoint = hit.point + hit.normal * heightOverTheCollider;
-                PeopleThatCanBeTaken people = Instantiate(peopleToSpawn[Random.Range(0, peopleToSpawn.Length)], spawnPoint, Quaternion.identity);
+                IEnumerable<Pickable> pickables = peopleToSpawn.Cast<Pickable>().Concat(platformsToSpawn);
+                Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));
+                Pickable people = Instantiate(prefabToSpawn, spawnPoint, Quaternion.identity);
             }
             else
             {
