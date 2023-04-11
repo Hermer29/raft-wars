@@ -62,8 +62,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SurfaceDistortion:
         m_Texture: {fileID: 2800000, guid: c53bb6b8c40b02141be3fdec5cc582e9, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 2, y: 2}
     - _SurfaceNoise:
         m_Texture: {fileID: 2800000, guid: e182ac5d3b797044fb29f3fa2acc3708, type: 3}
         m_Scale: {x: 4, y: 4}
@@ -90,13 +90,13 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SurfaceDistortionAmount: 0.68
-    - _SurfaceNoiseCutoff: 0.9
+    - _SurfaceNoiseCutoff: 0.87
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DepthGradientDeep: {r: 0.086274505, g: 0.40704754, b: 1, a: 0.7490196}
-    - _DepthGradientShallow: {r: 0.3254272, g: 0.8078549, b: 0.9716981, a: 0.7254902}
+    - _DepthGradientDeep: {r: 0.075299546, g: 0.35668203, b: 0.86, a: 0.7294118}
+    - _DepthGradientShallow: {r: 0, g: 0.7454543, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _ShorelineColor: {r: 1, g: 1, b: 1, a: 1}

@@ -1793,7 +1793,7 @@ MonoBehaviour:
   damageCostText: {fileID: 9164477877441629834}
   hpPercentText: {fileID: 9164477876137391864}
   hpCostText: {fileID: 9164477876514078619}
-  progressText: {fileID: 0}
+  progressText: {fileID: 5939087997509299598}
   platformsCountPrev: {fileID: 9164477877606778994}
   platformsCountAdd: {fileID: 9164477877179373572}
   warriorsCountPrev: {fileID: 9164477876938562166}
@@ -2663,7 +2663,7 @@ GameObject:
   - component: {fileID: 9164477876503084256}
   - component: {fileID: 5939087997509299598}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: ProgressText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

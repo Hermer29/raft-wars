@@ -16,7 +16,7 @@ namespace Interface
         public Image progressFill;
         [Space]
         public Text damagePercentText, damageCostText, hpPercentText, hpCostText;
-        public Text progressText;
+        public TMP_Text progressText;
         public Text platformsCountPrev, platformsCountAdd;
         public Text warriorsCountPrev, warriorsCountAdd;
         public Text powerCountPrev, powerCountAdd;
