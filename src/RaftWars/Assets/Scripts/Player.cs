@@ -68,7 +68,7 @@ public class Player : FighterRaft, IPlatformsCarrier
     private EnemyHud _enemyHud;
     public static event Action Died;
 
-    public Vector3 MoveDirection => new Vector3(_input.Horizontal, 0, _input.Vertical);
+    public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
     public float Bounds => edgesAndAngleWaves.Bounds;
 
     public void Construct()
@@ -300,7 +300,7 @@ public class Player : FighterRaft, IPlatformsCarrier
         
         if (!battle)
         {
-            rb.velocity = MoveDirection * speed;
+            rb.velocity = MoveDirectionXZ * speed;
         }
         else
         {

@@ -395,7 +395,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier
                     startPoint.z -= Constants.PlatformSize;
             }
 
-            var outCols = Physics.OverlapSphere(startPoint, 1);
+            int otherEnemies = LayerMask.GetMask("Enemy");
+            var outCols = Physics.OverlapSphere(startPoint, 1, otherEnemies);
             if (outCols == null || outCols.Length == 0)
             {
                 break;

@@ -9,7 +9,8 @@ namespace RaftWars.Infrastructure
         private readonly StateMachine _stateMachine;
         private readonly ICoroutineRunner _coroutines;
         private LoadingScreen _loading;
-        
+        private int _material;
+
         private const int GameplayScene = 1;
 
         public LoadLevelState(StateMachine stateMachine, ICoroutineRunner coroutines, LoadingScreen loading)
@@ -21,7 +22,7 @@ namespace RaftWars.Infrastructure
         
         public void Enter(int material)
         {
-            Game.MapGenerator = GameFactory.CreateMapGenerator(material);
+            _material = material;
             _coroutines.StartCoroutine(Load());
         }
 
@@ -40,6 +41,7 @@ namespace RaftWars.Infrastructure
             }
             _loading.SetSliderProcess(1f);
             
+            Game.MapGenerator = GameFactory.CreateMapGenerator(_material);
             _stateMachine.Enter<CreateServicesState>();
         }
     }

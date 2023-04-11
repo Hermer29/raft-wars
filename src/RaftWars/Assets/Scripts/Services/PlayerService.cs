@@ -22,7 +22,7 @@ namespace InputSystem
         public bool InBattle => PlayerInstance.battle;
         public bool ExistsEnemyThatAlreadyInExclusionZone => _enemyInExclusionZone != null;
         public Enemy EnemyInExclusionZone => _enemyInExclusionZone;
-        public Vector3 MoveDirection => PlayerInstance.MoveDirection;
+        public Vector3 MoveDirectionXZ => PlayerInstance.MoveDirectionXZ;
 
         public void AddPeople()
         {

@@ -11,6 +11,8 @@ public class EnemyHud : MonoBehaviour
     public CanvasGroup CanvasGroup;
     public TMP_Text nickname;
 
+    private bool _hidden;
+
     private void LateUpdate()
     {
         if(Target == null)
@@ -20,13 +22,28 @@ public class EnemyHud : MonoBehaviour
         }
 
         float distance = (Game.PlayerService.PlayerInstance.transform.position - Target.transform.position).sqrMagnitude;
-        if (!(distance < 800))
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(Target.position);
+        Vector2 center = new Vector2(Screen.width / 2, Screen.height / 2);
+        if((center - screenPoint).sqrMagnitude > 1500000)
         {
             CanvasGroup.alpha = 0;
+            _hidden = true;
             return;
         }
         CanvasGroup.alpha = 1;
-        Vector3 screenPoint = Camera.main.WorldToScreenPoint(Target.position);
+        var clamped = ClampScreenPoint(screenPoint);
+
+        if(_hidden)
+        {
+            transform.position = clamped;
+            _hidden = false;
+            return;
+        }
+        transform.position = Vector3.Lerp(transform.position, clamped, Time.deltaTime * 5);
+    }
+
+    private Vector3 ClampScreenPoint(Vector3 screenPoint)
+    {
         var viewportBoundsXMin = .2f;
         var viewportBoundsXMax = .8f;
         var viewportBoundsYMin = .2f;
@@ -37,6 +54,7 @@ public class EnemyHud : MonoBehaviour
         var screenBoundsYMax = Screen.height * viewportBoundsYMax;
         var x = Mathf.Clamp(screenPoint.x, screenBoundsXMin, screenBoundsXMax);
         var y = Mathf.Clamp(screenPoint.y, screenBoundsYMin, screenBoundsYMax);
-        transform.position = Vector3.Lerp(transform.position, new Vector3(x, y), Time.deltaTime * 5);
+        var clamped = new Vector3(x, y);
+        return clamped;
     }
 }

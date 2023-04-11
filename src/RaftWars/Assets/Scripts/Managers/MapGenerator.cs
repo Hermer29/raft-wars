@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -58,6 +60,7 @@ public class MapGenerator : MonoBehaviour
     private MaterialsService _materials;
     private CollectiblesService _collectibles;
     private PlayerService _player;
+    private Coroutine _coroutine;
 
     public void Construct()
     {
@@ -65,14 +68,46 @@ public class MapGenerator : MonoBehaviour
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;
         _player = Game.PlayerService;
+        
         _collectibles.NoCollectiblesLeft += SpawnMiscellaneous;
     }
 
     private IEnumerator SpawnOnPlayersPathRandom()
     {
+        Camera camera = Camera.main;
+        
         while(true)
         {
-            //_player.MoveDirection.
+            if (_player == null)
+            {
+                yield return null;
+                continue;
+            }
+            if (_player.MoveDirectionXZ.magnitude < 0.1f)
+            {
+                yield return null;
+                continue;
+            }
+            Vector3 direction = _player.MoveDirectionXZ;
+            direction.y = direction.z;
+            const float heightOverTheCollider = 4.5f;
+            var center = new Vector2(.5f, .5f);
+            const float generationDistance = 2;
+            Vector2 viewportPoint = direction.normalized * generationDistance * center + center;
+            Ray ray = camera.ViewportPointToRay(viewportPoint);
+            int raycastPlane = LayerMask.GetMask("Water");
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastPlane))
+            {
+                Debug.Log($"Spawned collectable on way");
+                Vector3 spawnPoint = hit.point + hit.normal * heightOverTheCollider;
+                PeopleThatCanBeTaken people = Instantiate(peopleToSpawn[Random.Range(0, peopleToSpawn.Length)], spawnPoint, Quaternion.identity);
+            }
+            else
+            {
+                yield return null;
+                continue;
+            }
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -85,6 +120,17 @@ public class MapGenerator : MonoBehaviour
         CreateCoinChests(stage);
         CreateGems(stage);
         CreateBarrels(stage);
+    }
+
+    private void OnEnable()
+    {
+        _coroutine = StartCoroutine(SpawnOnPlayersPathRandom());
+    }
+
+    private void OnDestroy()
+    {
+        if(_coroutine != null)
+            StopCoroutine(_coroutine);
     }
 
     private void FigureOutPlatformsAndEnemies(int stage)
@@ -132,20 +178,20 @@ public class MapGenerator : MonoBehaviour
 
     private Vector3 GetRandomSpawnPosition()
     {
-        var posToSpawn = new Vector3
+        const int eligibleDistanceToCenter = 40;
+        Vector3 posToSpawn = Vector3.zero;
+        float distanceToCenter = 0;
+        while (distanceToCenter <= eligibleDistanceToCenter)
         {
-            x = Random.Range(0f, 1f) > 0.5f ? 
-                Random.Range(xBorderMin, xBorderMax) : 
-                Random.Range(-xBorderMax, -xBorderMin),
-            z = Random.Range(0f, 1f) > 0.5f ? 
-                Random.Range(yBorderMin, yBorderMax) : 
-                Random.Range(-yBorderMax, -yBorderMin)
-        };
-        var distanceToCenter = Vector3.Distance(Vector3.zero, posToSpawn);
-        const int eligibleDistanceToCenter = 20;
-        if (distanceToCenter <= eligibleDistanceToCenter)
-            return GetRandomSpawnPosition();
-        
+            posToSpawn = new Vector3
+            {
+                x = Random.Range(0f, 1f) > 0.5f ? Random.Range(xBorderMin, xBorderMax) : 
+                    Random.Range(-xBorderMax, -xBorderMin), 
+                z = Random.Range(0f, 1f) > 0.5f ? Random.Range(yBorderMin, yBorderMax) : 
+                    Random.Range(-yBorderMax, -yBorderMin)
+            };
+            distanceToCenter = Vector3.Distance(Vector3.zero, posToSpawn);
+        }
         return posToSpawn;
     }
 
@@ -160,12 +206,18 @@ public class MapGenerator : MonoBehaviour
                 posToSpawn.x = Random.Range(0f, 1f) > 0.5f ? Random.Range(xBorderMin, xBorderMax) : Random.Range(-xBorderMax, -xBorderMin);
                 posToSpawn.z = Random.Range(0f, 1f) > 0.5f ? Random.Range(yBorderMin, yBorderMax) : Random.Range(-yBorderMax, -yBorderMin);
 
-                var outCols = Physics.OverlapSphere(posToSpawn, 1);
-                if (outCols != null && outCols.Length != 0) continue;
+                if (IsOverlappingOtherGenerated(posToSpawn)) continue;
                 Instantiate(coinsToSpawn, posToSpawn, Quaternion.identity);
                 break;
             }
         }
+    }
+
+    private static bool IsOverlappingOtherGenerated(Vector3 posToSpawn)
+    {
+        var outCols = Physics.OverlapSphere(posToSpawn, 1, LayerMask.GetMask("Default"));
+        bool isOverlapping = outCols != null && outCols.Length != 0;
+        return isOverlapping;
     }
 
     private void CreatePickablePeople(int stage)
