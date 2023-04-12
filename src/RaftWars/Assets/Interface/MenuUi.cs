@@ -10,7 +10,8 @@ namespace Interface
         [SerializeField] private Button _onClickGoFight;
         [SerializeField] private Button _onClickGoShop;
         [SerializeField] private CanvasGroup _canvas;
-        
+        [SerializeField] private Image _shopSelectionBackground;
+        [SerializeField] private Image _fightSelectionBackground;
         
         private Shop _shop;
         private Hud _hud;
@@ -31,6 +32,7 @@ namespace Interface
             _onClickGoFight.onClick.AddListener(ShopClosed);
             _onClickGoShop.onClick.AddListener(ShopOpened);
             gameManager.GameStarted += () => gameObject.SetActive(false);
+            _shopSelectionBackground.enabled = false;
         }
 
         private void ShopOpened()
@@ -38,6 +40,8 @@ namespace Interface
             _inFightState = false;
             _shop.ShowImmediately();
             _hud.tapToPlay.SetActive(false);
+            _shopSelectionBackground.enabled = true;
+            _fightSelectionBackground.enabled = false;
         }
 
         private void ShopClosed()
@@ -50,6 +54,8 @@ namespace Interface
             {
                 StopCoroutine(_waitingForHideButtons);
             }
+            _shopSelectionBackground.enabled = false;
+            _fightSelectionBackground.enabled = true;
             Show();
         }
 
