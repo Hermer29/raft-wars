@@ -68,14 +68,14 @@ namespace Services
         {
             float fromDifference = CalculatePlayerSuperiority() * FightConstants.DifferenceWeight;
             float fromDamage = _currentFightEnemy.damage * FightConstants.DamageWeight;
-            return MathF.Abs(1 * FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
+            return MathF.Abs(FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
         }
 
         private float CalculatePlayerAttackFrequency()
         {
             float fromDifference = -CalculatePlayerSuperiority() * FightConstants.DifferenceWeight;
             float fromDamage = _player.PlayerInstance.damage * FightConstants.DamageWeight;
-            return MathF.Abs(1 * FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
+            return MathF.Abs(FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
         }
 
         private bool IsParticipantsAlive()

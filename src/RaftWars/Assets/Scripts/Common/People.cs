@@ -153,8 +153,8 @@ public class People : MonoBehaviour
         StopCoroutine(_movingOnPlatform);
         animator.Play("Death");
         //TODO: if(andDestroy)
+        _platform.Capacity--;
         Destroy(gameObject, 2.5f);
-            
     }
 
     public void ApplyHat(HatSkin hat)
