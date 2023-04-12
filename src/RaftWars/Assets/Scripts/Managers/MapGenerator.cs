@@ -108,7 +108,7 @@ public class MapGenerator : MonoBehaviour
                 yield return null;
                 continue;
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2);
         }
     }
 
