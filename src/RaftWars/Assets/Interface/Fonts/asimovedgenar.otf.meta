@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 6bf422962abb91d47a0d6c9d5ae95f83
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Asimov
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 657b4b2961d74ef489f2df343fc4ca22, type: 3}
+  - {fileID: 12800000, guid: 100d43140c32c4b4bb1db4ce20725057, type: 3}
+  - {fileID: 12800000, guid: 832a8f4cc9aa22a479faf29b07d0d669, type: 3}
+  - {fileID: 12800000, guid: 45f6bb3af3ba5f24ea8e50c91f0aa852, type: 3}
+  - {fileID: 12800000, guid: 232ff2ab7a5f1274586d36bb25288409, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
