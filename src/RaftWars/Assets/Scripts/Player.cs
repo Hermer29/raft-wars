@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Cinemachine;
 using Common;
 using DefaultNamespace;
@@ -65,6 +66,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private Hud _hud;
     private HatSkin _hat;
     private EnemyHud _enemyHud;
+    private Coroutine _explosionsCoroutine;
     public static event Action Died;
 
     public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
@@ -284,6 +286,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     {
         Game.FightService.FightBeginningCollisionDetected(enemy);
         
+        StartExplosions(CancellationToken.None);
         if (battle) return;
 
         idleBehaviour = false;
@@ -341,8 +344,9 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
                 CameraGroup.RemoveMember(platform.transform);
             }
         }
-        
-        StartCoroutine(CreateExplosions());
+        if (_explosionsCoroutine != null)
+            StopCoroutine(_explosionsCoroutine);
+        StartExplosions(new CancellationTokenSource().Token);
     
         var virtualCamera = _camera.GetComponent<CinemachineVirtualCamera>();
         virtualCamera.m_Follow = null;
@@ -350,20 +354,28 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         transform.DOMoveY(-999, .65f).SetSpeedBased(true);
     }
 
-    private IEnumerator CreateExplosions()
+    private void StartExplosions(CancellationToken token)
     {
-        const float explosionFrequency = .5f;
-        int explosionCountAtATime = 2 * Math.Clamp(platforms.Count, 1, 999);
+        _explosionsCoroutine = StartCoroutine(CreateExplosions(token));
+    }
+
+    private IEnumerator CreateExplosions(CancellationToken token)
+    {
+        const float explosionFrequency = 1f;
         
         while (true)
         {
-            for (var i = 0; i < explosionCountAtATime; i++)
-            {
-                Explosion explosion = GameFactory.CreateExplosion();
-                explosion.transform.position = GetScaledRandomPointAmongAllPlatforms();
-            }
+            if (token.IsCancellationRequested)
+                yield break;
+            CreateExplosions();
             yield return new WaitForSeconds(explosionFrequency);
         }
+    }
+
+    private void CreateExplosions()
+    {
+        Explosion explosion = GameFactory.CreateExplosion();
+        explosion.transform.position = GetScaledRandomPointAmongAllPlatforms();
     }
 
     private Vector3 GetScaledRandomPointAmongAllPlatforms()
@@ -507,6 +519,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public override void StopFight()
     {
+        if (_explosionsCoroutine != null)
+            StopCoroutine(_explosionsCoroutine);
         OnBattleEnded();
     }
 

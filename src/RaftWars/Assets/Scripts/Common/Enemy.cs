@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Common;
 using DefaultNamespace;
 using InputSystem;
@@ -54,6 +56,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     private const int ExclusionSqrDistanceToPlayer = 300*2;
     private const int HpAdditive = 6;
     private EdgesAndAngleWaves edgesAndAngleWaves;
+    private Coroutine _explosionsCoroutine;
 
     private int StatsSum => (int) (hp + damage);
 
@@ -137,6 +140,19 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         {
             platforms[0].TryTakePeople(people.gameObject);
         }
+    }
+    
+    public bool TryFindNotFullPlatform(out Platform platform)
+    {
+        platform = null;
+        foreach(Platform plat in platforms)
+        {
+            if (plat.Capacity == 4 || plat.isTurret || plat.ishospital ||
+                plat.isWind) continue;
+            platform = plat;
+            return true;
+        }
+        return false;
     }
 
     public override void AddPlatform(Platform platform)
@@ -387,7 +403,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
         foreach (People man in people)
         {
-            this.platforms[Random.Range(0, this.platforms.Count)].TryTakePeople(man.gameObject);
+            this.platforms[Random.Range(0, this.platforms.Count)]
+                .TryTakePeople(man.gameObject);
         }
 
         RecountStats();
@@ -443,6 +460,12 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
         _enemyHud.hpText.text = Mathf.RoundToInt(hp).ToString();
         _enemyHud.damageText.text = Mathf.RoundToInt(damage).ToString();
+    }
+    
+    private Vector3 GetScaledRandomPointAmongAllPlatforms()
+    {
+        Platform randomPlatform = platforms.ElementAt(Random.Range(0, platforms.Count));
+        return randomPlatform.GetRandomPoint();
     }
 
     public void AddPeople(People warrior)
@@ -628,10 +651,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public override void Die()
     {
         Dead();
+        if(_explosionsCoroutine != null)
+            StopCoroutine(_explosionsCoroutine);
     }
 
     public override void StopFight()
     {
+        if(_explosionsCoroutine != null)
+            StopCoroutine(_explosionsCoroutine);
         OnPlayerDied();
     }
 
@@ -639,6 +666,26 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         battle = true;
         PlayShotAnimation(_player.PlayerInstance);
+        _explosionsCoroutine = StartCoroutine(CreateExplosions(CancellationToken.None));
+    }
+    
+    private IEnumerator CreateExplosions(CancellationToken token, Enemy enemy = null)
+    {
+        const float explosionFrequency = 1f;
+        
+        while (true)
+        {
+            if (token.IsCancellationRequested)
+                yield break;
+            CreateExplosions();
+            yield return new WaitForSeconds(explosionFrequency);
+        }
+    }
+    
+    private void CreateExplosions()
+    {
+        Explosion explosion = GameFactory.CreateExplosion();
+        explosion.transform.position = GetScaledRandomPointAmongAllPlatforms();
     }
 
     public bool TryTakePeople(GameObject warrior)

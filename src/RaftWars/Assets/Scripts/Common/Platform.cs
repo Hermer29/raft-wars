@@ -93,12 +93,15 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         else
         {
-            platform = enemy.platforms[0];
+            if(enemy.TryFindNotFullPlatform(out platform) == false)
+            {
+                return false;
+            }
         }
         
         Vector3 spawnPoint = platform.transform.position;
         spawnPoint = FindPointOnPlatform(spawnPoint);
-        People people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform)
+        var people = Instantiate(warrior, spawnPoint, Quaternion.identity, platform.transform)
             .GetComponent<People>();
         if (player != null)
         {
@@ -152,7 +155,6 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         platformComponent.Material = _material;
         if(_skin != null)
             platformComponent.ApplySkin(_skin);
-
         var fighterRaft = GetComponentInParent<Common.FighterRaft>();
         fighterRaft.AddAbstractPlatform(platformComponent, _material);
         platformObject.layer = isEnemy ? LayerMask.NameToLayer("Enemy") : LayerMask.NameToLayer("Player");

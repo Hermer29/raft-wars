@@ -29,16 +29,9 @@ public class Bullet : MonoBehaviour
         transform.position += shotDirection * (speed * Time.deltaTime);
         if (timer > Random.Range(0.2f, 0.6f))
         {
-            CreateExplosion();
+            Destroy(gameObject);
         }
         else
             timer += Time.deltaTime;
-    }
-
-    private void CreateExplosion()
-    {
-        GameObject _exp = Instantiate(explosion, transform.position, Quaternion.identity);
-        Destroy(_exp, 2);
-        Destroy(gameObject);
     }
 }
