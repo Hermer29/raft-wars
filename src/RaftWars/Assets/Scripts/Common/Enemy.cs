@@ -14,7 +14,7 @@ using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
 
-public class Enemy : FighterRaft, IPlatformsCarrier
+public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 {
     [SerializeField] public List<Platform> platforms = new List<Platform>();
     [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public float damage;
@@ -53,6 +53,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     private const int ExclusionSqrDistanceToPlayer = 300*2;
     private const int HpAdditive = 6;
+    private EdgesAndAngleWaves edgesAndAngleWaves;
 
     private int StatsSum => (int) (hp + damage);
 
@@ -69,10 +70,9 @@ public class Enemy : FighterRaft, IPlatformsCarrier
     {
         get
         {
-            var edgesAndWaves = GetComponent<EdgesAndAngleWaves>();
-            if (edgesAndWaves == null)
+            if (edgesAndAngleWaves == null)
                 return 3;
-            return edgesAndWaves.Bounds;
+            return edgesAndAngleWaves.Bounds;
         }
     }
 
@@ -108,10 +108,10 @@ public class Enemy : FighterRaft, IPlatformsCarrier
     {
         if (_disableEdges)
             return;
-        var edges = gameObject.AddComponent<EdgesAndAngleWaves>();
-        edges.Construct(this, _material);
-        edges.CreateEdges();
-        edges.CreateWaves();
+        edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
+        edgesAndAngleWaves.Construct(this, _material);
+        edgesAndAngleWaves.CreateEdges();
+        edgesAndAngleWaves.CreateWaves();
     }
 
     private void GenerateRandomColor(bool when)
@@ -137,6 +137,26 @@ public class Enemy : FighterRaft, IPlatformsCarrier
         {
             platforms[0].TryTakePeople(people.gameObject);
         }
+    }
+
+    public override void AddPlatform(Platform platform)
+    {
+        platforms.Add(platform);
+        edgesAndAngleWaves.UpdateVisual(platform.gameObject);
+    }
+
+    public override void AddTurret(Turret turret)
+    {
+        turrets.Add(turret);
+        hp += turret.healthIncrease;
+        damage += turret.damageIncrease;
+        RecountStats();
+    }
+
+    public override void AddFastTurret(Turret turret)
+    {
+        turrets.Add(turret);
+        speed += turret.millSpeed;
     }
 
     private void WarmupPlatforms()
@@ -344,22 +364,25 @@ public class Enemy : FighterRaft, IPlatformsCarrier
             plat.Material = _material;
             plat.isEnemy = true;
             plat.gameObject.layer = LayerMask.NameToLayer("Enemy");
+            var relatedTurret = plat.GetComponentInChildren<Turret>();
+            this.platforms.Add(plat);
+            if (plat.isTurret == false)
+                continue;
+
             if (plat.ishospital)
             {
-                currentHp += plat.GetComponentInChildren<Turret>().healthIncrease;
-                this.hp += plat.GetComponentInChildren<Turret>().healthIncrease;
+                currentHp += relatedTurret.healthIncrease;
+                this.hp += relatedTurret.healthIncrease;
             }
             else if (plat.isTurret)
             {
-                turrets.Add(plat.GetComponentInChildren<Turret>());
-                turretDamage += plat.GetComponentInChildren<Turret>().damageIncrease;
-                this.damage += plat.GetComponentInChildren<Turret>().damageIncrease;
-                currentHp += plat.GetComponentInChildren<Turret>().healthIncrease;
-                this.hp += plat.GetComponentInChildren<Turret>().healthIncrease;
-                platform.GetComponentInChildren<Turret>().DrawInMyColor(_material);
-            }
-            else
-                this.platforms.Add(plat);
+                turrets.Add(relatedTurret);
+                turretDamage += relatedTurret.damageIncrease;
+                this.damage += relatedTurret.damageIncrease;
+                currentHp += relatedTurret.healthIncrease;
+                this.hp += relatedTurret.healthIncrease;
+                relatedTurret.DrawInMyColor(_material);
+            }   
         }
 
         foreach (People man in people)
@@ -581,7 +604,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier
         PlayIdleAnimation();
     }
 
-    public void DealDamage(int amount = 1)
+    public override void DealDamage(int amount = 1)
     {
         bool IsRandomPeopleMustDie()
         {
@@ -616,5 +639,10 @@ public class Enemy : FighterRaft, IPlatformsCarrier
     {
         battle = true;
         PlayShotAnimation(_player.PlayerInstance);
+    }
+
+    public bool TryTakePeople(GameObject warrior)
+    {
+        throw new NotImplementedException("Should not be called, cause interface is just a marker");
     }
 }

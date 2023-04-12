@@ -12,14 +12,14 @@ public class Coins : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<ICanTakeCoins>() != null && canTake)
+        var coinsTaker = other.GetComponent<ICanTakeCoins>();
+        if (coinsTaker != null && canTake)
         {
-            if (canTake)
+            if (coinsTaker.TryTakeCoins(coins))
             {
                 canTake = false;
                 GameObject _effect = Instantiate(effect, transform.position, Quaternion.identity);
                 Destroy(_effect, 2f);
-                Game.MoneyService.AddCoins(coins);
                 Destroy(gameObject);
             }
         }

@@ -1,5 +1,7 @@
 using System;
+using Common;
 using DefaultNamespace;
+using RaftWars.Infrastructure;
 using Skins.Platforms;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -42,6 +44,11 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     public bool TryTakePeople(GameObject warrior)
     {
         Assert.IsNotNull(warrior);
+
+        if (TryGetFighterRaftImplementation<ICanTakePeople>(out _) == false)
+        {
+            return false;
+        }
         
         if (!isTurret && !ishospital && !isWind)
         {
@@ -121,7 +128,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         return FindPointOnPlatform(middle);
     }
 
-    public void TakePlatform(GameObject platform, Vector3 pos)
+    public void TakePlatform(GameObject platformPrefab, Vector3 pos)
     {
         Vector3 spawnPos = transform.position;
         Vector3 vectorFromPlayer = pos - transform.position;
@@ -140,29 +147,15 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
                 spawnPos.z -= Constants.PlatformSize;
         }
         
-        GameObject platformInstance = Instantiate(platform, spawnPos, Quaternion.identity, transform.parent);
-        var platformComponent = platformInstance.GetComponent<Platform>();
+        GameObject platformObject = Instantiate(platformPrefab, spawnPos, Quaternion.identity, transform.parent);
+        var platformComponent = platformObject.GetComponent<Platform>();
         platformComponent.Material = _material;
         if(_skin != null)
             platformComponent.ApplySkin(_skin);
 
-        if (GetComponentInParent<Player>() != null)
-        {
-            if (platformInstance.GetComponent<Platform>().isTurret)
-            {
-                platformInstance.GetComponentInChildren<Turret>().DrawInMyColor(_material);
-                if (!platformInstance.GetComponent<Platform>().isWind)
-                    GetComponentInParent<Player>().AddTurret(platformInstance.GetComponentInChildren<Turret>(),
-                        platformInstance.GetComponentInChildren<Turret>().damageIncrease,
-                        platformInstance.GetComponentInChildren<Turret>().healthIncrease);
-                else
-                    GetComponentInParent<Player>().AddFastTurret(platformInstance.GetComponentInChildren<Turret>(), platformInstance.GetComponentInChildren<Turret>().millSpeed);
-            }
-            GetComponentInParent<Player>().AddPlatform(platformInstance.GetComponent<Platform>());
-            platformInstance.layer = LayerMask.NameToLayer("Player");
-        }
-        else
-            platformInstance.layer = LayerMask.NameToLayer("Enemy");
+        var fighterRaft = GetComponentInParent<Common.FighterRaft>();
+        fighterRaft.AddAbstractPlatform(platformComponent, _material);
+        platformObject.layer = isEnemy ? LayerMask.NameToLayer("Enemy") : LayerMask.NameToLayer("Player");
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -183,14 +176,6 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         player.StartBattle(_relatedEnemy);
     }
 
-    public void TakeCoins(int coins)
-    {
-        if (GetComponentInParent<Player>() != null)
-        {
-            GetComponentInParent<Player>().AddCoins(coins);
-        }
-    }
-
     public void TakeGems(int gems)
     {
         if (GetComponentInParent<Player>() != null)
@@ -199,20 +184,20 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
     }
 
-    public void TakeBarrel(int damage)
+    public bool TryTakeBarrel(int damage) =>
+        TryGetFighterRaftImplementation(out ICanTakeBarrel barrelTaker) 
+            && barrelTaker.TryTakeBarrel(damage);
+
+    private bool TryGetFighterRaftImplementation<TImplementation>(out TImplementation implementation) where TImplementation: class
     {
-        var enemy = GetComponentInParent<Enemy>();
-        var player = GetComponentInParent<Player>();
-        if(enemy != null)
+        implementation = null;
+        var fighter = GetComponentInParent<FighterRaft>();
+        if (fighter is TImplementation checkedImplementation)
         {
-            enemy.DealDamage(damage);
-            return;
+            implementation = checkedImplementation;
+            return true;
         }
-        if(player != null)
-        {
-            player.DealDamage(damage);
-            return;
-        }
+        return false;
     }
 
     public void ApplySkin(PlatformSkin skin)
@@ -236,4 +221,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     {
         return transform.position + Platform.GetRandomPoint();
     }
+
+    public bool TryTakeCoins(int coins) =>
+        TryGetFighterRaftImplementation(out ICanTakeCoins barrelTaker) 
+            && barrelTaker.TryTakeCoins(coins);
 }

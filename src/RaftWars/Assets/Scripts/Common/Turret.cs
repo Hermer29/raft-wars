@@ -43,8 +43,6 @@ public class Turret : MonoBehaviour, ICoroutineSender
 
     public MeshRenderer[] objectsToDraw;
 
-
-
     private void Start()
     {
         mask = 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("Water");   

@@ -10,13 +10,16 @@ public class Barrel : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<ICanTakeBarrel>() != null && canTake)
+        var barrelTaker = other.GetComponent<ICanTakeBarrel>();
+        if (barrelTaker != null && canTake)
         {
-            canTake = false;
-            GameObject _effect = Instantiate(effect, transform.position, Quaternion.identity);
-            Destroy(_effect, 2f);
-            other.GetComponent<ICanTakeBarrel>().TakeBarrel(damage);
-            Destroy(gameObject);
+            if (barrelTaker.TryTakeBarrel(damage))
+            {
+                canTake = false;
+                GameObject _effect = Instantiate(effect, transform.position, Quaternion.identity);
+                Destroy(_effect, 2f);
+                Destroy(gameObject);
+            }
         }
     }
 }

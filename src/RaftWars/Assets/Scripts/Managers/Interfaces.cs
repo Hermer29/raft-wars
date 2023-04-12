@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 interface ICanTakePeople
@@ -24,10 +22,10 @@ public interface ICanTakeGems
 
 public interface ICanTakeCoins
 {
-    public void TakeCoins(int coins);
+    public bool TryTakeCoins(int coins);
 }
 
 public interface ICanTakeBarrel
 {
-    public void TakeBarrel(int damage);
+    public bool TryTakeBarrel(int damage);
 }

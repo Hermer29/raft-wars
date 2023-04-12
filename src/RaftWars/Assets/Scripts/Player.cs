@@ -15,13 +15,11 @@ using Skins.Platforms;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using Visual;
 using Random = UnityEngine.Random;
-using Infrastructure;
 
-public class Player : FighterRaft, IPlatformsCarrier
+public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCoins, ICanTakePeople
 {
     [SerializeField] private List<People> warriors;
     [SerializeField] private List<Platform> platforms;
@@ -170,11 +168,6 @@ public class Player : FighterRaft, IPlatformsCarrier
         _hud.ShowCoins(this.coins);
     }
 
-    public void SpendCoins(int coins)
-    {
-        Game.MoneyService.Spend(coins);
-    }
-
     public void AddGems(int gems)
     {
         this.gems += gems;
@@ -198,7 +191,7 @@ public class Player : FighterRaft, IPlatformsCarrier
         RecountStats();
     }
 
-    public void DealDamage(int amount = 1)
+    public override void DealDamage(int amount = 1)
     {
         const int damageAdditive = 6;
 
@@ -221,19 +214,17 @@ public class Player : FighterRaft, IPlatformsCarrier
         RecountStats();
     }
 
-    public void AddTurret(Turret tur, int damageIncrease, int healthIncrease)
+    public override void AddTurret(Turret tur)
     {
-        AddPlatform(tur.GetComponentInParent<Platform>());
         turrets.Add(tur);
-        platformHp += healthIncrease;
-        hp += (int) (healthIncrease * (1 + hpAdditive));
-        damage += (int) (damageIncrease * (1 + damageAdditive));
+        platformHp += tur.healthIncrease;
+        hp += (int) (tur.healthIncrease * (1 + hpAdditive));
+        damage += (int) (tur.damageIncrease * (1 + damageAdditive));
         RecountStats();
     }
     
-    public void AddFastTurret(Turret tur, float speed)
+    public override void AddFastTurret(Turret tur)
     {
-        AddPlatform(tur.GetComponentInParent<Platform>());
         this.speed += speed;
     }
 
@@ -242,27 +233,6 @@ public class Player : FighterRaft, IPlatformsCarrier
         _enemyHud.hpText.text = Mathf.RoundToInt(Mathf.Clamp(hp, 0, 99999)).ToString();
         _enemyHud.damageText.text = Mathf.RoundToInt(Mathf.Clamp(damage, 0, 99999)).ToString();
         warriorsCount = warriors.Count;
-    }
-
-    private void CheckHp()
-    {
-        bool Something()
-        {
-            return hp - platformHp * (1 + hpAdditive) <= (warriors.Count - 1) * hpIncomeForPeople * (1 + hpAdditive);
-        }
-        
-        if (warriorsCount > 0)
-        {
-            if (Something())
-            {
-                if (warriors.Count > 0)
-                {
-                    MakeRandomPeopleDie();
-                    damage -= (int) (damageIncomeForPeople * (1 + damageAdditive));
-                }
-            }
-        }
-        RecountStats();
     }
 
     private void MakeRandomPeopleDie()
@@ -442,7 +412,7 @@ public class Player : FighterRaft, IPlatformsCarrier
         return platforms[Random.Range(0, platformCount)];
     }
 
-    public void AddPlatform(Platform platform)
+    public override void AddPlatform(Platform platform)
     {
         void AddPlatformToCameraTargetGroup()
         {
@@ -538,5 +508,22 @@ public class Player : FighterRaft, IPlatformsCarrier
     public override void StopFight()
     {
         OnBattleEnded();
+    }
+
+    public bool TryTakeBarrel(int damage)
+    {
+        DealDamage(damage);
+        return true;
+    }
+
+    public bool TryTakeCoins(int coins)
+    {
+        Game.MoneyService.AddCoins(coins);
+        return true;
+    }
+
+    public bool TryTakePeople(GameObject warrior)
+    {
+        throw new InvalidOperationException("Should not be called, cause interface is just a marker");
     }
 }

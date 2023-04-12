@@ -8,5 +8,26 @@ namespace Common
 
         public abstract void Die();
         public abstract void StopFight();
+
+        public abstract void AddPlatform(Platform platform);
+        public abstract void AddTurret(Turret turret);
+        public abstract void AddFastTurret(Turret turret);
+
+        public void AddAbstractPlatform(Platform platform, Material color)
+        {
+            if (platform.isTurret)
+            {
+                var turret = platform.GetComponentInChildren<Turret>();
+                turret.DrawInMyColor(color);
+                if (turret.isWind)
+                    AddFastTurret(turret);
+                else
+                    AddTurret(turret);
+                    
+            }
+            AddPlatform(platform);
+        }
+
+        public abstract void DealDamage(int damage = 1);
     }
 }
