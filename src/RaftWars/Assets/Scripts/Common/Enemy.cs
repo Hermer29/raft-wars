@@ -56,7 +56,6 @@ public class Enemy : FighterRaft, IPlatformsCarrier
 
     private int StatsSum => (int) (hp + damage);
 
-
     public Material Material
     {
         set
