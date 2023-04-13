@@ -15,8 +15,8 @@ public class EnemyHud : MonoBehaviour
     private const float NormalizedDistanceToShow = .2f;
     private static float HorizontalScreenDistanceToShow = Screen.width * NormalizedDistanceToShow;
     private static float VerticalScreenDistanceToShow = Screen.height * NormalizedDistanceToShow;
-    private const float HudFollowingSpeed = 10;
-    private const float HudZTargetOffset = 4;
+    private const float HudFollowingSpeed = 30;
+    private const float HudZTargetOffset = 5;
     private const float ScreenDistanceBetweenTextsToHideOne = 200 * 200;
     private static List<EnemyHud> _otherHuds = new List<EnemyHud>();
 

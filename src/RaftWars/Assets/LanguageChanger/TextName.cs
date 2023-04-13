@@ -27,6 +27,7 @@ namespace LanguageChanger
         YouLost,
         YouWon,
         Boss,
-        Player
+        Player,
+        Or
     }
 }

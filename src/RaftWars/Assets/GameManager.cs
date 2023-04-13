@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DefaultNamespace.Common;
+using DG.Tweening;
 using InputSystem;
 using Interface;
 using RaftWars.Infrastructure;
@@ -50,6 +51,8 @@ public class GameManager : MonoBehaviour
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
         hud.NextStage.onClick.AddListener(NextStage);
+        hud.PreviousLevel.text = CrossLevelServices.LevelService.Level.ToString();
+        hud.NextLevel.text = CrossLevelServices.LevelService.Level.ToString() + 1;
         _stateMachine = stateMachine;
         _input = Game.InputService;
         _input.Disable();
@@ -104,7 +107,13 @@ private void Update()
         WarmupUiStats();
         WarmupStats();
         hud.stagePanel.SetActive(true);
-        hud.progressFill.fillAmount = _stage / 5f;
+        hud.progressFill.DOValue(_stage switch
+        {
+            1 => 0.223f,
+            2 => 0.434f,
+            3 => 0.644f,
+            4 => 0.854f
+        }, .5f);
         _stage++;
     }
 

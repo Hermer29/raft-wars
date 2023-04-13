@@ -153,7 +153,9 @@ public class People : MonoBehaviour
         StopCoroutine(_movingOnPlatform);
         animator.Play("Death");
         //TODO: if(andDestroy)
-        _platform.Capacity--;
+        if(_platform != null)
+            _platform.Capacity--;
+        _platform = null;
         Destroy(gameObject, 2.5f);
     }
 

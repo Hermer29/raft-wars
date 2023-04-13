@@ -13,7 +13,7 @@ namespace Interface
         public GameObject failedPanel;
         public GameObject blackBG;
         public GameObject stagePanel;
-        public Image progressFill;
+        public Slider progressFill;
         [Space]
         public Text damagePercentText, damageCostText, hpPercentText, hpCostText;
         public TMP_Text progressText;
@@ -38,6 +38,9 @@ namespace Interface
         public Button NextStage;
         public Arrow Arrow;
         public Button PauseButton;
+        public TMP_Text PreviousLevel;
+        public TMP_Text NextLevel;
+        public Image Tint;
 
         private void Start()
         {
@@ -52,6 +55,7 @@ namespace Interface
                     counter.SetActive(true);
                 }
             }
+            stagePanel.gameObject.SetActive(false);
         }
 
         public void HideDiamondsCounter()

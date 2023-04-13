@@ -61,3 +61,5 @@ MonoBehaviour:
     textValue: Player
   - textName: 21
     textValue: B.O.S.S.
+  - textName: 23
+    textValue: or
