@@ -26,6 +26,8 @@ public class EnemyHud : MonoBehaviour
     private bool _hidden = true;
     private bool _visible;
 
+    public bool CannotBeReplaced;
+
     private void Start()
     {
         _otherHuds.Add(this);
@@ -74,6 +76,8 @@ public class EnemyHud : MonoBehaviour
 
     private bool IsCanBeShown(Vector2 screenPoint)
     {
+        if(CannotBeReplaced)
+            return true;
         if (VisibilityListener._visibility.ContainsKey(this) == false)
             return false;
         var near =_otherHuds.FirstOrDefault(x => (x._actualScreenPosition - _actualScreenPosition).sqrMagnitude < ScreenDistanceBetweenTextsToHideOne);

@@ -86,6 +86,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         _enemyHud = GameFactory.CreateEnemyHud();
         _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
         _enemyHud.Target = transform;
+        _enemyHud.CannotBeReplaced = true;
         _input = Game.InputService;
         _materialsService = Game.MaterialsService;
         _hud = Game.Hud;
