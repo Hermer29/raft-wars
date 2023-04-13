@@ -14,4 +14,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _languageName: en
   _font: {fileID: 11400000, guid: e3e962da9be954e41b5ffcf8753e9533, type: 2}
-  _description: []
+  _description:
+  - textName: 0
+    textValue: TAP TO PLAY
+  - textName: 1
+    textValue: Drag to move
+  - textName: 2
+    textValue: Shop
+  - textName: 3
+    textValue: Fight
+  - textName: 4
+    textValue: Use
+  - textName: 5
+    textValue: Color
+  - textName: 6
+    textValue: Raft
+  - textName: 7
+    textValue: Unit
+  - textName: 8
+    textValue: Paused
+  - textName: 9
+    textValue: Continue
+  - textName: 10
+    textValue: CONGRATS!
+  - textName: 11
+    textValue: Stats
+  - textName: 12
+    textValue: Platforms
+  - textName: 13
+    textValue: Warriors
+  - textName: 14
+    textValue: Power
+  - textName: 15
+    textValue: Strength
+  - textName: 16
+    textValue: Damage
+  - textName: 17
+    textValue: Health
+  - textName: 18
+    textValue: Restart
+  - textName: 19
+    textValue: YOU LOST
+  - textName: 20
+    textValue: YOU WON
+  - textName: 22
+    textValue: Player
+  - textName: 21
+    textValue: B.O.S.S.

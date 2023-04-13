@@ -35,3 +35,31 @@ MonoBehaviour:
     textValue: "\u041F\u0430\u0443\u0437\u0430"
   - textName: 9
     textValue: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C"
+  - textName: 20
+    textValue: "\u0412\u042B \u041F\u041E\u0411\u0415\u0414\u0418\u041B\u0418!"
+  - textName: 19
+    textValue: "\u0412\u042B \u041F\u0420\u041E\u0418\u0413\u0420\u0410\u041B\u0418"
+  - textName: 18
+    textValue: "\u0417\u0430\u043D\u043E\u0432\u043E"
+  - textName: 17
+    textValue: "\u0417\u0434\u043E\u0440\u043E\u0432\u044C\u0435"
+  - textName: 16
+    textValue: "\u0423\u0440\u043E\u043D"
+  - textName: 15
+    textValue: "\u0421\u0438\u043B\u0430"
+  - textName: 14
+    textValue: "\u041C\u043E\u0449\u044C"
+  - textName: 13
+    textValue: "\u0412\u043E\u0438\u043D\u044B"
+  - textName: 12
+    textValue: "\u041F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B"
+  - textName: 11
+    textValue: "\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0430"
+  - textName: 10
+    textValue: "\u041F\u041E\u0417\u0414\u0420\u0410\u0412\u041B\u042F\u0415\u041C!"
+  - textName: 9
+    textValue: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C"
+  - textName: 21
+    textValue: "\u0411.\u041E.\u0421.\u0421."
+  - textName: 22
+    textValue: "\u0418\u0433\u0440\u043E\u043A"

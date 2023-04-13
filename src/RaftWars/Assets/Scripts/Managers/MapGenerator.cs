@@ -99,7 +99,15 @@ public class MapGenerator : MonoBehaviour
             {
                 Debug.Log($"Spawned collectable on way");
                 Vector3 spawnPoint = hit.point + hit.normal * heightOverTheCollider;
-                IEnumerable<Pickable> pickables = peopleToSpawn.Cast<Pickable>().Concat(platformsToSpawn);
+                IEnumerable<Pickable> pickables;
+                if(Random.Range(0, 100) > 80f)
+                {
+                    pickables = platformsToSpawn;
+                }
+                else
+                {
+                    pickables = peopleToSpawn.Cast<Pickable>();
+                }
                 Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));
                 Pickable people = Instantiate(prefabToSpawn, spawnPoint, Quaternion.identity);
             }
@@ -108,7 +116,7 @@ public class MapGenerator : MonoBehaviour
                 yield return null;
                 continue;
             }
-            yield return new WaitForSeconds(10);
+            yield return new WaitForSeconds(6);
         }
     }
 

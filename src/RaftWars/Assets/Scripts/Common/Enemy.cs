@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -348,6 +349,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         if (isBoss)
         {
             _enemyHud = GameFactory.CreateBossHud();
+            _enemyHud.nickname.text = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Boss];
         }
         else
         {
@@ -355,7 +357,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             var nick = _enemyHud.transform.Cast<Transform>()
                 .First(x => x.name == "NicknameText")
                 .GetComponent<TMP_Text>();
-            nick.text = "Player" + Random.Range(1000, 10000);
+            var playerText = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Player];
+            nick.text = playerText + Random.Range(1000, 10000);
         }
 
         _enemyHud.Target = transform;

@@ -14,7 +14,19 @@ namespace LanguageChanger
         Raft,
         Unit,
         Paused,
-        Continue
-        
+        Continue,
+        Congrats,
+        Stats,
+        Platforms,
+        Warriors,
+        Power,
+        Strength,
+        Damage,
+        Health,
+        Restart,
+        YouLost,
+        YouWon,
+        Boss,
+        Player
     }
 }

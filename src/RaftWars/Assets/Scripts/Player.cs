@@ -125,22 +125,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     private void TryGenerateNickname()
     {
-        string nick = "";
-        if (YandexGamesSdk.IsInitialized)
-        {
-            if (YandexGamesSdk.Environment.i18n.lang == "ru")
-            {
-                nick = "Игрок";
-            }
-            else
-            {
-                nick = "Player";
-            }
-        }
-        else
-        {
-            nick = "Игрок";
-        }
+        string nick = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Player];
         _enemyHud.nickname.text = nick;
     }
 

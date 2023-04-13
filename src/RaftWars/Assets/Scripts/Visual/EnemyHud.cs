@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 using DefaultNamespace;
+using System.Collections.Generic;
 
 public class EnemyHud : MonoBehaviour
 {
@@ -16,9 +17,19 @@ public class EnemyHud : MonoBehaviour
     private static float VerticalScreenDistanceToShow = Screen.height * NormalizedDistanceToShow;
     private const float HudFollowingSpeed = 10;
     private const float HudZTargetOffset = 4;
+    private const float ScreenDistanceBetweenTextsToHideOne = 200 * 200;
+    private static List<EnemyHud> _otherHuds = new List<EnemyHud>();
 
+    private Vector2 _screenPoint;
+    private Vector2 _actualScreenPosition;
+    private float _distanceToCenter;
     private bool _hidden = true;
     private bool _visible;
+
+    private void Start()
+    {
+        _otherHuds.Add(this);
+    }
 
     private void LateUpdate()
     {
@@ -35,14 +46,16 @@ public class EnemyHud : MonoBehaviour
         var worldTarget = Target.position;
         worldTarget.z += HudZTargetOffset; 
         Vector2 screenPoint = Camera.main.WorldToScreenPoint(worldTarget);
-        
+        _screenPoint = screenPoint;
+        _distanceToCenter = (screenPoint - Vector2.zero).sqrMagnitude;
+        var clamped = ClampScreenPoint(screenPoint);
+        _actualScreenPosition = clamped;
         if(IsCanBeShown(screenPoint) == false)
         {
             Hide();
             return;
         }
         CanvasGroup.alpha = 1;
-        var clamped = ClampScreenPoint(screenPoint);
 
         if(_hidden)
         {
@@ -63,6 +76,11 @@ public class EnemyHud : MonoBehaviour
     {
         if (VisibilityListener._visibility.ContainsKey(this) == false)
             return false;
+        var near =_otherHuds.FirstOrDefault(x => (x._actualScreenPosition - _actualScreenPosition).sqrMagnitude < ScreenDistanceBetweenTextsToHideOne);
+        if(near != null && near._distanceToCenter < _distanceToCenter)
+        {
+            return false;
+        }
         return VisibilityListener._visibility[this].Any(x => x.IsVisible());
         // var lessThanHorizontalMax = screenPoint.x < Screen.width + HorizontalScreenDistanceToShow;
         // var moreThanHorizontalMin = screenPoint.x > -HorizontalScreenDistanceToShow;

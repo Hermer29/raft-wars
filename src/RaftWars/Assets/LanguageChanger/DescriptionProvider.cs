@@ -7,6 +7,7 @@ namespace LanguageChanger
 {
     public class DescriptionProvider : MonoBehaviour
     {
+        public static DescriptionProvider Instance;
         [SerializeField] private LanguageDescription _russian;
         [SerializeField] private LanguageDescription _english;
         [Header("Testing")] [SerializeField] private bool _enableTesting;
@@ -16,6 +17,7 @@ namespace LanguageChanger
 
         private void Start()
         {
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
 

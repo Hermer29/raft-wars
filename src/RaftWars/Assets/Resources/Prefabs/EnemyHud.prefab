@@ -434,8 +434,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: B.O.S.S.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b9bcd276fd0c8e346a5344ed458e0526, type: 2}
-  m_sharedMaterial: {fileID: -515497186644199100, guid: b9bcd276fd0c8e346a5344ed458e0526, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e3e962da9be954e41b5ffcf8753e9533, type: 2}
+  m_sharedMaterial: {fileID: -9189752883446573533, guid: e3e962da9be954e41b5ffcf8753e9533, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
