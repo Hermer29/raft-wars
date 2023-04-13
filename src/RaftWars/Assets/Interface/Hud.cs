@@ -56,6 +56,7 @@ namespace Interface
                 }
             }
             stagePanel.gameObject.SetActive(false);
+            failedPanel.gameObject.SetActive(false);
         }
 
         public void HideDiamondsCounter()
