@@ -116,7 +116,7 @@ public class MapGenerator : MonoBehaviour
                 yield return null;
                 continue;
             }
-            yield return new WaitForSeconds(6);
+            yield return new WaitForSeconds(30);
         }
     }
 
