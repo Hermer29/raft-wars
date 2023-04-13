@@ -152,6 +152,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         
         GameObject platformObject = Instantiate(platformPrefab, spawnPos, Quaternion.identity, transform.parent);
         var platformComponent = platformObject.GetComponent<Platform>();
+        platformComponent.isEnemy = isEnemy;
         platformComponent.Material = _material;
         if(_skin != null)
             platformComponent.ApplySkin(_skin);
