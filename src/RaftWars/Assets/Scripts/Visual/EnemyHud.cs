@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 using TMPro;
@@ -27,14 +28,58 @@ public class EnemyHud : MonoBehaviour
     private bool _visible;
 
     public bool CannotBeReplaced;
+    public bool WorksInFixedUpdate;
 
     private void Start()
     {
         _otherHuds.Add(this);
     }
 
+    private void FixedUpdate()
+    {
+        if(WorksInFixedUpdate == false)
+        {
+            return;
+        }
+        if(Player.instance == null || Player.instance.canPlay == false)
+        {
+            Hide();
+            return;
+        }
+        if(Target == null)
+        {
+            Hide();
+            return;
+        }
+        var worldTarget = Target.position;
+        worldTarget.z += HudZTargetOffset;
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(worldTarget);
+        _screenPoint = screenPoint;
+        _distanceToCenter = (screenPoint - Vector2.zero).sqrMagnitude;
+        var clamped = ClampScreenPoint(screenPoint);
+        _actualScreenPosition = clamped;
+        if(IsCanBeShown(screenPoint) == false)
+        {
+            Hide();
+            return;
+        }
+        CanvasGroup.alpha = 1;
+
+        if(_hidden)
+        {
+            transform.position = clamped;
+            _hidden = false;
+            return;
+        }
+        transform.position = Vector3.Lerp(transform.position, clamped, Time.deltaTime * HudFollowingSpeed);
+    }
+
     private void LateUpdate()
     {
+        if(WorksInFixedUpdate)
+        {
+            return;
+        }
         if(Player.instance == null || Player.instance.canPlay == false)
         {
             Hide();

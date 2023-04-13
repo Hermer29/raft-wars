@@ -111,7 +111,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             enemy.AddPeople(people);
         }
-
+        platform.Capacity++;
         people.SetColor(_material);
         people.SetRelatedPlatform(this);
         return true;
@@ -154,6 +154,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         var platformComponent = platformObject.GetComponent<Platform>();
         platformComponent.isEnemy = isEnemy;
         platformComponent.Material = _material;
+        platformComponent.Capacity = 0;
         if(_skin != null)
             platformComponent.ApplySkin(_skin);
         var fighterRaft = GetComponentInParent<Common.FighterRaft>();
