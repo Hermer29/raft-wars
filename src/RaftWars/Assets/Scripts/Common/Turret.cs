@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -121,7 +119,7 @@ public class Turret : MonoBehaviour, ICoroutineSender
             {
                 foreach (Collider col in cols)
                 {
-                    if (col.gameObject.GetComponent<ThatCanBeTaken>() != null)
+                    if (col.gameObject.GetComponent<RaftWars.Pickables.Pickable>() != null)
                     {
                         col.transform.Translate((posToCast - col.transform.position) * Time.deltaTime);
                     }
