@@ -36,15 +36,17 @@ namespace RaftWars.Infrastructure
             pause.Construct(Game.Hud.PauseButton);
             Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
             Game.UsingService = new PlayerUsingService(Game.PlayerService, CrossLevelServices.PrefsService);
-            _stateMachine.Enter<CreateIMGUIState>();
-            _stateMachine.Enter<CreateShopState>();
             
-            if(CrossLevelServices.PrefsService.GetInt("TutorialShown", 0) == 0)
+            if(CrossLevelServices.PrefsService.GetInt("TutorialShown", 0) == 0 || Game.FeatureFlags.TutorialEveryTime)
             {
                 var tutorial = GameFactory.CreateTutorial();
+                tutorial.Construct(Game.Hud.Joystick);
                 CrossLevelServices.PrefsService.SetInt("TutorialShown", 1);
-                Game.GameManager.GameStarted += () => GameObject.Destroy(tutorial.gameObject);
+                Game.GameManager.GameStarted += tutorial.Show;
             }
+
+            _stateMachine.Enter<CreateIMGUIState>();
+            _stateMachine.Enter<CreateShopState>();
         }
 
         private static Player CreatePlayer()

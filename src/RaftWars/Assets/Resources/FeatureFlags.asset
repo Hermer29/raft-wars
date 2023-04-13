@@ -15,3 +15,4 @@ MonoBehaviour:
   <IMGUIEnabled>k__BackingField: 1
   <DiamondsEnabledInGame>k__BackingField: 0
   <MenuButtonsFading>k__BackingField: 0
+  <TutorialEveryTime>k__BackingField: 1
