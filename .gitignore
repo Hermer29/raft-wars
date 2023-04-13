@@ -72,3 +72,4 @@ src/RaftWars/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 # Temporary auto-generated Android Assets
 src/RaftWars/[Aa]ssets/[Ss]treamingAssets/aa.meta
 src/RaftWars/[Aa]ssets/[Ss]treamingAssets/aa/*
+git-filter-repo.txt
