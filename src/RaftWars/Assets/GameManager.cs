@@ -5,11 +5,9 @@ using InputSystem;
 using Interface;
 using RaftWars.Infrastructure;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
     public static GameManager instance;
     private bool _started;
     

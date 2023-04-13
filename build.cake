@@ -3,13 +3,13 @@
 #addin nuget:?package=FluentFTP&version=46.0.2
 #addin nuget:?package=Cake.Git&version=3.0.0
 
+using System.ComponentModel.Design.Serialization;
 using TL;
 using FluentFTP;
 using System.IO;
 using System.Text.RegularExpressions;
 
 const string ProjectName = "RaftWars";
-const string TelegramSessionPath = "./.config/WTelegram.session";
 const string ArtifactsFolderPath = "./artifacts";
 const string ProjectFolderPath = $"./src/{ProjectName}";
 const string UnityBuildMethod = "Editor.Builder.BuildWebGl";
@@ -17,6 +17,8 @@ const string SearchingBuildFolderPattern = @"^.{0,}_" + ProjectName + "_.{0,}$";
 const string UnityPath = @"D:\Soft\Unity\2021.3.15f1\Editor\Unity.exe";
 
 var target = Argument("target", "Send-Build-Notification");
+
+string TelegramSessionPath => Context.Configuration.GetValue("Telegram_SessionPath");
 
 Task("Clean-Artifacts")
     .Does(() => 
