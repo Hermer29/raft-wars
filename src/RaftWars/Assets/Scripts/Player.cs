@@ -144,8 +144,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         battle = false;
         idleBehaviour = true;
         PutInIdleAnimation();
-        if(_explosionsCoroutine != null)
-            StopCoroutine(_explosionsCoroutine);
     }
 
     private void PutInIdleAnimation()
@@ -159,6 +157,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         {
             turret.IdleAnim();
         }
+        if(_explosionsCoroutine != null)
+            StopCoroutine(_explosionsCoroutine);
     }
 
     public void AddCoins(int coins)
@@ -358,6 +358,10 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     private void StartExplosions(CancellationToken token)
     {
+        if(_explosionsCoroutine != null)
+        {
+            StopCoroutine(_explosionsCoroutine);
+        }
         _explosionsCoroutine = StartCoroutine(CreateExplosions(token));
     }
 
