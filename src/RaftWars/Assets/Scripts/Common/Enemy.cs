@@ -55,7 +55,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     private const int ExclusionSqrDistanceToPlayer = 300*2;
     private const int HpAdditive = 6;
-    private EdgesAndAngleWaves edgesAndAngleWaves;
+    private EdgesAndAngleWaves _edgesAndAngleWaves;
     private Coroutine _explosionsCoroutine;
 
     private int StatsSum => (int) (hp + damage);
@@ -73,9 +73,9 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         get
         {
-            if (edgesAndAngleWaves == null)
+            if (_edgesAndAngleWaves == null)
                 return 3;
-            return edgesAndAngleWaves.Bounds;
+            return _edgesAndAngleWaves.Bounds;
         }
     }
 
@@ -111,10 +111,10 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         if (_disableEdges)
             return;
-        edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
-        edgesAndAngleWaves.Construct(this, _material);
-        edgesAndAngleWaves.CreateEdges();
-        edgesAndAngleWaves.CreateWaves();
+        _edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
+        _edgesAndAngleWaves.Construct(this, _material);
+        _edgesAndAngleWaves.CreateEdges();
+        _edgesAndAngleWaves.CreateWaves();
     }
 
     private void GenerateRandomColor(bool when)
@@ -158,7 +158,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public override void AddPlatform(Platform platform)
     {
         platforms.Add(platform);
-        edgesAndAngleWaves.UpdateVisual(platform.gameObject);
+        _edgesAndAngleWaves.UpdateVisual(platform.gameObject);
     }
 
     public override void AddTurret(Turret turret)
@@ -627,6 +627,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         PlayIdleAnimation();
     }
 
+    public override EnemyHud GetHud()
+    {
+        return _enemyHud;
+    }
+
     public override void DealDamage(int amount = 1)
     {
         bool IsRandomPeopleMustDie()
@@ -691,5 +696,10 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public bool TryTakePeople(GameObject warrior)
     {
         throw new NotImplementedException("Should not be called, cause interface is just a marker");
+    }
+
+    public IEnumerable<Vector3> GetPlatformPoints()
+    {
+        return _edgesAndAngleWaves.GetAllBorderPoints();
     }
 }

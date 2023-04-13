@@ -28,6 +28,8 @@ namespace Common
             AddPlatform(platform);
         }
 
+        public abstract EnemyHud GetHud();
+
         public abstract void DealDamage(int damage = 1);
     }
 }

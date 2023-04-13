@@ -55,6 +55,14 @@ namespace DefaultNamespace
             }
         }
 
+        public IEnumerable<Vector3> GetPointsOnEdges()
+        {
+            return GetEdges()
+                .SelectMany(x => new Vector3[] { x.a, x.b })
+                .GroupBy(x => x)
+                .Select(x => x.Key);
+        }
+
         private static IEnumerable<(Vector3[] corners, Vector3 normal)> ExcludeIntersecting(IEnumerable<(Vector3[] corners, Vector3 normal)> source)
         {
             var result = source.Select(x => x);
@@ -72,7 +80,5 @@ namespace DefaultNamespace
                    (GeoMaths.AlmostEquals(cornersA[0], cornersB[1]) && 
                     GeoMaths.AlmostEquals(cornersA[1], cornersB[0]));
         }
-
-        
     }
 }

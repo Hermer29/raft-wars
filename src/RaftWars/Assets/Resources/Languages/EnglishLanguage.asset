@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: EnglishLanguage
   m_EditorClassIdentifier: 
   _languageName: en
-  _font: {fileID: 0}
+  _font: {fileID: 11400000, guid: e3e962da9be954e41b5ffcf8753e9533, type: 2}
   _description: []
-  _possibleCongratulationOptions: []

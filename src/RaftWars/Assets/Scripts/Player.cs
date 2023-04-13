@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Agava.YandexGames;
 using Cinemachine;
 using Common;
 using DefaultNamespace;
@@ -124,15 +125,23 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     private void TryGenerateNickname()
     {
-        if (PlayerPrefs.HasKey("PlayerNick"))
+        string nick = "";
+        if (YandexGamesSdk.IsInitialized)
         {
-            _enemyHud.nickname.text = PlayerPrefs.GetString("PlayerNick");
+            if (YandexGamesSdk.Environment.i18n.lang == "ru")
+            {
+                nick = "Игрок";
+            }
+            else
+            {
+                nick = "Player";
+            }
         }
         else
         {
-            PlayerPrefs.SetString("PlayerNick", "Player" + Random.Range(1000, 9999));
-            _enemyHud.nickname.text = PlayerPrefs.GetString("PlayerNick");
+            nick = "Игрок";
         }
+        _enemyHud.nickname.text = nick;
     }
 
     private void Update()
@@ -191,6 +200,11 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         platformHp += healthIncrease;
         hp += (int) (healthIncrease * (1 + hpAdditive));
         RecountStats();
+    }
+
+    public override EnemyHud GetHud()
+    {
+        return _enemyHud;
     }
 
     public override void DealDamage(int amount = 1)

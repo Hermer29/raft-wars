@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RussianLanguage
   m_EditorClassIdentifier: 
   _languageName: ru
-  _font: {fileID: 0}
+  _font: {fileID: 11400000, guid: e3e962da9be954e41b5ffcf8753e9533, type: 2}
   _description:
   - textName: 0
     textValue: "\u041D\u0430\u0436\u043C\u0438 \u0447\u0442\u043E\u0431\u044B \u0438\u0433\u0440\u0430\u0442\u044C"

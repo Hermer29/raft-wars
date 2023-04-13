@@ -1,7 +1,7 @@
-using System;
-using RaftWars.Infrastructure;
+using System.Linq;
 using UnityEngine;
 using TMPro;
+using DefaultNamespace;
 
 public class EnemyHud : MonoBehaviour
 {
@@ -14,10 +14,11 @@ public class EnemyHud : MonoBehaviour
     private const float NormalizedDistanceToShow = .2f;
     private static float HorizontalScreenDistanceToShow = Screen.width * NormalizedDistanceToShow;
     private static float VerticalScreenDistanceToShow = Screen.height * NormalizedDistanceToShow;
-    private const float HudFollowingSpeed = 6;
-    private const float HudZTargetOffset = 2;
+    private const float HudFollowingSpeed = 10;
+    private const float HudZTargetOffset = 4;
 
     private bool _hidden = true;
+    private bool _visible;
 
     private void LateUpdate()
     {
@@ -34,6 +35,7 @@ public class EnemyHud : MonoBehaviour
         var worldTarget = Target.position;
         worldTarget.z += HudZTargetOffset; 
         Vector2 screenPoint = Camera.main.WorldToScreenPoint(worldTarget);
+        
         if(IsCanBeShown(screenPoint) == false)
         {
             Hide();
@@ -59,11 +61,14 @@ public class EnemyHud : MonoBehaviour
 
     private bool IsCanBeShown(Vector2 screenPoint)
     {
-        var lessThanHorizontalMax = screenPoint.x < Screen.width + HorizontalScreenDistanceToShow;
-        var moreThanHorizontalMin = screenPoint.x > -HorizontalScreenDistanceToShow;
-        var lessThanVerticalMax = screenPoint.y < Screen.height + VerticalScreenDistanceToShow;
-        var moreThanVerticalMin = screenPoint.y > -VerticalScreenDistanceToShow;
-        return lessThanHorizontalMax && moreThanHorizontalMin && lessThanVerticalMax && moreThanVerticalMin; 
+        if (VisibilityListener._visibility.ContainsKey(this) == false)
+            return false;
+        return VisibilityListener._visibility[this].Any(x => x.IsVisible());
+        // var lessThanHorizontalMax = screenPoint.x < Screen.width + HorizontalScreenDistanceToShow;
+        // var moreThanHorizontalMin = screenPoint.x > -HorizontalScreenDistanceToShow;
+        // var lessThanVerticalMax = screenPoint.y < Screen.height + VerticalScreenDistanceToShow;
+        // var moreThanVerticalMin = screenPoint.y > -VerticalScreenDistanceToShow;
+        // return lessThanHorizontalMax && moreThanHorizontalMin && lessThanVerticalMax && moreThanVerticalMin; 
     }
 
     private Vector3 ClampScreenPoint(Vector3 screenPoint)
@@ -80,5 +85,15 @@ public class EnemyHud : MonoBehaviour
         var y = Mathf.Clamp(screenPoint.y, screenBoundsYMin, screenBoundsYMax);
         var clamped = new Vector3(x, y);
         return clamped;
+    }
+
+    public void BecameInvisible()
+    {
+        _visible = false;
+    }
+
+    public void BecameVisible()
+    {
+        _visible = true;
     }
 }

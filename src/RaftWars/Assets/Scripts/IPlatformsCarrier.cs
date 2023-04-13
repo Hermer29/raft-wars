@@ -7,4 +7,9 @@ namespace DefaultNamespace
     {
         IEnumerable<GameObject> GetPlatforms();
     }
+
+    public interface IPlatformPoints
+    {
+        IEnumerable<Vector3> GetPlatformPoints();
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using Common;
 using DefaultNamespace;
 using RaftWars.Infrastructure;
@@ -50,6 +51,11 @@ namespace Visual
                 edge.transform.position = position + Vector3.up * HeightOffset;
                 edge.transform.rotation = rotation;
             }
+        }
+
+        public IEnumerable<Vector3> GetAllBorderPoints()
+        {
+            return _edges.GetPointsOnEdges();
         }
 
         public void UpdateVisual(GameObject newPlatform)
