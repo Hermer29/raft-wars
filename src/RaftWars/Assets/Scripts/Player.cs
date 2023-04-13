@@ -143,6 +143,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         battle = false;
         idleBehaviour = true;
         PutInIdleAnimation();
+        if(_explosionsCoroutine != null)
+            StopCoroutine(_explosionsCoroutine);
     }
 
     private void PutInIdleAnimation()
