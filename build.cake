@@ -3,6 +3,7 @@
 #addin nuget:?package=FluentFTP&version=46.0.2
 #addin nuget:?package=Cake.Git&version=3.0.0
 
+using System.Security.Cryptography;
 using System.ComponentModel.Design.Serialization;
 using TL;
 using FluentFTP;
@@ -56,7 +57,8 @@ Task("Send-Build-Notification")
     .Does(async () => 
 {
     Int64 chatId = Int64.Parse(Context.Configuration.GetValue("Telegram_ChatId"));
-    using var tgClient = new WTelegram.Client(TelegramConfig, System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate));
+    var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
+    using var tgClient = new WTelegram.Client(TelegramConfig, opened);
     var account = await tgClient.LoginUserIfNeeded();
     var dialogs = await tgClient.Messages_GetAllChats();
     var dialog = dialogs.chats[chatId];

@@ -140,10 +140,10 @@ public class EnemyHud : MonoBehaviour
 
     private Vector3 ClampScreenPoint(Vector3 screenPoint)
     {
-        var viewportBoundsXMin = .2f;
+        var viewportBoundsXMin = .25f;
         var viewportBoundsXMax = .8f;
         var viewportBoundsYMin = .1f;
-        var viewportBoundsYMax = .9f;
+        var viewportBoundsYMax = .85f;
         var screenBoundsXMin = Screen.width * viewportBoundsXMin;
         var screenBoundsXMax = Screen.width * viewportBoundsXMax;
         var screenBoundsYMin = Screen.height * viewportBoundsYMin;

@@ -21,8 +21,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 {
     [SerializeField] public List<Platform> platforms = new List<Platform>();
     [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public float damage;
-    [SerializeField] private float hpIncrease = 5;
-    [SerializeField] private float damageIncrease = 5;
+    [SerializeField] private float hpIncrease = PeopleConsts.StatsForPeople;
+    [SerializeField] private float damageIncrease = PeopleConsts.StatsForPeople;
     [SerializeField] private bool _disableEdges;
     private List<People> warriors = new List<People>();
     private List<Turret> turrets = new List<Turret>();
@@ -55,7 +55,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     private EnemyHud _enemyHud;
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     private const int ExclusionSqrDistanceToPlayer = 300*2;
-    private const int HpAdditive = 6;
+    private const int HpAdditive = PeopleConsts.StatsForPeople;
     private EdgesAndAngleWaves _edgesAndAngleWaves;
     private Coroutine _explosionsCoroutine;
 
@@ -355,6 +355,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         {
             _enemyHud = GameFactory.CreateEnemyHud();
             var nick = _enemyHud.transform.Cast<Transform>()
+                .First().Cast<Transform>()
                 .First(x => x.name == "NicknameText")
                 .GetComponent<TMP_Text>();
             var playerText = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Player];

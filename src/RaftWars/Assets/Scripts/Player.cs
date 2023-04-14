@@ -32,18 +32,16 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     [SerializeField] private Text coinsText, gemsText;
     [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public int hp;
     [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public int damage;
-    [FormerlySerializedAs("hpIncrease")] [SerializeField] private int hpIncomeForPeople = 5;
-    [FormerlySerializedAs("damageIncrease")] [SerializeField] private int damageIncomeForPeople = 5;
+    [FormerlySerializedAs("hpIncrease")] [SerializeField] private int hpIncomeForPeople = PeopleConsts.StatsForPeople;
+    [FormerlySerializedAs("damageIncrease")] [SerializeField] private int damageIncomeForPeople = PeopleConsts.StatsForPeople;
     [SerializeField] public float speed;
     public CinemachineTargetGroup CameraGroup;
     [SerializeField] private GameObject[] _indicators;
 
-    private int damageClear = 10;
     private int platformHp;
     private float hpAdditive;
     private float damageAdditive;
     public bool battle;
-    private float timer = 0;
     public bool isDead;
     public int platformCount = 1;
     public bool canPlay;
@@ -51,9 +49,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     public int gems;
     public int warriorsCount = 2;
     public CinemachineCameraOffset _camera;
-    private float damageToPlayer;
-    private const float WinningDamageCoefficient = .6f;
-    private const float LoosingDamageCoefficient = .4f;
     private const int PushForceBeforeFightFromEnemy = 2;
 
     private Enemy enemyForBattle;
@@ -69,6 +64,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private EnemyHud _enemyHud;
     private Coroutine _explosionsCoroutine;
     public static event Action Died;
+    public Transform center;
 
     public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
     public float Bounds => edgesAndAngleWaves.Bounds;
@@ -84,15 +80,15 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     {
         _enemyHud = GameFactory.CreateEnemyHud();
         _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
-        _enemyHud.Target = transform;
+        _enemyHud.Target = center;
         _enemyHud.CannotBeReplaced = true;
         _enemyHud.WorksInFixedUpdate = true;
         _input = Game.InputService;
         _materialsService = Game.MaterialsService;
         _hud = Game.Hud;
         
-        hp = 1;
-        damage = 1;
+        hp = PeopleConsts.StatsForPeople * warriorsCount;
+        damage = PeopleConsts.StatsForPeople * warriorsCount;
         MakePeopleRunAndColorize(_material);
         if (instance == null)
             instance = this;

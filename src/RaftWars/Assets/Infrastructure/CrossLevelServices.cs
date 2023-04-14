@@ -1,4 +1,5 @@
 ﻿using RaftWars.Infrastructure.Services;
+using DefaultNamespace;
 
 namespace RaftWars.Infrastructure
 {
@@ -7,9 +8,17 @@ namespace RaftWars.Infrastructure
         public static LevelService LevelService;
         public static IPrefsService PrefsService;
         
-        public CrossLevelServices(ICoroutineRunner coroutineRunner)
+        public CrossLevelServices(ICoroutineRunner coroutineRunner, FeatureFlags featureFlags)
         {
-            PrefsService = new PlayerPrefsService(coroutineRunner);
+            switch(featureFlags.PrefsImplementation)
+            {
+                case PrefsOptions.YandexCloud:
+                    PrefsService = new YandexPrefsService(coroutineRunner);
+                    break;
+                case PrefsOptions.PlayerPrefs:
+                    PrefsService = new PlayerPrefsService(coroutineRunner);
+                    break;
+            }
             LevelService = new LevelService(PrefsService);
         }
     }

@@ -1,7 +1,6 @@
 ﻿using DefaultNamespace;
 using InputSystem;
 using Interface;
-using RaftWars.Infrastructure.AssetManagement;
 using Services;
 
 namespace RaftWars.Infrastructure
@@ -31,7 +30,6 @@ namespace RaftWars.Infrastructure
             CollectiblesService = new CollectiblesService();
             PlayerService = new PlayerService(player);
             AdverisingService = new AdvertisingService();
-            FeatureFlags = AssetLoader.LoadFeatureFlags();
             Hud = GameFactory.CreateHud();
             InputService = new InputService(Hud.Joystick);
             IAPService = new YandexIAPService();

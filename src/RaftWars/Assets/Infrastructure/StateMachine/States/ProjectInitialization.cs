@@ -1,4 +1,6 @@
-﻿namespace RaftWars.Infrastructure
+﻿
+using RaftWars.Infrastructure.AssetManagement;
+namespace RaftWars.Infrastructure
 {
     public class ProjectInitialization : IState
     {
@@ -17,7 +19,8 @@
         
         public void Enter()
         {
-            _crossLevelServices ??= new CrossLevelServices(_coroutineRunner);
+            Game.FeatureFlags = AssetLoader.LoadFeatureFlags();
+            _crossLevelServices ??= new CrossLevelServices(_coroutineRunner, Game.FeatureFlags);
         }
     }
 }

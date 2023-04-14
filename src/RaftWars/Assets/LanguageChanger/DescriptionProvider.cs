@@ -33,7 +33,7 @@ namespace LanguageChanger
                 return _languageOverride != "ru" ? _english : _russian;
             }
 
-            var lang = /*Agava.YandexGames.YandexGamesSdk.Environment.i18n.lang*/"ru";
+            var lang = Agava.YandexGames.YandexGamesSdk.Environment.i18n.lang;
             return lang != "ru" ? _english : _russian;
         }
     }
