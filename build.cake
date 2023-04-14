@@ -12,23 +12,29 @@ using System.Text.RegularExpressions;
 
 const string ProjectName = "RaftWars";
 const string ArtifactsFolderPath = "./artifacts";
-const string ProjectFolderPath = $"./src/{ProjectName}";
-const string UnityBuildMethod = "Editor.Builder.BuildWebGl";
-const string SearchingBuildFolderPattern = @"^.{0,}_" + ProjectName + "_.{0,}$";
-const string UnityPath = @"D:\Soft\Unity\2021.3.15f1\Editor\Unity.exe";
 
-var target = Argument("target", "Send-Build-Notification");
+var target = Argument("target", SendBuildNotificationTask);
 
-string TelegramSessionPath => Context.Configuration.GetValue("Telegram_SessionPath");
+#region Clean-Artifacts
 
-Task("Clean-Artifacts")
+const string CleanArtifactsTask = "Clean-Artifacts";
+
+Task(CleanArtifactsTask)
     .Does(() => 
 {
     CleanDirectory(ArtifactsFolderPath);
 });
+#endregion
 
-Task("Build-WebGL")
-    .IsDependentOn("Clean-Artifacts")
+#region Build-WebGl
+
+const string BuildWebGlTask = "Build-WebGL";
+const string UnityPath = @"D:\Soft\Unity\2021.3.15f1\Editor\Unity.exe";
+const string UnityBuildMethod = "Editor.Builder.BuildWebGl";
+const string ProjectFolderPath = $"./src/{ProjectName}";
+
+Task(BuildWebGlTask)
+    .IsDependentOn(CleanArtifactsTask)
     .Does(() => 
 {
     UnityEditor(UnityPath,
@@ -52,31 +58,20 @@ UnityEditorArguments CreateUnityEditorArguments()
     return arguments;
 }
 
-Task("Send-Build-Notification")
-    .IsDependentOn("UploadFile")
-    .Does(async () => 
+string CreateBuildFolderName()
 {
-    Int64 chatId = Int64.Parse(Context.Configuration.GetValue("Telegram_ChatId"));
-    var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
-    using var tgClient = new WTelegram.Client(TelegramConfig, opened);
-    var account = await tgClient.LoginUserIfNeeded();
-    var dialogs = await tgClient.Messages_GetAllChats();
-    var dialog = dialogs.chats[chatId];
-    await tgClient.SendMessageAsync(dialog, CreateTelegramMessage());
-});
-
-string CreateTelegramMessage()
-{
-    var lastCommit = GitLog(new DirectoryPath("."), 1).First();
-    var message = $"Новый билд по проекту {ProjectName}! " + 
-        $"Произошедшие изменения: {lastCommit.Message}\n" +
-        $"Демонстрационная ссылка: https://immgames.ru/Games/Wolf/{ProjectName}. "+
-        $"Внимание! После следующего обновления эта версия игры \"сгорит\" из ссылки";
-    return message;
+    return $"{DateTime.Today:d}_{ProjectName}_{DateTime.Now.Hour}_{DateTime.Now.Minute}";
 }
 
-Task("UploadFile")
-    .IsDependentOn("Build-WebGL")
+#endregion
+
+#region Upload-File
+
+const string UploadFileTask = "Upload-File";
+const string SearchingBuildFolderPattern = @"^.{0,}_" + ProjectName + "_.{0,}$";
+
+Task(UploadFileTask)
+    .IsDependentOn(BuildWebGlTask)
     .Does(() => 
 {
     var client = new FtpClient(
@@ -90,8 +85,6 @@ Task("UploadFile")
     client.UploadDirectory(targetDirectory, $"/{ProjectName}");
 });
 
-RunTarget(target);
-
 string GetLastArtifactDirectory() => 
     System.IO.Directory.EnumerateDirectories(".\\artifacts")
         .First(directory => Regex.IsMatch(directory, SearchingBuildFolderPattern));
@@ -103,18 +96,39 @@ string FtpConfig(string key) => key switch
     "Ftp_Password" => Context.Configuration.GetValue("Ftp_Password")
 };
 
-string CreateBuildFolderName()
+#endregion
+
+#region Send-Build-Notification
+
+const string SendBuildNotificationTask = "Send-Build-Notification";
+const string TelegramSessionPathParameter = "Telegram_SessionPath";
+const string TelegramChatIdParameter = "Telegram_ChatId";
+const string TelegramApiIdParameter = "Telegram_ApiId";
+const string TelegramApiHashParameter = "Telegram_ApiHash";
+const string TelegramPhoneNumberParameter = "Telegram_PhoneNumber";
+
+string TelegramSessionPath => Context.Configuration.GetValue(TelegramSessionPathParameter);
+
+Task(SendBuildNotificationTask)
+    .IsDependentOn(UploadFileTask)
+    .Does(async () => 
 {
-    return $"{DateTime.Today:d}_{ProjectName}_{DateTime.Now.Hour}_{DateTime.Now.Minute}";
-}
+    Int64 chatId = Int64.Parse(Context.Configuration.GetValue(TelegramChatIdParameter));
+    var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
+    using var tgClient = new WTelegram.Client(TelegramConfig, opened);
+    var account = await tgClient.LoginUserIfNeeded();
+    var dialogs = await tgClient.Messages_GetAllChats();
+    var dialog = dialogs.chats[chatId];
+    await tgClient.SendMessageAsync(dialog, CreateTelegramMessage());
+});
 
 string TelegramConfig(string what)
 {
     switch (what)
     {
-        case "api_id": return Context.Configuration.GetValue("Telegram_ApiId");
-        case "api_hash": return Context.Configuration.GetValue("Telegram_ApiHash");
-        case "phone_number": return Context.Configuration.GetValue("Telegram_PhoneNumber");
+        case "api_id": return Context.Configuration.GetValue(TelegramApiIdParameter);
+        case "api_hash": return Context.Configuration.GetValue(TelegramApiHashParameter);
+        case "phone_number": return Context.Configuration.GetValue(TelegramPhoneNumberParameter);
         case "verification_code": Console.Write("Code: "); return Console.ReadLine();
         // Есть включена двойная аутентификация на аккаунте это может понадобиться:
         case "first_name": return "John";
@@ -123,3 +137,16 @@ string TelegramConfig(string what)
         default: return null;                  
     }
 }
+
+string CreateTelegramMessage()
+{
+    var lastCommit = GitLog(new DirectoryPath("."), 1).First();
+    var message = $"Новый билд по проекту {ProjectName}! " + 
+        $"Произошедшие изменения: {lastCommit.Message}\n" +
+        $"Демонстрационная ссылка: https://immgames.ru/Games/Wolf/{ProjectName}. "+
+        $"Внимание! После следующего обновления эта версия игры \"сгорит\" из ссылки";
+    return message;
+}
+#endregion
+
+RunTarget(target);
