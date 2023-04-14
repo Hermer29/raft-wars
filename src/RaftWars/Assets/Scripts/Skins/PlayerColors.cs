@@ -1,12 +1,11 @@
-﻿using System;
-using DefaultNamespace.Skins;
+﻿using DefaultNamespace.Skins;
 using UnityEditor;
 using UnityEngine;
 
 namespace Skins
 {
     [CreateAssetMenu(fileName = "PlayerColors", menuName = "Create Player Colors", order = 0)]
-    public class PlayerColors : ScriptableObject, IShopProduct
+    public class PlayerColors : ScriptableObject, IYandexIapProduct
     {
         [field: SerializeField] public Material Color { get; private set; }
         [field: SerializeField] public Sprite ShopImage { get; private set; }
@@ -15,7 +14,7 @@ namespace Skins
         [field: SerializeField] public bool OwnedByDefault { get; private set; }
         [field: SerializeField] public string Guid { get; private set; }
         [field: SerializeField] public Vector2 OverrideEntryDeltaSize { get; private set; }
-
+        [field: SerializeField] public string ProductId { get; private set; }
 
         private void OnValidate()
         {
