@@ -65,6 +65,9 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private Coroutine _explosionsCoroutine;
     public static event Action Died;
     public Transform center;
+    private int _healthBeforeFight;
+    private float _lostPercent;
+    private int _damageBeforeFight;
 
     public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
     public float Bounds => edgesAndAngleWaves.Bounds;
@@ -172,8 +175,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     public void AddPeople(People warrior)
     {
         warriors.Add(warrior);
-        hp += 6;
-        damage += 6;
+        hp += PeopleConsts.StatsForPeople;
+        damage += PeopleConsts.StatsForPeople;
         warrior.Material = _material;
         RecountStats();
         warrior.ApplyHat(_hat);
@@ -193,18 +196,41 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public override void DealDamage(int amount = 1)
     {
-        const int damageAdditive = 6;
-
-        bool IsRandomPeopleMustDie()
+        bool IsStatsDecreasingTime()
         {
-            return hp % damageAdditive == 0;
+            var accountedAlreadyLost = _lostPercent * _healthBeforeFight;
+            var step = _healthBeforeFight * 0.1f;
+            var resultingCondition = hp - amount < _healthBeforeFight - accountedAlreadyLost - step;
+            if (Math.Abs(_lostPercent - .9f) < 0.01f)
+                return false;
+            return resultingCondition;
         }
-        if (IsRandomPeopleMustDie())
+
+        if (Game.FightService.FightStarted)
         {
-            MakeRandomPeopleDie();
-            damage -= damageAdditive;
+            if (Game.FightService.CalculatePlayerSuperiority() > 0)
+            {
+                if (Random.Range(0, 100) > 99f)
+                {
+                    MakeRandomPeopleDie();
+                }
+            }
+            else
+            {
+                if (Random.Range(0, 70) > 99f)
+                {
+                    MakeRandomPeopleDie();
+                }
+            }
+        }
+        
+        
+        if (IsStatsDecreasingTime())
+        {
+            damage -= (int)Mathf.Ceil(_damageBeforeFight * 0.1f);
             if (damage <= 0)
                 damage = 0;
+            _lostPercent += 0.1f;
         }
         hp -= amount;
         if (Game.FightService.FightStarted == false && hp <= 0)
@@ -237,7 +263,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     private void MakeRandomPeopleDie()
     {
-        if (warriors.Count == 1)
+        if (warriors.Count == 2)
             return;
 
         People warrior = warriors[Random.Range(0, warriors.Count)];
@@ -311,6 +337,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         MakeWarriorsShot(enemy);
         MakeTurretsShot(enemy);
         PushPlayerOutOfEnemy(enemy);
+        _healthBeforeFight = hp;
+        _damageBeforeFight = damage;
     }
     
     private void PushPlayerOutOfEnemy(Enemy enemy)
@@ -559,5 +587,12 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     public bool TryTakePeople(GameObject warrior)
     {
         throw new InvalidOperationException("Should not be called, cause interface is just a marker");
+    }
+
+    public void IncreaseStats(int amount)
+    {
+        damage += amount;
+        hp += amount;
+        RecountStats();
     }
 }

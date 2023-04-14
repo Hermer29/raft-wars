@@ -63,7 +63,7 @@ namespace Services
             End();
         }
 
-        private float CalculatePlayerSuperiority()
+        public float CalculatePlayerSuperiority()
         {
             return _player.PlayerInstance.damage - _currentFightEnemy.damage;
         }
@@ -84,7 +84,7 @@ namespace Services
 
         private bool IsParticipantsAlive()
         {
-            return _player.PlayerInstance.hp > 0 && _currentFightEnemy.hp > 0;
+            return _player.PlayerInstance.hp > 0 && (int) Mathf.Floor(_currentFightEnemy.hp) > 0;
         }
 
         private FighterRaft Winner()

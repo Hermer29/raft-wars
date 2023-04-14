@@ -42,6 +42,7 @@ namespace Interface
         public TMP_Text NextLevel;
         public Image Tint;
         public SoundButton SoundButton;
+        public AdvertisingForStatsButton AdvertisingForStatsButton;
 
         private void Start()
         {

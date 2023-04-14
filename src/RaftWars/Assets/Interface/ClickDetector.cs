@@ -9,7 +9,7 @@ namespace Interface
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            _gameManager.StartGameOnClick();
+            _gameManager.StartGame();
             Destroy(gameObject);
         }
     }

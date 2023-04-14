@@ -16,7 +16,7 @@ public class Arrow : MonoBehaviour
     private Vector2 _previousDirection;
     private Camera _camera;
     private PlayerService _playerService;
-    private GameObject _boss;
+    private Enemy _boss;
     private bool _disabled;
 
     public void Construct(PlayerService playerService, Camera camera, Enemy boss)
@@ -30,7 +30,7 @@ public class Arrow : MonoBehaviour
 
     private void SetBoss(Enemy enemy)
     {
-        _boss = enemy.gameObject;
+        _boss = enemy;
     }
     
     private void Start()
@@ -53,6 +53,12 @@ public class Arrow : MonoBehaviour
         if (_disabled)
             return;
         if (_boss == null)
+        {
+            _fading.alpha = 0;
+            return;
+        }
+
+        if (_boss.GetHud().IsCanBeShown())
         {
             _fading.alpha = 0;
             return;

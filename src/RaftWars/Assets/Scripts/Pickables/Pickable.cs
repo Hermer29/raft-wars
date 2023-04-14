@@ -19,12 +19,17 @@ namespace RaftWars.Pickables
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<ICanTakePlatform>() == null)
+            if (other.TryGetComponent<ICanTakePlatform>(out var platformTaker) == false)
                 return;
 
             if (canTake == false)
                 return;
 
+            if (platformTaker is Platform { isEnemy: false })
+            {
+                Game.MapGenerator.PickedUp();
+            }
+            
             _collectibles ??= Game.CollectiblesService;
             _collectibles?.Spend();
             

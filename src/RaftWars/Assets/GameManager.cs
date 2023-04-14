@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
         hud.NextStage.onClick.AddListener(NextStage);
         hud.PreviousLevel.text = CrossLevelServices.LevelService.Level.ToString();
-        hud.NextLevel.text = CrossLevelServices.LevelService.Level.ToString() + 1;
+        hud.NextLevel.text = (CrossLevelServices.LevelService.Level + 1).ToString();
         _stateMachine = stateMachine;
         _input = Game.InputService;
         _input.Disable();
@@ -171,7 +171,7 @@ private void Update()
         CrossLevelServices.LevelService.Increment();
     }
 
-    public void StartGameOnClick()
+    public void StartGame()
     {
         _arrow.Construct(player, _camera, GameManager.instance.boss);
         GameStarted?.Invoke();

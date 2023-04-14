@@ -119,13 +119,29 @@ public class EnemyHud : MonoBehaviour
         _hidden = true;
     }
 
+    public bool IsCanBeShown()
+    {
+        var worldTarget = Target.position;
+        worldTarget.z += HudZTargetOffset; 
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(worldTarget);
+        _screenPoint = screenPoint;
+        _distanceToCenter = (screenPoint - Vector2.zero).sqrMagnitude;
+        var clamped = ClampScreenPoint(screenPoint);
+        _actualScreenPosition = clamped;
+        return IsCanBeShown(screenPoint);
+    }
+
     private bool IsCanBeShown(Vector2 screenPoint)
     {
         if(CannotBeReplaced)
             return true;
         if (VisibilityListener._visibility.ContainsKey(this) == false)
             return false;
-        var near =_otherHuds.FirstOrDefault(x => (x._actualScreenPosition - _actualScreenPosition).sqrMagnitude < ScreenDistanceBetweenTextsToHideOne);
+        var near =_otherHuds
+            .Where(x => VisibilityListener._visibility.ContainsKey(x))
+            .Where(x => VisibilityListener._visibility[x]
+                .Any(x => x.IsVisible()))
+            .FirstOrDefault(x => (x._actualScreenPosition - _actualScreenPosition).sqrMagnitude < ScreenDistanceBetweenTextsToHideOne);
         if(near != null && near._distanceToCenter < _distanceToCenter)
         {
             return false;

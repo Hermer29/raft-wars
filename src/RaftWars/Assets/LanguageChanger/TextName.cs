@@ -28,6 +28,7 @@ namespace LanguageChanger
         YouWon,
         Boss,
         Player,
-        Or
+        Or,
+        StartBigger
     }
 }

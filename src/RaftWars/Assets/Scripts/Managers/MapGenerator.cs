@@ -67,13 +67,36 @@ public class MapGenerator : MonoBehaviour
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;
         _player = Game.PlayerService;
-        
-        //_collectibles.NoCollectiblesLeft += SpawnMiscellaneous;
+    }
+
+    private void Start()
+    {
+        Game.GameManager.GameStarted += () => StartCoroutine(Counter());
+    }
+
+    private int _counter;
+    private int _offscreenGenerationCooldown;
+    
+    private IEnumerator Counter()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+            _counter++;
+            if(_offscreenGenerationCooldown > 0)
+                _offscreenGenerationCooldown--;
+        }
+    }
+
+    public void PickedUp()
+    {
+        _counter = 0;
     }
 
     private IEnumerator SpawnOnPlayersPathRandom()
     {
         Camera camera = Camera.main;
+        int probabilityToSpawnPlatformInPercent = 0;
         
         while(true)
         {
@@ -100,12 +123,14 @@ public class MapGenerator : MonoBehaviour
                 Debug.Log($"Spawned collectable on way");
                 Vector3 spawnPoint = hit.point + hit.normal * heightOverTheCollider;
                 IEnumerable<Pickable> pickables;
-                if(Random.Range(0, 100) > 80f)
+                if(Random.Range(0, 100) > 80f - probabilityToSpawnPlatformInPercent)
                 {
                     pickables = platformsToSpawn;
+                    probabilityToSpawnPlatformInPercent = 0;
                 }
                 else
                 {
+                    probabilityToSpawnPlatformInPercent += 5;
                     pickables = peopleToSpawn.Cast<Pickable>();
                 }
                 Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));
@@ -117,7 +142,12 @@ public class MapGenerator : MonoBehaviour
                 yield return null;
                 continue;
             }
-            yield return new WaitForSeconds(30);
+
+            _offscreenGenerationCooldown = 30;
+            yield return new WaitWhile(() => _offscreenGenerationCooldown - _counter > 0);
+            Debug.Log(
+                $"Offscreen generation cooldown passed. Cooldown seconds remains: {_offscreenGenerationCooldown}, Decreasing counter: {_counter}");
+            _counter = 0;
         }
     }
 
