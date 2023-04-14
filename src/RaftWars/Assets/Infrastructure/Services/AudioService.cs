@@ -13,6 +13,8 @@ public class AudioService : MonoBehaviour
     [SerializeField] private AudioSource _swimmingSound;
     [SerializeField] private AudioSource _standingSound;
     [SerializeField] private AudioSource _peoplePickedUp;
+    [SerializeField] private AudioSource _shopUse;
+    [SerializeField] private AudioSource _shopBuy;
 
     private const string AudioKey = "Audio";
 
@@ -77,5 +79,15 @@ public class AudioService : MonoBehaviour
     {
         _peoplePickedUp.Stop();
         _peoplePickedUp.Play();
+    }
+
+    public void PlayShopUseButtonOnClick()
+    {
+        _shopUse.Play();
+    }
+
+    public void PlayShopBuyButtonOnClick()
+    {
+        _shopBuy.Play();
     }
 }

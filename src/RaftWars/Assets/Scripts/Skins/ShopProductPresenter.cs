@@ -2,6 +2,7 @@
 using DefaultNamespace.Skins;
 using InputSystem;
 using Services;
+using RaftWars.Infrastructure;
 
 namespace Skins
 {
@@ -27,7 +28,7 @@ namespace Skins
             _usingService = usingService;
             _propertyService = propertyService;
 
-            _entry.Use.onClick.AddListener(OnUse);
+            _entry.Use.onClick.AddListener(OnUseClicked);
             _entry.BuyForCoins.onClick.AddListener(OnBuyWithCoins);
             _entry.BuyForYans.onClick.AddListener(OnBuyWithYans);
 
@@ -58,6 +59,12 @@ namespace Skins
             _entry.Use.interactable = false;
         }
 
+        private void OnUseClicked()
+        {
+            Game.AudioService.PlayShopUseButtonOnClick();
+            OnUse();
+        }
+
         private void UpdateRequested((EquippedType, IShopProduct) product)
         {
             bool sameType = _product.GetType() == product.Item2.GetType();
@@ -83,6 +90,7 @@ namespace Skins
             _propertyService.Own(_product);
             MarkAsBought();
             OnUse();
+            Game.AudioService.PlayShopBuyButtonOnClick();
         }
 
         private void MarkAsBought()
