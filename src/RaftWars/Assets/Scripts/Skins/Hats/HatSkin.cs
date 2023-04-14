@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Skins.Hats
 {
-    public class HatSkin : MonoBehaviour, IShopProduct
+    public class HatSkin : MonoBehaviour, IYandexIapProduct
     {
         [field: SerializeField] public Sprite ShopImage { get; private set; } 
         [field: SerializeField] public int CoinsCost { get; private set; } = 300;
@@ -13,6 +13,7 @@ namespace Skins.Hats
         [field: SerializeField] public bool OwnedByDefault { get; private set; }
         [field: SerializeField] public string Guid { get; private set; }
         [field: SerializeField] public Vector2 OverrideEntryDeltaSize { get; private set; }
+        [field: SerializeField] public string ProductId { get; private set; }
 
         private void OnValidate()
         {

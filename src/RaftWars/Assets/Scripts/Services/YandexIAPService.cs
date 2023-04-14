@@ -1,13 +1,25 @@
-﻿using UnityEngine;
+﻿using DefaultNamespace.Skins;
+using Agava.YandexGames;
+using RaftWars.Infrastructure;
+using System;
+using UnityEngine;
 
 namespace InputSystem
 {
     public class YandexIAPService
     {
-        public bool TryBuy(int cost)
+        public void TryBuy(IYandexIapProduct product, Action onSuccess, Action onError)
         {
-            Debug.Log("For now nothing");
-            return true;
+            if(Game.FeatureFlags.EnableYandexIap)
+            {
+                Billing.PurchaseProduct(product.ProductId, 
+                _ => onSuccess(), 
+                _ => onError());
+                return;
+            }
+
+            Debug.Log("Yandex IAP disabled. Everything is free for yans");
+            onSuccess.Invoke();
         }
     }
 }

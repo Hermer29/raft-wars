@@ -26,7 +26,6 @@ namespace RaftWars.Infrastructure
             var stateMachine = new StateMachine(this, loadingScreen);
 
             stateMachine.Enter<ProjectInitialization>();
-            stateMachine.Enter<BootstrapState>();
         }
 
         public void StartCoroutine(IEnumerator coroutine)

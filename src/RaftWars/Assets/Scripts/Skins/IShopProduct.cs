@@ -10,6 +10,11 @@ namespace DefaultNamespace.Skins
         Vector2 OverrideEntryDeltaSize { get; }
     }
 
+    public interface IYandexIapProduct : IShopProduct
+    {
+        string ProductId { get; }
+    }
+
     public interface IOwnable
     {
         string Guid { get; }

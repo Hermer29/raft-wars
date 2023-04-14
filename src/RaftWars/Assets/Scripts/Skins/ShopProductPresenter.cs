@@ -76,13 +76,10 @@ namespace Skins
 
         private void OnBuyWithYans()
         {
-            if (_iapService.TryBuy(_product.YansCost) == false)
-            {
-                PlayerTriedToBuyAndIapRaisedError?.Invoke();
-                return;
-            }
-
-            OwnProduct();
+            _iapService.TryBuy(
+                _product as IYandexIapProduct, 
+                onSuccess: OwnProduct, 
+                onError: () => PlayerTriedToBuyAndIapRaisedError?.Invoke());
         }
 
         private void OwnProduct()

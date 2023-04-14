@@ -47,10 +47,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ShopImage>k__BackingField: {fileID: -270594596, guid: 6a404270106bda648a0dbe7f6e4fc148, type: 3}
   <CoinsCost>k__BackingField: 300
-  <YansCost>k__BackingField: 3
+  <YansCost>k__BackingField: 2
   <HasEdges>k__BackingField: 0
   <OwnedByDefault>k__BackingField: 0
   <Guid>k__BackingField: 6a066175-3d56-4182-aeb6-bacedbc5b0c1
+  <OverrideEntryDeltaSize>k__BackingField: {x: 0, y: 0}
+  <ProductId>k__BackingField: platformskin4
 --- !u!1001 &3333924603401110514
 PrefabInstance:
   m_ObjectHideFlags: 0

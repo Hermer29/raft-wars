@@ -51,11 +51,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <ShopImage>k__BackingField: {fileID: 21300000, guid: 390e4bd861326cd4ba34a9393584c245, type: 3}
-  <CoinsCost>k__BackingField: 0
-  <YansCost>k__BackingField: 0
+  <CoinsCost>k__BackingField: 300
+  <YansCost>k__BackingField: 2
   <HasEdges>k__BackingField: 1
   <OwnedByDefault>k__BackingField: 1
   <Guid>k__BackingField: dedd9c93-2ce6-45b0-a0e3-3b1552bfd819
+  <OverrideEntryDeltaSize>k__BackingField: {x: 0, y: 0}
+  <ProductId>k__BackingField: platformskin1
 --- !u!33 &1795843246625334317
 MeshFilter:
   m_ObjectHideFlags: 0

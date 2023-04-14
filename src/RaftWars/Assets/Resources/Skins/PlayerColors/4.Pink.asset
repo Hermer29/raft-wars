@@ -15,7 +15,8 @@ MonoBehaviour:
   <Color>k__BackingField: {fileID: 2100000, guid: 0ec1a918ee242ce4f842996bf06dbeee, type: 2}
   <ShopImage>k__BackingField: {fileID: 21300000, guid: 228cac8703a65f34990825f6c24b646a, type: 3}
   <CoinsCost>k__BackingField: 300
-  <YansCost>k__BackingField: 3
+  <YansCost>k__BackingField: 2
   <OwnedByDefault>k__BackingField: 0
   <Guid>k__BackingField: 5ec91c11-3f76-4247-b711-7e9c422a0c48
   <OverrideEntryDeltaSize>k__BackingField: {x: -50, y: -50}
+  <ProductId>k__BackingField: platformcolor4

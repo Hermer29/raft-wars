@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Skins.Platforms
 {
-    public class PlatformSkin : MonoBehaviour, IShopProduct
+    public class PlatformSkin : MonoBehaviour, IYandexIapProduct
     {
         [field: SerializeField] public Sprite ShopImage { get; private set; }
         [field: SerializeField] public int CoinsCost { get; private set; }
@@ -13,7 +13,7 @@ namespace Skins.Platforms
         [field: SerializeField] public bool OwnedByDefault { get; private set; }
         [field: SerializeField] public string Guid { get; private set; }
         [field: SerializeField] public Vector2 OverrideEntryDeltaSize { get; private set; }
-
+        [field: SerializeField] public string ProductId { get; private set; }
         
         private void OnValidate()
         {
