@@ -68,7 +68,7 @@ public class MapGenerator : MonoBehaviour
         _materials = Game.MaterialsService;
         _player = Game.PlayerService;
         
-        _collectibles.NoCollectiblesLeft += SpawnMiscellaneous;
+        //_collectibles.NoCollectiblesLeft += SpawnMiscellaneous;
     }
 
     private IEnumerator SpawnOnPlayersPathRandom()
@@ -110,6 +110,7 @@ public class MapGenerator : MonoBehaviour
                 }
                 Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));
                 Pickable people = Instantiate(prefabToSpawn, spawnPoint, Quaternion.identity);
+                people.name = "GeneratedOverTime";
             }
             else
             {
