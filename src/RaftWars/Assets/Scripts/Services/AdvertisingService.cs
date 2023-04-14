@@ -7,6 +7,8 @@ namespace InputSystem
     public class AdvertisingService
     {
         private readonly AudioService _audioService;
+        private bool _previousAudioState;
+        private Action _onRewarded;
         
         public AdvertisingService(AudioService audioService)
         {
@@ -33,27 +35,32 @@ namespace InputSystem
                 onRewarded?.Invoke();
                 return;
             }
+            _previousAudioState = _audioService.State;
+            _audioService.SetState(false);
+            _onRewarded = onRewarded;
+
             VideoAd.Show(OnOpen, OnRewarded, OnRewardedClose, OnRewardedError);
         }
 
         private void OnRewarded()
         {
-            
+            _onRewarded.Invoke();
+            _audioService.SetState(_previousAudioState);
         }
 
         private void OnOpen()
         {
-            
+            _audioService.SetState(_previousAudioState);
         }
 
         private void OnRewardedClose()
         {
-            
+            _audioService.SetState(_previousAudioState);
         }
 
         private void OnRewardedError(string error)
         {
-            
+            _audioService.SetState(_previousAudioState);
         }
     }
 }
