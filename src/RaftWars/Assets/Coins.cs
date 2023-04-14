@@ -21,6 +21,7 @@ public class Coins : MonoBehaviour
                 GameObject _effect = Instantiate(effect, transform.position, Quaternion.identity);
                 Destroy(_effect, 2f);
                 Destroy(gameObject);
+                Game.AudioService.CoinPickedUp();
             }
         }
     }

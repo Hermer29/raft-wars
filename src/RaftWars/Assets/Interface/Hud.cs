@@ -41,6 +41,7 @@ namespace Interface
         public TMP_Text PreviousLevel;
         public TMP_Text NextLevel;
         public Image Tint;
+        public SoundButton SoundButton;
 
         private void Start()
         {

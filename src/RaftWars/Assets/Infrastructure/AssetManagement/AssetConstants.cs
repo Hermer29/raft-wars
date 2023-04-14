@@ -22,6 +22,7 @@
         public const string StatsCanvasPath = "Prefabs/UI/StatsCanvas";
         public const string PlayerDeathMaterialPath = "PlayerColorOnDeath";
         public const string TutorialPath = "Prefabs/UI/Tutorial";
+        public const string AudioServicePath = "Prefabs/AudioService";
 
         public static string CreateLevelGeneratorPath(int level)
         {

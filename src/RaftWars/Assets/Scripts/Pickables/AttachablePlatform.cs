@@ -1,4 +1,5 @@
 using System;
+using RaftWars.Infrastructure;
 using RaftWars.Pickables;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public class AttachablePlatform : Pickable
     {
         if (other.GetComponent<ICanTakePlatform>() == null || !canTake) return;
         canTake = false;
+        Game.AudioService.PlayPlatformPickingUpSound();
         GetComponent<BoxCollider>().enabled = false;
         other.GetComponent<ICanTakePlatform>().TakePlatform(platform, transform.position);
         Destroy(gameObject);

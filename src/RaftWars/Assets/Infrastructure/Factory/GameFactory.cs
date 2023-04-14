@@ -82,5 +82,12 @@ namespace RaftWars.Infrastructure
         {
             return Instantiate(LoadTutorial());
         }
+
+        public static AudioService CreateAudioService()
+        {
+            var instance = Instantiate(LoadAudioService());
+            instance.Construct(CrossLevelServices.PrefsService);
+            return instance;
+        }
     }
 }

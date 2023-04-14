@@ -1,8 +1,8 @@
 ﻿using Cinemachine;
 using Infrastructure.States;
 using InputSystem;
+using RaftWars.Infrastructure.AssetManagement;
 using UnityEngine;
-using Visual;
 
 namespace RaftWars.Infrastructure
 {
@@ -36,7 +36,7 @@ namespace RaftWars.Infrastructure
             pause.Construct(Game.Hud.PauseButton);
             Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
             Game.UsingService = new PlayerUsingService(Game.PlayerService, CrossLevelServices.PrefsService);
-            
+            Game.Hud.SoundButton.Construct(Game.AudioService);
             if(CrossLevelServices.PrefsService.GetInt("TutorialShown", 0) == 0 || Game.FeatureFlags.TutorialEveryTime)
             {
                 var tutorial = GameFactory.CreateTutorial();

@@ -13,9 +13,12 @@ namespace Services
         private readonly PlayerService _player;
         private readonly ICoroutineRunner _runner;
         private Enemy _currentFightEnemy;
+        private AudioService _audioService;
 
-        public FightService(FightCameraService fightCameraService, PlayerService player, ICoroutineRunner runner)
+        public FightService(FightCameraService fightCameraService, PlayerService player, ICoroutineRunner runner,
+            AudioService audioService)
         {
+            _audioService = audioService;
             _fightCamera = fightCameraService;
             _player = player;
             _runner = runner;
@@ -34,6 +37,7 @@ namespace Services
             _runner.StartCoroutine(PlayerFightProcess());
             _runner.StartCoroutine(EnemyFightProcess());
             enemy.StartFight();
+            _audioService.PlayFightAudio();
         }
         
         private IEnumerator PlayerFightProcess()
@@ -102,6 +106,7 @@ namespace Services
 
         private void End()
         {
+            _audioService.StopFightAudio();
             Winner().StopFight();
             Looser().Die();
             _currentFightEnemy = null;
