@@ -6,11 +6,11 @@ namespace InputSystem
 {
     public class AdvertisingService
     {
-        private YandexGamesEnvironment _gamesEnvironment;
+        private readonly AudioService _audioService;
         
-        public AdvertisingService()
+        public AdvertisingService(AudioService audioService)
         {
-            _gamesEnvironment = new YandexGamesEnvironment();
+            _audioService = audioService;
         }
         
         private static bool SdkNotWorking => Application.isEditor || YandexGamesSdk.IsInitialized == false;
@@ -33,7 +33,27 @@ namespace InputSystem
                 onRewarded?.Invoke();
                 return;
             }
-            VideoAd.Show(onRewarded);
+            VideoAd.Show(OnOpen, OnRewarded, OnRewardedClose, OnRewardedError);
+        }
+
+        private void OnRewarded()
+        {
+            
+        }
+
+        private void OnOpen()
+        {
+            
+        }
+
+        private void OnRewardedClose()
+        {
+            
+        }
+
+        private void OnRewardedError(string error)
+        {
+            
         }
     }
 }

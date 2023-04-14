@@ -1,4 +1,5 @@
 using System;
+using RaftWars.Infrastructure;
 using RaftWars.Pickables;
 using UnityEngine;
 
@@ -20,8 +21,12 @@ public class AttachablePlatform : Pickable
     
     protected override void TriggerEntered(Collider other)
     {
-        if (other.GetComponent<ICanTakePlatform>() == null || !canTake) return;
+        if (other.TryGetComponent<ICanTakePlatform>(out var otherTaker) == false || !canTake) return;
         canTake = false;
+        if(otherTaker is Platform {isEnemy: false})
+        {
+            Game.AudioService.PlayPlatformPickingUpSound();
+        }
         GetComponent<BoxCollider>().enabled = false;
         other.GetComponent<ICanTakePlatform>().TakePlatform(platform, transform.position);
         Destroy(gameObject);

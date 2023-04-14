@@ -1998,6 +1998,7 @@ GameObject:
   - component: {fileID: 4304277572330373551}
   - component: {fileID: 8305903277654708906}
   - component: {fileID: 2769495594846906186}
+  - component: {fileID: 1555571740096878760}
   m_Layer: 5
   m_Name: SoundsButton
   m_TagString: Untagged
@@ -2107,6 +2108,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1555571740096878760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8361870940776828089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 347c6b01cde4495b907d562b07a48f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8385219870927136553
 GameObject:
   m_ObjectHideFlags: 0
@@ -3444,6 +3457,7 @@ MonoBehaviour:
   PreviousLevel: {fileID: 537785724015131580}
   NextLevel: {fileID: 5600352280263910213}
   Tint: {fileID: 0}
+  SoundButton: {fileID: 1555571740096878760}
 --- !u!1 &9164477875961470073
 GameObject:
   m_ObjectHideFlags: 0

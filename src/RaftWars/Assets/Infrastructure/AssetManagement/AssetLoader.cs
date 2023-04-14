@@ -2,6 +2,7 @@
 using Cinemachine;
 using DefaultNamespace;
 using Interface;
+using Mono.Cecil;
 using Skins;
 using Skins.Hats;
 using Skins.Platforms;
@@ -116,6 +117,11 @@ namespace RaftWars.Infrastructure.AssetManagement
         public static Tutorial LoadTutorial()
         {
             return Resources.Load<Tutorial>(TutorialPath);
+        }
+        
+        public static AudioService LoadAudioService()
+        {
+            return Resources.Load<AudioService>(AudioServicePath);
         }
     }
 }

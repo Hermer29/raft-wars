@@ -214,6 +214,7 @@ private void Update()
         hud.blackBG.SetActive(true);
         hud.failedPanel.SetActive(true);
         _input.Disable();
+        Game.AudioService.PlayLooseSound();
     }
 
     public void IncreaseHealth()

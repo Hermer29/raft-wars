@@ -23,20 +23,22 @@ namespace RaftWars.Infrastructure
         public static StateMachine StateMachine;
         public static FightService FightService;
         public static UnityEngine.Canvas StatsCanvas;
+        public static AudioService AudioService;
 
         public Game(Player player, StateMachine stateMachine, ICoroutineRunner coroutineRunner)
         {
             StateMachine = stateMachine;
             CollectiblesService = new CollectiblesService();
             PlayerService = new PlayerService(player);
-            AdverisingService = new AdvertisingService();
             Hud = GameFactory.CreateHud();
             InputService = new InputService(Hud.Joystick);
             IAPService = new YandexIAPService();
             MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService, Hud);
             PropertyService = new PropertyService(CrossLevelServices.PrefsService);
+            AudioService = GameFactory.CreateAudioService();
+            AdverisingService = new AdvertisingService(AudioService);
             FightService = new FightService(
-                new FightCameraService(GameFactory.CreatePlayerVirtualCamera()), PlayerService, coroutineRunner);
+                new FightCameraService(GameFactory.CreatePlayerVirtualCamera()), PlayerService, coroutineRunner, AudioService);
             StatsCanvas = GameFactory.CreateStatsCanvas();
         }
     }

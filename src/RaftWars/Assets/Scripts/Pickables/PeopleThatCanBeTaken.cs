@@ -1,4 +1,5 @@
 using System;
+using RaftWars.Infrastructure;
 using RaftWars.Pickables;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -41,6 +42,10 @@ public class PeopleThatCanBeTaken : Pickable
         if (other.TryGetComponent(out ICanTakePeople otherTaker) == false || !canTake) return;
         if (!otherTaker.TryTakePeople(warrior)) return;
         canTake = false;
+        if(otherTaker is Platform {isEnemy: false})
+        {
+            Game.AudioService.PeoplePickedUp();
+        }
         CreateExplosion();
         Destroy(gameObject);
     }

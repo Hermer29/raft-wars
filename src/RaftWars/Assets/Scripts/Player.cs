@@ -273,12 +273,30 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         if (!battle)
         {
             rb.velocity = MoveDirectionXZ * speed;
+            HandleMovementEvents(MoveDirectionXZ);
         }
         else
         {
             rb.velocity = Vector3.zero;
         }
     }
+    
+    private bool _movingStarted = false;
+
+    public void HandleMovementEvents(Vector3 moveDirectionXz)
+    {
+        if (_movingStarted == false && moveDirectionXz.sqrMagnitude != 0)
+        {
+            _movingStarted = true;
+            Game.AudioService.PlaySwimmingSound();
+        }
+        else if (_movingStarted == true && moveDirectionXz.sqrMagnitude == 0)
+        {
+            _movingStarted = false;
+            Game.AudioService.StopPlayingSwimmingSound();
+        }
+    }
+    
 
     public void StartBattle(Enemy enemy)
     {
