@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using DefaultNamespace;
+using Mono.Cecil;
 using RaftWars.Infrastructure.AssetManagement;
 using Skins.Hats;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -33,7 +35,15 @@ public class People : MonoBehaviour
 
     public Material Material
     {
-        set => matRenderer.material = value;
+        set 
+        {
+            if(value == null)
+            {
+                matRenderer.material = Resources.Load<Material>("Boss5StageMaterial");
+                return;
+            }
+            matRenderer.material = value;
+        }
     }
 
     private void OnValidate()
@@ -78,6 +88,7 @@ public class People : MonoBehaviour
 
     public void SetRelatedPlatform(Platform platform)
     {
+        Assert.IsNotNull(platform);
         _platform = platform;
         Material = platform.Material;
         Transform transform1 = platform.transform;
@@ -116,11 +127,6 @@ public class People : MonoBehaviour
         Bullet _bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
         _bullet.MoveTowards(targetShoot);
         audio.Play();
-    }
-
-    public void SetColor(Material mat)
-    {
-        matRenderer.material = mat;
     }
 
     public void PlayShotAnimation(Transform target)

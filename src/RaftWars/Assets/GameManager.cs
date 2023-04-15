@@ -66,7 +66,6 @@ public class GameManager : MonoBehaviour
             Destroy(instance);
             instance = this;
         }
-
         map.Generate(_stage);
     }
 

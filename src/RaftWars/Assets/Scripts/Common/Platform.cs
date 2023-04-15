@@ -69,8 +69,8 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             {
                 transform.parent.GetComponent<Enemy>().AddPeople(people);
             }
-            people.SetColor(_material);
             people.SetRelatedPlatform(this);
+            people.Material = _material;
         }
         else
         {
@@ -112,7 +112,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             enemy.AddPeople(people);
         }
         platform.Capacity++;
-        people.SetColor(_material);
+        people.Material = _material;
         people.SetRelatedPlatform(this);
         return true;
     }
@@ -157,7 +157,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         platformComponent.Capacity = 0;
         if(_skin != null)
             platformComponent.ApplySkin(_skin);
-        var fighterRaft = GetComponentInParent<Common.FighterRaft>();
+        var fighterRaft = GetComponentInParent<FighterRaft>();
         fighterRaft.AddAbstractPlatform(platformComponent, _material);
         platformObject.layer = isEnemy ? LayerMask.NameToLayer("Enemy") : LayerMask.NameToLayer("Player");
     }

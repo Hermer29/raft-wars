@@ -51,6 +51,12 @@ namespace DefaultNamespace.IMGUI
             {
                 _moneyService.AddCoins(300);
             }
+            
+            Vector2 nextNextNextButtonPosition = nextNextButtonPosition - new Vector2(0, (height / 2) + height);
+            if (GUI.Button(new Rect(nextNextNextButtonPosition, size), "NextStage", _style))
+            {
+                Game.GameManager.NextStage();
+            }
 
             foreach (Enemy enemy in FindObjectsOfType<Enemy>())
             {

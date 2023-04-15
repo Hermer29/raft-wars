@@ -419,7 +419,7 @@ public class MapGenerator : MonoBehaviour
             else
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
 
-            var intersections = Physics.SphereCastAll(posToSpawn, 20, Vector3.up);
+            var intersections = Physics.SphereCastAll(posToSpawn, 30, Vector3.up);
             if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
             {
                 continue;
@@ -508,7 +508,14 @@ public class MapGenerator : MonoBehaviour
                 }
             }
 
-            enemy.Material = _materials.GetRandom();
+            if(enemy.boss5Stage)
+            {
+                enemy.Material = _materials.GetMaterialForBoss5Stage();
+            }
+            else 
+            {
+                enemy.Material = _materials.GetRandom();
+            }
             enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1] + 1, damageIncrease[stage - 1] + 1, platformAdditive, peopleAdditive);
             GameManager.instance.boss = enemy;
             BossCreated?.Invoke(enemy);

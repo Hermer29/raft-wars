@@ -125,7 +125,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         if (!when)
             return;
 
-        _material = _materialService.GetRandom();
+        if(boss5Stage)
+        {
+            _material = _materialService.GetMaterialForBoss5Stage();
+        }
+        else 
+        {
+            _material = _materialService.GetRandom();
+        }
         SetColor(_material);
     }
 
@@ -133,15 +140,16 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         foreach (People warrior in warriors)
         {
-            warrior.matRenderer.material = material;
+            warrior.Material = material;
         }
     }
 
     private void AssignRelatedPeople()
     {
-        foreach (People people in GetComponentsInChildren<People>())
+        foreach (People people in GetComponentsInChildren<People>(includeInactive: true))
         {
             platforms[0].TryTakePeople(people.gameObject);
+            people.Material = _material;
         }
     }
     
@@ -369,8 +377,18 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
         _enemyHud.Target = transform;
         _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
-    
-        if (boss5Stage) return;
+        
+        
+        if (boss5Stage)
+        {
+            _materialService = Game.MaterialsService;
+            this.platforms[0].Material = _materialService.GetMaterialForBoss5Stage();
+            foreach (People man in people)
+            {
+                this.platforms[0].TryTakePeople(man.gameObject);
+            }
+            return;
+        }
         platformsAdditive = platformsAdd;
         peopleAdditive = peopleAdd;
         this.platforms[0].isEnemy = true;
@@ -460,7 +478,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         if(_enemyHud == null)
         {
-        // Мы сюда попадаем только если враг не создавался генератором, 
+        // Мы в этот код попадаем только если враг не создавался генератором, 
         // к примеру придаток босса с пятого этапа попадает сюда
             _enemyHud = GameFactory.CreateBossHud();
             _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);

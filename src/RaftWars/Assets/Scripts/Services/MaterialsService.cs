@@ -24,5 +24,13 @@ namespace InputSystem
                 throw new InvalidOperationException();
             return _edgesMaterial[Random.Range(0, _edgesMaterial.Length)];
         }
+
+        public Material GetMaterialForBoss5Stage()
+        {
+            var material = Resources.Load<Material>("Boss5StageMaterial");
+            if (material == null)
+                Debug.LogWarning("Warning! Boss5StageMaterial equals null");
+            return material;
+        }
     }
 }
