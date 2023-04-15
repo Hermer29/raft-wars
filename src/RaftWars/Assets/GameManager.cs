@@ -173,6 +173,8 @@ private void Update()
 
     public void StartGame()
     {
+        if(_started == true)
+            return; 
         _arrow.Construct(player, _camera, GameManager.instance.boss);
         GameStarted?.Invoke();
         _input.Enable();
