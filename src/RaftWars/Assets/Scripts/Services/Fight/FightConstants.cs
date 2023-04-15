@@ -1,9 +1,12 @@
-﻿namespace Services
+﻿using UnityEngine;
+
+namespace Services
 {
-    public static class FightConstants
+    [CreateAssetMenu]
+    public class FightConstants : UnityEngine.ScriptableObject
     {
-        public const float DifferenceWeight = 1f;
-        public const float DamageWeight = 5;
-        public const float FightSpeedModifierDecreasing = 25f;
+        [SerializeField] public float DifferenceWeight = 5f;
+        public float DamageWeight = 5f;
+        public float FightSpeedModifierDecreasing = 50f;
     }
 }

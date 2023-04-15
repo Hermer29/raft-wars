@@ -82,7 +82,7 @@ public class MapGenerator : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(1);
-            _counter++;
+            _counter += 2;
             if(_offscreenGenerationCooldown > 0)
                 _offscreenGenerationCooldown--;
         }
@@ -130,7 +130,7 @@ public class MapGenerator : MonoBehaviour
                 }
                 else
                 {
-                    probabilityToSpawnPlatformInPercent += 5;
+                    probabilityToSpawnPlatformInPercent += 10;
                     pickables = peopleToSpawn.Cast<Pickable>();
                 }
                 Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));

@@ -14,14 +14,16 @@ namespace Services
         private readonly ICoroutineRunner _runner;
         private Enemy _currentFightEnemy;
         private AudioService _audioService;
+        private FightConstants _fightConstants;
 
         public FightService(FightCameraService fightCameraService, PlayerService player, ICoroutineRunner runner,
-            AudioService audioService)
+            AudioService audioService, FightConstants fightConstants)
         {
             _audioService = audioService;
             _fightCamera = fightCameraService;
             _player = player;
             _runner = runner;
+            _fightConstants = fightConstants;
         }
 
         public bool FightStarted { get; private set; }
@@ -44,7 +46,9 @@ namespace Services
         {  
             do
             {
-                yield return new WaitForSeconds(CalculatePlayerAttackFrequency());
+                var attackFrequency = CalculatePlayerAttackFrequency();
+                Debug.Log("Player af:" + attackFrequency);
+                yield return new WaitForSeconds(attackFrequency);
                 if (FightStarted == false)
                     break;
                 _currentFightEnemy.DealDamage();
@@ -55,7 +59,9 @@ namespace Services
         {
             do
             {
-                yield return new WaitForSeconds(CalculateEnemyAttackFrequency());
+                var attackFrequency = CalculateEnemyAttackFrequency();
+                Debug.Log("Enemy af:" + attackFrequency);
+                yield return new WaitForSeconds(attackFrequency);
                 if (FightStarted == false)
                     break;
                 _player.DealDamage();
@@ -70,16 +76,29 @@ namespace Services
 
         private float CalculateEnemyAttackFrequency()
         {
-            float fromDifference = CalculatePlayerSuperiority() * FightConstants.DifferenceWeight;
-            float fromDamage = _currentFightEnemy.damage * FightConstants.DamageWeight;
-            return MathF.Abs(FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
+            float fromDifference = -CalculatePlayerSuperiority() * _fightConstants.DifferenceWeight;
+            float fromDamage = CalculateFromOverallDamageFactor();
+            if(fromDifference > 0)
+            {
+                return Mathf.Abs(_fightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
+            }
+            return Mathf.Abs((_fightConstants.FightSpeedModifierDecreasing + fromDifference) / fromDamage);
+        }
+
+        private float CalculateFromOverallDamageFactor()
+        {
+            return (_currentFightEnemy.damage + _player.PlayerInstance.damage) * _fightConstants.DamageWeight;
         }
 
         private float CalculatePlayerAttackFrequency()
         {
-            float fromDifference = -CalculatePlayerSuperiority() * FightConstants.DifferenceWeight;
-            float fromDamage = _player.PlayerInstance.damage * FightConstants.DamageWeight;
-            return MathF.Abs(FightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
+            float fromDifference = CalculatePlayerSuperiority() * _fightConstants.DifferenceWeight;
+            float fromDamage = CalculateFromOverallDamageFactor();
+            if(fromDifference > 0)
+            {
+                return Mathf.Abs(_fightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
+            }
+            return Mathf.Abs((_fightConstants.FightSpeedModifierDecreasing + fromDifference) / fromDamage);
         }
 
         private bool IsParticipantsAlive()

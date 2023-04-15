@@ -643,12 +643,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             return (int) hp % hpIncrease == 0;
         }
         
+        var changed = hp - amount;
+        var percent = changed / hp;
+        var newDamage = damage * percent;
+        damage = newDamage;
+
         if (IsRandomPeopleMustDie())
         {
             MakeRandomPeopleDie();
-            damage -= damageIncrease;
-            if (damage <= 0)
-                damage = 0;
         }
         hp -= amount;
         if (hp <= 0)

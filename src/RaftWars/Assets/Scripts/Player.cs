@@ -68,6 +68,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private int _healthBeforeFight;
     private float _lostPercent;
     private int _damageBeforeFight;
+    private float _lostPercentForPeople;
+    private float _stepForPeoplrCapacityBeforeBattle;
 
     public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
     public float Bounds => edgesAndAngleWaves.Bounds;
@@ -143,6 +145,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         battle = false;
         idleBehaviour = true;
         PutInIdleAnimation();
+        _lostPercent = 0;
+        _lostPercentForPeople = 0;
     }
 
     private void PutInIdleAnimation()
@@ -196,42 +200,28 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public override void DealDamage(int amount = 1)
     {
-        bool IsStatsDecreasingTime()
+        var changedHp = hp - amount;
+
+        var damagePercent = (float) changedHp / _healthBeforeFight;
+        if(battle == false)
         {
-            var accountedAlreadyLost = _lostPercent * _healthBeforeFight;
-            var step = _healthBeforeFight * 0.1f;
-            var resultingCondition = hp - amount < _healthBeforeFight - accountedAlreadyLost - step;
-            if (Math.Abs(_lostPercent - .9f) < 0.01f)
-                return false;
-            return resultingCondition;
+            var changed = hp - amount;
+            var percent = changed / hp;
+            var newDamage = damage * percent;
+            damage = newDamage;
+        }
+        else
+            damage = (int) Mathf.Ceil(_damageBeforeFight * damagePercent);
+
+        var accountedAlreadyLostForPeopl = _lostPercentForPeople * _healthBeforeFight;
+        var willPeopleDie = changedHp < _healthBeforeFight - _lostPercentForPeople * _healthBeforeFight;
+
+        if(willPeopleDie)
+        {
+            MakeRandomPeopleDie();
+            _lostPercentForPeople += _stepForPeoplrCapacityBeforeBattle;
         }
 
-        if (Game.FightService.FightStarted)
-        {
-            if (Game.FightService.CalculatePlayerSuperiority() > 0)
-            {
-                if (Random.Range(0, 100) > 99f)
-                {
-                    MakeRandomPeopleDie();
-                }
-            }
-            else
-            {
-                if (Random.Range(0, 70) > 99f)
-                {
-                    MakeRandomPeopleDie();
-                }
-            }
-        }
-        
-        
-        if (IsStatsDecreasingTime())
-        {
-            damage -= (int)Mathf.Ceil(_damageBeforeFight * 0.1f);
-            if (damage <= 0)
-                damage = 0;
-            _lostPercent += 0.1f;
-        }
         hp -= amount;
         if (Game.FightService.FightStarted == false && hp <= 0)
         {
@@ -263,7 +253,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     private void MakeRandomPeopleDie()
     {
-        if (warriors.Count == 2)
+        if (warriors.Count == 1)
             return;
 
         People warrior = warriors[Random.Range(0, warriors.Count)];
@@ -339,6 +329,9 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         PushPlayerOutOfEnemy(enemy);
         _healthBeforeFight = hp;
         _damageBeforeFight = damage;
+        _lostPercent = 0;
+        _lostPercentForPeople = 0;
+        _stepForPeoplrCapacityBeforeBattle = 1f / warriors.Count;
     }
     
     private void PushPlayerOutOfEnemy(Enemy enemy)

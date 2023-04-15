@@ -1,7 +1,9 @@
-﻿using DefaultNamespace;
+﻿using System.Runtime.Versioning;
+using DefaultNamespace;
 using InputSystem;
 using Interface;
 using Services;
+using UnityEngine;
 
 namespace RaftWars.Infrastructure
 {
@@ -38,7 +40,8 @@ namespace RaftWars.Infrastructure
             AudioService = GameFactory.CreateAudioService();
             AdverisingService = new AdvertisingService(AudioService);
             FightService = new FightService(
-                new FightCameraService(GameFactory.CreatePlayerVirtualCamera()), PlayerService, coroutineRunner, AudioService);
+                new FightCameraService(GameFactory.CreatePlayerVirtualCamera()), PlayerService, coroutineRunner, AudioService,
+                Resources.Load<FightConstants>("FightConstants"));
             StatsCanvas = GameFactory.CreateStatsCanvas();
         }
     }
