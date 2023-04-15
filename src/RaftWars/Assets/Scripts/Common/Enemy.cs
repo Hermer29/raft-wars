@@ -107,6 +107,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         Vector3 pointOnBound = GetNearestPointOnBound();
         Vector3 vectorToCenter = (Vector3.zero - pointOnBound).normalized;
         const int distanceFromBounds = 5;
+        _moveDirection = -_moveDirection;
         transform.position = vectorToCenter * distanceFromBounds + pointOnBound;
     }
 
@@ -222,6 +223,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         if (player != null && !player.isDead) return;
         battle = false;
         timer = 0;
+    }
+
+    public override Platform GetAnotherPlatform()
+    {
+        return platforms[Random.Range(0, platforms.Count)];
     }
 
     private void TryMoveEnemy(float deltaTime)
@@ -512,6 +518,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         foreach (People people in warriors)
         {
             people.PlayShotAnimation(target.transform);
+        }
+
+        if(boss5Stage)
+        {
+            foreach(var people in GetComponentsInChildren<People>())
+            {
+                people.PlayShotAnimation(target.transform);
+            }
         }
 
         foreach (Turret turret in turrets)

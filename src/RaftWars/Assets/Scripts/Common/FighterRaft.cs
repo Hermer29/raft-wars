@@ -31,5 +31,6 @@ namespace Common
         public abstract EnemyHud GetHud();
 
         public abstract void DealDamage(int damage = 1);
+        public abstract Platform GetAnotherPlatform();
     }
 }

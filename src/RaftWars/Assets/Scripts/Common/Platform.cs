@@ -131,24 +131,59 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         return FindPointOnPlatform(middle);
     }
 
+    private Vector3 GetSpawnPoint(Vector3 pos)
+    {
+         Collider[] outCols;
+            Vector3 spawnPos = transform.position;
+            Vector3 diff = pos - transform.position;
+            if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
+            {
+                if (diff.x > 0)
+                    spawnPos.x += Constants.PlatformSize;
+                else
+                    spawnPos.x -= Constants.PlatformSize;
+            }
+            else
+            {
+                if (diff.z > 0)
+                    spawnPos.z += Constants.PlatformSize;
+                else
+                    spawnPos.z -= Constants.PlatformSize;
+            }
+            outCols = Physics.OverlapSphere(spawnPos, 1.2f);
+            if (outCols.Length != 0)
+            {
+                while (true)
+                {
+                    spawnPos = GetComponentInParent<FighterRaft>().GetAnotherPlatform().transform.position;
+                    if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
+                    {
+                        if (diff.x > 0)
+                            spawnPos.x += Constants.PlatformSize;
+                        else
+                            spawnPos.x -= Constants.PlatformSize;
+                    }
+                    else
+                    {
+                        if (diff.z > 0)
+                            spawnPos.z += Constants.PlatformSize;
+                        else
+                            spawnPos.z -= Constants.PlatformSize;
+                    }
+
+                    outCols = Physics.OverlapSphere(spawnPos, 1.2f);
+                    if (outCols.Length == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return spawnPos;
+    }
+
     public void TakePlatform(GameObject platformPrefab, Vector3 pos)
     {
-        Vector3 spawnPos = transform.position;
-        Vector3 vectorFromPlayer = pos - transform.position;
-        if (Mathf.Abs(vectorFromPlayer.x) > Mathf.Abs(vectorFromPlayer.z))
-        {
-            if (vectorFromPlayer.x > 0)
-                spawnPos.x += Constants.PlatformSize;
-            else
-                spawnPos.x -= Constants.PlatformSize;
-        }
-        else
-        {
-            if (vectorFromPlayer.z > 0)
-                spawnPos.z += Constants.PlatformSize;
-            else
-                spawnPos.z -= Constants.PlatformSize;
-        }
+        var spawnPos = GetSpawnPoint(pos);
         
         GameObject platformObject = Instantiate(platformPrefab, spawnPos, Quaternion.identity, transform.parent);
         var platformComponent = platformObject.GetComponent<Platform>();

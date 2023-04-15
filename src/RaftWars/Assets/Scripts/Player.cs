@@ -457,7 +457,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         return _platform;
     }
 
-    public Platform GetAnotherPlatform()
+    public override Platform GetAnotherPlatform()
     {
         return platforms[Random.Range(0, platformCount)];
     }
