@@ -203,12 +203,9 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         var changedHp = hp - amount;
 
         var damagePercent = (float) changedHp / _healthBeforeFight;
-        if(battle == false)
+        if(Game.FightService.FightStarted == false)
         {
-            var changed = hp - amount;
-            var percent = changed / hp;
-            var newDamage = damage * percent;
-            damage = newDamage;
+            damage -= amount;
         }
         else
             damage = (int) Mathf.Ceil(_damageBeforeFight * damagePercent);
