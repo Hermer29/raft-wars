@@ -9721,6 +9721,7 @@ GameObject:
   - component: {fileID: 5433138277035568762}
   - component: {fileID: 7689909392650543309}
   - component: {fileID: 9182267864735776208}
+  - component: {fileID: 1788943677964959942}
   m_Layer: 7
   m_Name: Platform
   m_TagString: Untagged
@@ -9823,6 +9824,18 @@ MonoBehaviour:
   isTurret: 0
   isWind: 0
   ishospital: 0
+--- !u!114 &1788943677964959942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012955610709395739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d380464b90fb734888d69191f61087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1989336941871113059
 GameObject:
   m_ObjectHideFlags: 0
@@ -14646,6 +14659,7 @@ GameObject:
   - component: {fileID: 1695857126820390696}
   - component: {fileID: 1897716731597137289}
   - component: {fileID: 2704268873551692461}
+  - component: {fileID: 1249447527794772609}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -14747,6 +14761,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &1249447527794772609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2814489574095041227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d380464b90fb734888d69191f61087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3540170325148840652
 GameObject:
   m_ObjectHideFlags: 0
@@ -14800,11 +14826,11 @@ MonoBehaviour:
   platforms:
   - {fileID: 9182267864735776208}
   - {fileID: 8090845344016243301}
-  maximumDamage: 0
+  damage: 0
   hpIncrease: 18
   damageIncrease: 18
   _disableEdges: 1
-  maximumHp: 0
+  hp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -14868,11 +14894,11 @@ MonoBehaviour:
   platforms:
   - {fileID: 8282080258773804857}
   - {fileID: 8233848195437117165}
-  maximumDamage: 0
+  damage: 0
   hpIncrease: 18
   damageIncrease: 18
   _disableEdges: 1
-  maximumHp: 0
+  hp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -19740,6 +19766,7 @@ GameObject:
   - component: {fileID: 5407425613177391320}
   - component: {fileID: 5407425613177391321}
   - component: {fileID: 5407425613177391326}
+  - component: {fileID: 1090758697309768266}
   m_Layer: 7
   m_Name: Platform
   m_TagString: Untagged
@@ -19842,6 +19869,18 @@ MonoBehaviour:
   isTurret: 0
   isWind: 0
   ishospital: 0
+--- !u!114 &1090758697309768266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5407425613177391327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d380464b90fb734888d69191f61087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5532563807216815786
 GameObject:
   m_ObjectHideFlags: 0
@@ -19855,6 +19894,7 @@ GameObject:
   - component: {fileID: 6643875209222444364}
   - component: {fileID: 5745904289890697979}
   - component: {fileID: 8282080258773804857}
+  - component: {fileID: 931064060787342697}
   m_Layer: 7
   m_Name: Platform
   m_TagString: Untagged
@@ -19957,6 +19997,18 @@ MonoBehaviour:
   isTurret: 0
   isWind: 0
   ishospital: 0
+--- !u!114 &931064060787342697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5532563807216815786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d380464b90fb734888d69191f61087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5948873619137181305
 GameObject:
   m_ObjectHideFlags: 0
@@ -24908,11 +24960,11 @@ MonoBehaviour:
   platforms:
   - {fileID: 5407425613177391326}
   - {fileID: 3072774633583291002}
-  maximumDamage: 0
+  damage: 0
   hpIncrease: 18
   damageIncrease: 18
   _disableEdges: 1
-  maximumHp: 0
+  hp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -24997,11 +25049,11 @@ MonoBehaviour:
   - {fileID: 4082760745587002320}
   - {fileID: 8632570819058151720}
   - {fileID: 4018753607323202871}
-  maximumDamage: 0
+  damage: 0
   hpIncrease: 18
   damageIncrease: 18
   _disableEdges: 1
-  maximumHp: 0
+  hp: 0
   battle: 0
   isDead: 0
   isBoss: 1

@@ -35,9 +35,9 @@ namespace DefaultNamespace.IMGUI
             var position = new Vector2(Screen.width * _viewportBtnPosition.x, Screen.height * _viewportBtnPosition.y);
             float height = Screen.height / _viewPortBtnSize.y;
             var size = new Vector2(Screen.width / _viewPortBtnSize.x, height);
-            if(GUI.Button(new Rect(position, size), "Add People", _style))
+            if(GUI.Button(new Rect(position, size), "Add 10/10", _style))
             {
-                _player.AddPeople();
+                _player.Amplify(10);
             }
 
             Vector2 nextButtonPosition = position - new Vector2(0, (height / 2) + height);

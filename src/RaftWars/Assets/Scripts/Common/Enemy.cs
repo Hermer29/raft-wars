@@ -161,7 +161,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public override void AddPlatform(Platform platform)
     {
         platforms.Add(platform);
-        _edgesAndAngleWaves.UpdateVisual(platform.gameObject);
+        _edgesAndAngleWaves?.UpdateVisual(platform.gameObject);
     }
 
     public override void AddTurret(Turret turret)
@@ -218,6 +218,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
     private void TryMoveEnemy(float deltaTime)
     {
+        if(boss5Stage)
+            return;
         if (_player.InBattle)
             return;
         if (_player.IsDead)
@@ -458,11 +460,15 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         if(_enemyHud == null)
         {
-            if(_enemyHud == null)
+        // Мы сюда попадаем только если враг не создавался генератором, 
+        // к примеру придаток босса с пятого этапа попадает сюда
+            _enemyHud = GameFactory.CreateBossHud();
+            _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
+            if(_enemyHud.Target == null)
             {
-                _enemyHud = GameFactory.CreateBossHud();
-                _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
+                _enemyHud.Target = transform;
             }
+            _enemyHud.nickname.text = "";
         }
 
         _enemyHud.hpText.text = Mathf.RoundToInt(hp).ToString();

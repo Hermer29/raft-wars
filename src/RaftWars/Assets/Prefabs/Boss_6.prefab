@@ -4823,6 +4823,7 @@ GameObject:
   - component: {fileID: 1695857126820390696}
   - component: {fileID: 1897716731597137289}
   - component: {fileID: 2704268873551692461}
+  - component: {fileID: 1176011201002052162}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -4924,6 +4925,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &1176011201002052162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2814489574095041227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d380464b90fb734888d69191f61087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4694305688015369776
 GameObject:
   m_ObjectHideFlags: 0
@@ -4979,11 +4992,11 @@ MonoBehaviour:
   platforms:
   - {fileID: 8282080258773804857}
   - {fileID: 8233848195437117165}
-  maximumDamage: 0
+  damage: 0
   hpIncrease: 18
   damageIncrease: 18
   _disableEdges: 1
-  maximumHp: 0
+  hp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -9851,6 +9864,7 @@ GameObject:
   - component: {fileID: 5407425613177391320}
   - component: {fileID: 5407425613177391321}
   - component: {fileID: 5407425613177391326}
+  - component: {fileID: 6944890819746258694}
   m_Layer: 7
   m_Name: Platform
   m_TagString: Untagged
@@ -9953,6 +9967,18 @@ MonoBehaviour:
   isTurret: 0
   isWind: 0
   ishospital: 0
+--- !u!114 &6944890819746258694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5407425613177391327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d380464b90fb734888d69191f61087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5532563807216815786
 GameObject:
   m_ObjectHideFlags: 0
@@ -9966,6 +9992,7 @@ GameObject:
   - component: {fileID: 6643875209222444364}
   - component: {fileID: 5745904289890697979}
   - component: {fileID: 8282080258773804857}
+  - component: {fileID: 5241379656466384068}
   m_Layer: 7
   m_Name: Platform
   m_TagString: Untagged
@@ -10068,6 +10095,18 @@ MonoBehaviour:
   isTurret: 0
   isWind: 0
   ishospital: 0
+--- !u!114 &5241379656466384068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5532563807216815786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d380464b90fb734888d69191f61087f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5948873619137181305
 GameObject:
   m_ObjectHideFlags: 0
@@ -15019,11 +15058,11 @@ MonoBehaviour:
   platforms:
   - {fileID: 5407425613177391326}
   - {fileID: 3072774633583291002}
-  maximumDamage: 0
+  damage: 0
   hpIncrease: 18
   damageIncrease: 18
   _disableEdges: 1
-  maximumHp: 0
+  hp: 0
   battle: 0
   isDead: 0
   isBoss: 1
@@ -15105,11 +15144,11 @@ MonoBehaviour:
   - {fileID: 1820488959452121892}
   - {fileID: 4082760745587002320}
   - {fileID: 4018753607323202871}
-  maximumDamage: 0
+  damage: 0
   hpIncrease: 17
   damageIncrease: 17
   _disableEdges: 1
-  maximumHp: 0
+  hp: 0
   battle: 0
   isDead: 0
   isBoss: 1

@@ -57,5 +57,10 @@ namespace InputSystem
         {
             PlayerInstance.DealDamage();
         }
+
+        public void Amplify(int stats)
+        {
+            PlayerInstance.Amplify(stats);
+        }
     }
 }

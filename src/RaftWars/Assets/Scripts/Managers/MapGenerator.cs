@@ -177,9 +177,14 @@ public class MapGenerator : MonoBehaviour
 
     private void FigureOutPlatformsAndEnemies(int stage)
     {
-        for (var i = 0; i < enemiesNumber[stage - 1]; i++)
+        for (var i = 0; i < enemiesNumber[stage - 1];)
         {
             Vector3 posToSpawn = GetRandomSpawnPosition();
+            var intersections = Physics.SphereCastAll(posToSpawn, 20, Vector3.up);
+            if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
+            {
+                continue;
+            }
             Enemy enemy = Instantiate(enemyPrefab, posToSpawn, Quaternion.identity);
             var platforms = ComeUpWithPeopleAndPlatformsCount(stage, out var people, out var pickablePeople
                 ,out var pickablePlatforms);
@@ -187,6 +192,7 @@ public class MapGenerator : MonoBehaviour
             enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1],
                 damageIncrease[stage - 1], pickablePlatforms, pickablePeople);
             GameManager.instance.AddEnemy(enemy);
+            i++;
         }
     }
 
@@ -401,6 +407,7 @@ public class MapGenerator : MonoBehaviour
     public void ActuallyGenerateBoss()
     {
         Vector3 posToSpawn = new Vector3();
+    
         while (true)
         {
             if (Random.Range(0f, 1f) > 0.5f)
@@ -411,6 +418,12 @@ public class MapGenerator : MonoBehaviour
                 posToSpawn.z = Random.Range(yBorderMin, yBorderMax - 30);
             else
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
+
+            var intersections = Physics.SphereCastAll(posToSpawn, 20, Vector3.up);
+            if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
+            {
+                continue;
+            }
 
             Enemy enemy = Instantiate(bosses[stage - 1], posToSpawn, Quaternion.identity);
             List<Platform> platforms = new List<Platform>();

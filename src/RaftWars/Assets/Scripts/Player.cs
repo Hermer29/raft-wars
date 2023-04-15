@@ -481,12 +481,14 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     {
         damage += (int) (damage * (percent - damageAdditive));
         damageAdditive = percent;
+        RecountStats();
     }
 
     public void IncreaseHealth(float bonus)
     {
         hp += (int) (hp * (bonus - hpAdditive));
         hpAdditive = (int) bonus;
+        RecountStats();
     }
 
     public IEnumerable<GameObject> GetPlatforms()
@@ -584,5 +586,10 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         damage += amount;
         hp += amount;
         RecountStats();
+    }
+
+    public void Amplify(int amount)
+    {
+        IncreaseStats(amount);
     }
 }

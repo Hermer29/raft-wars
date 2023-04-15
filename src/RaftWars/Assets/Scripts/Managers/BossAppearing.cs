@@ -33,6 +33,7 @@ public class BossAppearing : MonoBehaviour
     private IEnumerator QueryBossSpawnProcess()
     {
         yield return null;
+        _root.GetComponent<CanvasGroup>().alpha = 1;
         _slider.value = 1;
         _slider.DOValue(0, TimeToGenerateBoss)
             .OnComplete(OnComplete);
@@ -40,15 +41,16 @@ public class BossAppearing : MonoBehaviour
 
     private void OnComplete()
     {
-        _generateBoss.Invoke();
+        _generateBoss?.Invoke();
+        _generateBoss = null;
         _root.GetComponent<CanvasGroup>().alpha = 0;
         _bossIsHere.gameObject.SetActive(true);
         _bossIsHere.alpha = 0;
         _bossIsHere.DOFade(1, .2f);
+        Game.AudioService.PlayBossIsHere();
 
         void OnWritingShown()
         {
-            Game.AudioService.PlayBossIsHere();
             _bossIsHere.DOFade(0, .2f)
                 .OnComplete(() => _bossIsHere.gameObject.SetActive(false));
             _root.SetActive(false);
