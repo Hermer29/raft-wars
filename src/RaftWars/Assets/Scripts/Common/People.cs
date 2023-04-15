@@ -134,10 +134,8 @@ public class People : MonoBehaviour
         this.target = target.position;
         this.target.y = transform.position.y;
         targetShoot = this.target + Vector3.up;
-        //
-        transform.forward = (target.position - transform.position).normalized;
-        //
-        //transform.LookAt(target);
+        //transform.LookAt(target.position, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(target.position - transform.position);
         battle = true;
         animator.Play("Idle Aiming");
     }

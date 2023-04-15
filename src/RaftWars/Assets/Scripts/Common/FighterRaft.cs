@@ -12,6 +12,7 @@ namespace Common
         public abstract void AddPlatform(Platform platform);
         public abstract void AddTurret(Turret turret);
         public abstract void AddFastTurret(Turret turret);
+        public abstract int PlatformsCount {get;}
 
         public void AddAbstractPlatform(Platform platform, Material color)
         {

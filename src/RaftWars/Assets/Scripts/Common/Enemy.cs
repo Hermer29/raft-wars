@@ -72,6 +72,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         }
     }
 
+    public override int PlatformsCount => platforms.Count;
+
     public float Extents
     {
         get

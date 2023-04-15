@@ -419,7 +419,7 @@ public class MapGenerator : MonoBehaviour
             else
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
 
-            var intersections = Physics.SphereCastAll(posToSpawn, 30, Vector3.up);
+            var intersections = Physics.SphereCastAll(posToSpawn, 50, Vector3.up);
             if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
             {
                 continue;

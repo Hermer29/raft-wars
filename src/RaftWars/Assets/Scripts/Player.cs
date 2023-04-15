@@ -38,6 +38,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     public CinemachineTargetGroup CameraGroup;
     [SerializeField] private GameObject[] _indicators;
 
+    public override int PlatformsCount => platforms.Count;
+
     private int platformHp;
     private float hpAdditive;
     private float damageAdditive;
@@ -474,7 +476,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         AddPlatformToCameraTargetGroup();
         edgesAndAngleWaves.UpdateVisual(platform.gameObject);
         _camera.m_Offset.z = edgesAndAngleWaves.Bounds * -1;
-        speed += .5f;
+        speed += Game.FeatureFlags.PlayerSpeedIncreasingPerPlatform;
     }
 
     public void AmplifyDamage(float percent)

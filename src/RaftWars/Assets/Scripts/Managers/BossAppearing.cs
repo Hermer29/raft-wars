@@ -12,7 +12,7 @@ public class BossAppearing : MonoBehaviour
     [SerializeField] private Slider _slider;
     [SerializeField] private GameObject _root;
     [SerializeField] private TMP_Text _bossIsHere;
-    
+
     private MapGenerator _generator;
     private GameManager _gameManager;
     private Action _generateBoss;
@@ -37,6 +37,11 @@ public class BossAppearing : MonoBehaviour
         _slider.value = 1;
         _slider.DOValue(0, TimeToGenerateBoss)
             .OnComplete(OnComplete);
+    }
+
+    private void OnDisable()
+    {
+        _slider.DOKill();
     }
 
     private void OnComplete()

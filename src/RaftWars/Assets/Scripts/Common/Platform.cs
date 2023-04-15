@@ -153,9 +153,13 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             outCols = Physics.OverlapSphere(spawnPos, 1.2f);
             if (outCols.Length != 0)
             {
+                var raft = GetComponentInParent<FighterRaft>();
+                if(raft.PlatformsCount == 1)
+                    return spawnPos;
                 while (true)
                 {
-                    spawnPos = GetComponentInParent<FighterRaft>().GetAnotherPlatform().transform.position;
+                    
+                    spawnPos = raft.GetAnotherPlatform().transform.position;
                     if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
                     {
                         if (diff.x > 0)

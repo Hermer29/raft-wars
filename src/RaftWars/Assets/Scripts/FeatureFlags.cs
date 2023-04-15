@@ -13,5 +13,6 @@ namespace DefaultNamespace
         [field: SerializeField] public bool InitializeYandexGames { get; private set; }
         [field: SerializeField] public PrefsOptions PrefsImplementation {get; private set;}
         [field: SerializeField] public bool EnableYandexIap { get; private set; }
+        [field: SerializeField] public float PlayerSpeedIncreasingPerPlatform {get; private set;}
     }
 }

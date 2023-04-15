@@ -345,6 +345,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Y Bot
       objectReference: {fileID: 0}
+    - target: {fileID: 5822821947120931875, guid: 09713b0346c85254ab41b485061b6172, type: 3}
+      propertyPath: m_Quality
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822821947120931875, guid: 09713b0346c85254ab41b485061b6172, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822821947120931875, guid: 09713b0346c85254ab41b485061b6172, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5822821947120931875, guid: 09713b0346c85254ab41b485061b6172, type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 09713b0346c85254ab41b485061b6172, type: 3}
       propertyPath: m_Controller
       value: 
@@ -353,7 +369,8 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 371130416597084920, guid: 09713b0346c85254ab41b485061b6172, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 09713b0346c85254ab41b485061b6172, type: 3}
 --- !u!4 &2029696649709458120 stripped
 Transform:
