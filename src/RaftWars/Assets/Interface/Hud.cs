@@ -14,6 +14,7 @@ namespace Interface
         public GameObject blackBG;
         public GameObject stagePanel;
         public Slider progressFill;
+        
         [Space]
         public Text damagePercentText, damageCostText, hpPercentText, hpCostText;
         public TMP_Text progressText;
@@ -43,6 +44,7 @@ namespace Interface
         public Image Tint;
         public SoundButton SoundButton;
         public AdvertisingForStatsButton AdvertisingForStatsButton;
+        public BossAppearing BossAppearing;
 
         private void Start()
         {

@@ -60,9 +60,11 @@ public class MapGenerator : MonoBehaviour
     private CollectiblesService _collectibles;
     private PlayerService _player;
     private Coroutine _coroutine;
+    private BossAppearing _appearing;
 
-    public void Construct()
+    public void Construct(BossAppearing appearing)
     {
+        _appearing = appearing;
         _diamondsEnabled = Game.FeatureFlags.DiamondsEnabledInGame;
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;
@@ -396,7 +398,7 @@ public class MapGenerator : MonoBehaviour
     }
 
 
-    public void GenerateBoss()
+    public void ActuallyGenerateBoss()
     {
         Vector3 posToSpawn = new Vector3();
         while (true)
@@ -497,8 +499,14 @@ public class MapGenerator : MonoBehaviour
             enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1] + 1, damageIncrease[stage - 1] + 1, platformAdditive, peopleAdditive);
             GameManager.instance.boss = enemy;
             BossCreated?.Invoke(enemy);
+            enemy.Died += Game.GameManager.BossDied;
             break;
         }
+    }
+    
+    public void GenerateBoss()
+    {
+        _appearing.QueryBossSpawn(ActuallyGenerateBoss);
     }
 
     private void OnDrawGizmos()

@@ -65,3 +65,5 @@ MonoBehaviour:
     textValue: or
   - textName: 24
     textValue: START BIGGER!
+  - textName: 25
+    textValue: Boss is here!

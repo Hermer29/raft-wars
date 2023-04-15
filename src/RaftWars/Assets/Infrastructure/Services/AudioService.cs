@@ -1,3 +1,4 @@
+using System.Collections;
 using RaftWars.Infrastructure.Services;
 using UnityEngine;
 
@@ -15,6 +16,8 @@ public class AudioService : MonoBehaviour
     [SerializeField] private AudioSource _peoplePickedUp;
     [SerializeField] private AudioSource _shopUse;
     [SerializeField] private AudioSource _shopBuy;
+    [SerializeField] private AudioSource _bossIsHere;
+    [SerializeField] private AudioSource _battleCry;
 
     private const string AudioKey = "Audio";
 
@@ -39,10 +42,12 @@ public class AudioService : MonoBehaviour
     public void PlayFightAudio()
     {
         _fight.Play();
+        _battleCry.Play();
     }
-
+    
     public void StopFightAudio()
     {
+        _battleCry.Stop();
         _fight.Stop();
     }
 
@@ -89,5 +94,10 @@ public class AudioService : MonoBehaviour
     public void PlayShopBuyButtonOnClick()
     {
         _shopBuy.Play();
+    }
+
+    public void PlayBossIsHere()
+    {
+        _bossIsHere.Play();
     }
 }

@@ -29,6 +29,7 @@ namespace LanguageChanger
         Boss,
         Player,
         Or,
-        StartBigger
+        StartBigger,
+        BossIsHere
     }
 }

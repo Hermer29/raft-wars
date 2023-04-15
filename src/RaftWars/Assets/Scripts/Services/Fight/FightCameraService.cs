@@ -24,7 +24,7 @@ public class FightCameraService
 
         foreach (GameObject platform in player.GetPlatforms().Concat(enemy.GetPlatforms()))
         {
-            _temporalTargetGroup.AddMember(platform.transform, 1, 7f);
+            _temporalTargetGroup.AddMember(platform.transform, 1, 3f);
         }
         _virtualCamera.Priority = 100;
     }

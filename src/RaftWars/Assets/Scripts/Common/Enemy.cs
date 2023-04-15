@@ -61,6 +61,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
     private int StatsSum => (int) (hp + damage);
 
+    public event Action Died;
+
     public Material Material
     {
         set
@@ -548,6 +550,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             col.enabled = false;
         }
        
+        Died?.Invoke();
         Destroy(gameObject);
     }
 

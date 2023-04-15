@@ -68,30 +68,30 @@ public class GameManager : MonoBehaviour
         }
 
         map.Generate(_stage);
-        map.GenerateBoss();
     }
 
 private bool _wonTheGame;
 public bool GamePaused;
 private Pause _pause;
+private BossAppearing _appearing;
 
 private void Update()
     {
-        if (!_started)
-        {
-        }
-        else if(_stage == 5 && boss == null && !hud.stagePanel.activeSelf)
-        {
-            if(_wonTheGame)
-                return;
-            _wonTheGame = true;
-            WinTheGame();
-        }
-        else if(_stage != 5 && boss == null && !hud.stagePanel.activeSelf)
-        {
-            IncrementStage();
-        }
-
+        // if (!_started)
+        // {
+        // }
+        // else if(_stage == 5 && boss == null && !hud.stagePanel.activeSelf)
+        // {
+        //     if(_wonTheGame)
+        //         return;
+        //     _wonTheGame = true;
+        //     WinTheGame();
+        // }
+        // else if(_stage != 5 && boss == null && !hud.stagePanel.activeSelf)
+        // {
+        //     IncrementStage();
+        // }
+        //
         for(var i = 0; i < _enemies.Count; i++)
         {
             if (_enemies[i] == null)
@@ -180,6 +180,7 @@ private void Update()
         hud.tapToPlay.SetActive(false);
         Player.instance.canPlay = true;
         _pause.ShowButton();
+        map.GenerateBoss();
     }
 
     public void AddEnemy(Enemy enemy)
@@ -195,6 +196,7 @@ private void Update()
         Player.instance.canPlay = true;
         hud.blackBG.SetActive(false);
         hud.stagePanel.SetActive(false);
+        
         map.GenerateBoss();
     }
 
@@ -324,5 +326,29 @@ private void Update()
 
         IncreaseNextDamageAmplification();
         IncreaseNextDamageAmplificationCost();
+    }
+
+    public void BossDied()
+    { 
+        if (!_started)
+        {
+        }
+        else if(_stage == 5 && !hud.stagePanel.activeSelf)
+        {
+            if(_wonTheGame)
+                return;
+            _wonTheGame = true;
+            WinTheGame();
+        }
+        else if(_stage != 5 && !hud.stagePanel.activeSelf)
+        {
+            IncrementStage();
+        }
+
+        for(var i = 0; i < _enemies.Count; i++)
+        {
+            if (_enemies[i] == null)
+                _enemies.RemoveAt(i);
+        }
     }
 }
