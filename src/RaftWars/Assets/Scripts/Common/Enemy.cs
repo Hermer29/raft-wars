@@ -697,7 +697,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             MakeRandomPeopleDie();
         }
         hp -= amount;
-        if (hp <= 0)
+        if (Mathf.Floor(hp) <= 0)
             hp = 0;
         
         RecountStats();

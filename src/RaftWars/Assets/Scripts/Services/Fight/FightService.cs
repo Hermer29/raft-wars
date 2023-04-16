@@ -46,27 +46,27 @@ namespace Services
         {  
             do
             {
-                var attackFrequency = CalculatePlayerAttackFrequency();
+                var attackFrequency = CalculateAttackFrequency(CalculatePlayerSuperiority());
                 Debug.Log("Player af:" + attackFrequency);
                 yield return new WaitForSeconds(attackFrequency);
                 if (FightStarted == false)
                     break;
                 _currentFightEnemy.DealDamage();
             } while (IsParticipantsAlive());
+            End();
         }
 
         private IEnumerator EnemyFightProcess()
         {
             do
             {
-                var attackFrequency = CalculateEnemyAttackFrequency();
+                var attackFrequency = CalculateAttackFrequency(-CalculatePlayerSuperiority());
                 Debug.Log("Enemy af:" + attackFrequency);
                 yield return new WaitForSeconds(attackFrequency);
                 if (FightStarted == false)
                     break;
                 _player.DealDamage();
             } while (IsParticipantsAlive());
-            End();
         }
 
         public float CalculatePlayerSuperiority()
@@ -74,13 +74,13 @@ namespace Services
             return _player.PlayerInstance.damage - _currentFightEnemy.damage;
         }
 
-        private float CalculateEnemyAttackFrequency()
+        private float CalculateAttackFrequency(float superiority)
         {
-            float fromDifference = -CalculatePlayerSuperiority() * _fightConstants.DifferenceWeight;
+            float fromDifference = superiority * _fightConstants.DifferenceWeight;
             float fromDamage = CalculateFromOverallDamageFactor();
             if(fromDifference > 0)
             {
-                return Mathf.Abs(_fightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
+                return Mathf.Abs(_fightConstants.FightSpeedModifierDecreasing / (fromDifference + fromDamage));
             }
             return Mathf.Abs((_fightConstants.FightSpeedModifierDecreasing + fromDifference) / fromDamage);
         }
@@ -89,21 +89,10 @@ namespace Services
         {
             return (_currentFightEnemy.damage + _player.PlayerInstance.damage) * _fightConstants.DamageWeight;
         }
-
-        private float CalculatePlayerAttackFrequency()
-        {
-            float fromDifference = CalculatePlayerSuperiority() * _fightConstants.DifferenceWeight;
-            float fromDamage = CalculateFromOverallDamageFactor();
-            if(fromDifference > 0)
-            {
-                return Mathf.Abs(_fightConstants.FightSpeedModifierDecreasing / (fromDamage + fromDifference));
-            }
-            return Mathf.Abs((_fightConstants.FightSpeedModifierDecreasing + fromDifference) / fromDamage);
-        }
-
+        
         private bool IsParticipantsAlive()
         {
-            return _player.PlayerInstance.hp > 0 && (int) Mathf.Floor(_currentFightEnemy.hp) > 0;
+            return _player.PlayerInstance.hp > 0 && Mathf.Floor(_currentFightEnemy.hp) > 0;
         }
 
         private FighterRaft Winner()

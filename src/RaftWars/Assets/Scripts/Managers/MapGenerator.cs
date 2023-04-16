@@ -180,7 +180,8 @@ public class MapGenerator : MonoBehaviour
         for (var i = 0; i < enemiesNumber[stage - 1];)
         {
             Vector3 posToSpawn = GetRandomSpawnPosition();
-            var intersections = Physics.SphereCastAll(posToSpawn, 20, Vector3.up);
+            const int checkRadius = 40;
+            var intersections = Physics.OverlapSphere(posToSpawn, checkRadius);
             if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
             {
                 continue;
@@ -419,7 +420,8 @@ public class MapGenerator : MonoBehaviour
             else
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
 
-            var intersections = Physics.SphereCastAll(posToSpawn, 50, Vector3.up);
+            const float checkRadius = 40;
+            var intersections = Physics.OverlapSphere(posToSpawn, checkRadius);
             if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
             {
                 continue;

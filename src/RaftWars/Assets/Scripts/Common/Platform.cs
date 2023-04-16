@@ -156,9 +156,12 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
                 var raft = GetComponentInParent<FighterRaft>();
                 if(raft.PlatformsCount == 1)
                     return spawnPos;
+                var trials = 0; 
                 while (true)
                 {
-                    
+                    trials++;
+                    if (trials == 5)
+                        break;
                     spawnPos = raft.GetAnotherPlatform().transform.position;
                     if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
                     {
