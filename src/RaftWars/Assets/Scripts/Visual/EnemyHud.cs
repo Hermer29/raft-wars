@@ -30,6 +30,7 @@ public class EnemyHud : MonoBehaviour
     public bool CannotBeReplaced;
     public bool WorksInFixedUpdate;
     public bool PrioritizedShow;
+    public bool NotParticipateInPrioritization;
 
     private void Start()
     {
@@ -143,8 +144,13 @@ public class EnemyHud : MonoBehaviour
             .Where(x => VisibilityListener._visibility[x].Any(x => x.IsVisible()))
             .FirstOrDefault(x => (x._actualScreenPosition - _actualScreenPosition).sqrMagnitude < ScreenDistanceBetweenTextsToHideOne);
         
+        if(NotParticipateInPrioritization)
+            goto Exit;
+
         if(near != null)
         {
+            if(near.NotParticipateInPrioritization)
+                goto Exit;
             if(PrioritizedShow)
             {
                 return true;
@@ -159,6 +165,7 @@ public class EnemyHud : MonoBehaviour
             }
         }
         
+        Exit:
         return VisibilityListener._visibility[this].Any(x => x.IsVisible());
         // var lessThanHorizontalMax = screenPoint.x < Screen.width + HorizontalScreenDistanceToShow;
         // var moreThanHorizontalMin = screenPoint.x > -HorizontalScreenDistanceToShow;

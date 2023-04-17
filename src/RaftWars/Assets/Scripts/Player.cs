@@ -90,6 +90,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         _enemyHud.Target = center;
         _enemyHud.CannotBeReplaced = true;
         _enemyHud.WorksInFixedUpdate = true;
+        _enemyHud.NotParticipateInPrioritization = true;
         _input = Game.InputService;
         _materialsService = Game.MaterialsService;
         _hud = Game.Hud;
