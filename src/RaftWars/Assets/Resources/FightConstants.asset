@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DifferenceWeight: 50
   DamageWeight: 234.45
-  FightSpeedModifierDecreasing: 500
+  FightSpeedModifierDecreasing: 1000
+  PlayerAttackSpeedAmplification: 0.1

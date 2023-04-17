@@ -24,7 +24,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     [SerializeField] private float hpIncrease = PeopleConsts.StatsForPeople;
     [SerializeField] private float damageIncrease = PeopleConsts.StatsForPeople;
     [SerializeField] private bool _disableEdges;
-    private List<People> warriors = new List<People>();
+    public List<People> warriors = new List<People>();
     private List<Turret> turrets = new List<Turret>();
     private int warriorsCount;
     private float hpClear = 0;

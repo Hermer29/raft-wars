@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Common;
 using InputSystem;
 using RaftWars.Infrastructure;
@@ -16,6 +18,9 @@ namespace Services
         private AudioService _audioService;
         private FightConstants _fightConstants;
 
+        //private IEnumerable<FightingUnit> _enemySideUnits; TODO
+        //private IEnumerable<FightingUnit> _playerSideUnits; TODO
+
         public FightService(FightCameraService fightCameraService, PlayerService player, ICoroutineRunner runner,
             AudioService audioService, FightConstants fightConstants)
         {
@@ -30,6 +35,7 @@ namespace Services
 
         public void FightBeginningCollisionDetected(Enemy enemy)
         {
+            //CreateFightingUnits(enemy); COMING SOON TODO
             if (FightStarted)
                 return;
             FightStarted = true;
@@ -41,14 +47,23 @@ namespace Services
             enemy.StartFight();
             _audioService.PlayFightAudio();
         }
-        
+
+        private void CreateFightingUnits(Enemy enemy)
+        {
+            // _enemySideUnits = enemy.warriors.Select(x => new FightingUnit(1f, _runner));
+            // _playerSideUnits = _player.PlayerInstance.warriors.Select(x => new FightingUnit(1f, _runner));
+            // foreach (var warrior in enemy.warriors)
+            // {
+            // }
+        }
+
         private IEnumerator PlayerFightProcess()
         {  
             do
             {
                 var attackFrequency = CalculateAttackFrequency(CalculatePlayerSuperiority());
                 Debug.Log("Player af:" + attackFrequency);
-                yield return new WaitForSeconds(attackFrequency);
+                yield return new WaitForSeconds(attackFrequency - _fightConstants.PlayerAttackSpeedAmplification);
                 if (FightStarted == false)
                     break;
                 _currentFightEnemy.DealDamage();

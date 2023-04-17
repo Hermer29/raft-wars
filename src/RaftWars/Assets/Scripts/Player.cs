@@ -23,7 +23,7 @@ using Random = UnityEngine.Random;
 
 public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCoins, ICanTakePeople
 {
-    [SerializeField] private List<People> warriors;
+    [SerializeField] public List<People> warriors;
     [SerializeField] private List<Platform> platforms;
     [SerializeField] private List<Turret> turrets = new List<Turret>();
     [SerializeField] private TextMeshPro hpText;
