@@ -70,9 +70,9 @@ namespace Services
         {  
             do
             {
-                var attackFrequency = CalculateAttackFrequency(CalculatePlayerSuperiority());
+                var attackFrequency = CalculateAttackFrequency(CalculatePlayerSuperiority()) - _fightConstants.PlayerAttackSpeedAmplification;
                 Debug.Log("Player af:" + attackFrequency);
-                yield return new WaitForSeconds(attackFrequency - _fightConstants.PlayerAttackSpeedAmplification);
+                yield return new WaitForSeconds(Mathf.Clamp(attackFrequency, 0.0001f, _fightConstants.AttackCooldownHigherBound));
                 if (FightStarted == false)
                     break;
                 while(_paused)
@@ -88,7 +88,7 @@ namespace Services
             {
                 var attackFrequency = CalculateAttackFrequency(-CalculatePlayerSuperiority());
                 Debug.Log("Enemy af:" + attackFrequency);
-                yield return new WaitForSeconds(attackFrequency);
+                yield return new WaitForSeconds(Mathf.Clamp(attackFrequency,  0.0001f, _fightConstants.AttackCooldownHigherBound));
                 if (FightStarted == false)
                     break;
                 while(_paused)

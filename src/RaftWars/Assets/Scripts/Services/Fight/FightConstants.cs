@@ -9,5 +9,6 @@ namespace Services
         public float DamageWeight = 5f;
         public float FightSpeedModifierDecreasing = 50f;
         public float PlayerAttackSpeedAmplification = .5f;
+        public float AttackCooldownHigherBound = .9f;
     }
 }
