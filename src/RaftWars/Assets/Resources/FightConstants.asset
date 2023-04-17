@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8a03594ed0d4d0994ab03d8e37c3542, type: 3}
   m_Name: FightConstants
   m_EditorClassIdentifier: 
-  DifferenceWeight: 50
-  DamageWeight: 234.45
-  FightSpeedModifierDecreasing: 1000
+  DifferenceWeight: 53.1
+  DamageWeight: 200
+  FightSpeedModifierDecreasing: 3000
   PlayerAttackSpeedAmplification: 0.1
