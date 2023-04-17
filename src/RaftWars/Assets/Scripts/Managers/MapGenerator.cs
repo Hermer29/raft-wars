@@ -420,8 +420,8 @@ public class MapGenerator : MonoBehaviour
             else
                 posToSpawn.z = Random.Range(-yBorderMax + 30, -yBorderMin);
 
-            const float checkRadius = 40;
-            var intersections = Physics.OverlapSphere(posToSpawn, checkRadius);
+            const float checkRadius = 70;
+            var intersections = Physics.SphereCastAll( - new Vector3(0, checkRadius), checkRadius, Vector3.up, 0);
             if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
             {
                 continue;

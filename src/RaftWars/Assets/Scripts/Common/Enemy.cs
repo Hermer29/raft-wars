@@ -370,7 +370,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         {
             _enemyHud = GameFactory.CreateBossHud();
             _enemyHud.nickname.text = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Boss];
-            _enemyHud.PrioritizedShow = true;
+            //_enemyHud.PrioritizedShow = true;
         }
         else
         {
