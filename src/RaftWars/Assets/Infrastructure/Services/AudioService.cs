@@ -58,14 +58,14 @@ public class AudioService : MonoBehaviour
 
     public void PlaySwimmingSound()
     {
-        //_swimmingSound.Play();
-        //_standingSound.Pause();
+        _swimmingSound.Play();
+        _standingSound.Pause();
     }
 
     public void StopPlayingSwimmingSound()
     {
-        //_swimmingSound.Pause();
-        //_standingSound.Play();
+        _swimmingSound.Pause();
+        _standingSound.Play();
     }
 
     public void PlayPlatformPickingUpSound()

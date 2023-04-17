@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Common;
 using InputSystem;
 using RaftWars.Infrastructure;
@@ -17,6 +15,7 @@ namespace Services
         private Enemy _currentFightEnemy;
         private AudioService _audioService;
         private FightConstants _fightConstants;
+        private bool _paused;
 
         //private IEnumerable<FightingUnit> _enemySideUnits; TODO
         //private IEnumerable<FightingUnit> _playerSideUnits; TODO
@@ -48,6 +47,16 @@ namespace Services
             _audioService.PlayFightAudio();
         }
 
+        public void TryPause()
+        {
+            _paused = true;
+        }
+
+        public void TryUnpause()
+        {
+            _paused = false;
+        }
+
         private void CreateFightingUnits(Enemy enemy)
         {
             // _enemySideUnits = enemy.warriors.Select(x => new FightingUnit(1f, _runner));
@@ -66,6 +75,8 @@ namespace Services
                 yield return new WaitForSeconds(attackFrequency - _fightConstants.PlayerAttackSpeedAmplification);
                 if (FightStarted == false)
                     break;
+                while(_paused)
+                    yield return null;
                 _currentFightEnemy.DealDamage();
             } while (IsParticipantsAlive());
             End();
@@ -80,6 +91,8 @@ namespace Services
                 yield return new WaitForSeconds(attackFrequency);
                 if (FightStarted == false)
                     break;
+                while(_paused)
+                    yield return null;
                 _player.DealDamage();
             } while (IsParticipantsAlive());
         }

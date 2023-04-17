@@ -33,7 +33,7 @@ namespace RaftWars.Infrastructure
             Game.GameManager = GameFactory.CreateGameManager();
             Game.MapGenerator.Construct(Game.Hud.BossAppearing);
             var pause = GameFactory.CreatePauseMenu();
-            pause.Construct(Game.Hud.PauseButton);
+            pause.Construct(Game.Hud.PauseButton, Game.FightService);
             Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
             Game.Hud.AdvertisingForStatsButton.Construct(Game.AdverisingService, Game.PlayerService, Game.GameManager);
             Game.UsingService = new PlayerUsingService(Game.PlayerService, CrossLevelServices.PrefsService);
