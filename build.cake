@@ -53,7 +53,7 @@ UnityEditorArguments CreateUnityEditorArguments()
         ExecuteMethod = UnityBuildMethod,
         BuildTarget = BuildTarget.WebGL,
         ProjectPath = ProjectFolderPath,
-        CacheServerIPAddress = $"{AcceleratorConfig("Ip")}:80"
+        CacheServerIPAddress = $"{AcceleratorConfig("Ip")}:10080"
     };
     arguments.Custom.BuildFolder = CreateBuildFolderName();
     return arguments;
