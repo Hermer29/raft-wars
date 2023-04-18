@@ -1,5 +1,7 @@
-﻿
-using RaftWars.Infrastructure.AssetManagement;
+﻿using RaftWars.Infrastructure.AssetManagement;
+using RaftWars.Infrastructure.Services;
+using Agava.YandexGames;
+
 namespace RaftWars.Infrastructure
 {
     public class ProjectInitialization : IState
@@ -25,12 +27,31 @@ namespace RaftWars.Infrastructure
             _crossLevelServices ??= new CrossLevelServices(_coroutineRunner, Game.FeatureFlags);
             if(Game.FeatureFlags.InitializeYandexGames)
             {
-                Agava.YandexGames.YandexGamesSdk.Initialize(onSuccessCallback: () => {
-                    _stateMachine.Enter<BootstrapState>();
+                YandexGamesSdk.Initialize(onSuccessCallback: () => {
+                    ContinueInitialization();
                 });
                 return;
             }
+           ContinueInitialization();
+        }
+
+        private void ContinueInitialization()
+        {
+            SelectPrefsImplementation();
             _stateMachine.Enter<BootstrapState>();
+        }
+
+        private void SelectPrefsImplementation()
+        {
+            switch(Game.FeatureFlags.PrefsImplementation)
+            {
+                case PrefsOptions.YandexCloud:
+                    CrossLevelServices.PrefsService = new YandexPrefsService(_coroutineRunner);
+                    break;
+                case PrefsOptions.PlayerPrefs:
+                    CrossLevelServices.PrefsService = new PlayerPrefsService(_coroutineRunner);
+                    break;
+            }
         }
     }
 }
