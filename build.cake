@@ -52,8 +52,7 @@ UnityEditorArguments CreateUnityEditorArguments()
         LogFile = ArtifactsFolderPath + "/unity.log",
         ExecuteMethod = UnityBuildMethod,
         BuildTarget = BuildTarget.WebGL,
-        ProjectPath = ProjectFolderPath,
-        CacheServerIPAddress = $"{AcceleratorConfig("Ip")}:10080"
+        ProjectPath = ProjectFolderPath
     };
     arguments.Custom.BuildFolder = CreateBuildFolderName();
     return arguments;
@@ -63,13 +62,6 @@ string CreateBuildFolderName()
 {
     return $"{DateTime.Today:d}_{ProjectName}_{DateTime.Now.Hour}_{DateTime.Now.Minute}";
 }
-
-string AcceleratorConfig(string key) => key switch
-{
-    "Ip" => Context.Configuration.GetValue("Accelerator_Ip"),
-    "Login" => Context.Configuration.GetValue("Accelerator_Login"),
-    "Password" => Context.Configuration.GetValue("Accelerator_Password")
-};
 
 #endregion
 
