@@ -24,7 +24,6 @@ namespace RaftWars.Infrastructure
         public void Enter()
         {
             Game.FeatureFlags = AssetLoader.LoadFeatureFlags();
-            _crossLevelServices ??= new CrossLevelServices(_coroutineRunner, Game.FeatureFlags);
             if(Game.FeatureFlags.InitializeYandexGames)
             {
                 YandexGamesSdk.Initialize(onSuccessCallback: () => {
@@ -52,6 +51,7 @@ namespace RaftWars.Infrastructure
                     CrossLevelServices.PrefsService = new PlayerPrefsService(_coroutineRunner);
                     break;
             }
+            CrossLevelServices.LevelService = new LevelService(CrossLevelServices.PrefsService);
         }
     }
 }

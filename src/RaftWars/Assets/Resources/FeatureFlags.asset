@@ -16,7 +16,7 @@ MonoBehaviour:
   <DiamondsEnabledInGame>k__BackingField: 0
   <MenuButtonsFading>k__BackingField: 0
   <TutorialEveryTime>k__BackingField: 0
-  <InitializeYandexGames>k__BackingField: 1
-  <PrefsImplementation>k__BackingField: 0
-  <EnableYandexIap>k__BackingField: 1
+  <InitializeYandexGames>k__BackingField: 0
+  <PrefsImplementation>k__BackingField: 1
+  <EnableYandexIap>k__BackingField: 0
   <PlayerSpeedIncreasingPerPlatform>k__BackingField: 0
