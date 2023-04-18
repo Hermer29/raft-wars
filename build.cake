@@ -53,20 +53,10 @@ UnityEditorArguments CreateUnityEditorArguments()
         ExecuteMethod = UnityBuildMethod,
         BuildTarget = BuildTarget.WebGL,
         ProjectPath = ProjectFolderPath,
-        AssetServerUpdate = CreateAssetServerUpdate()
+        CacheServerIPAddress = $"{AcceleratorConfig("Ip")}:80"
     };
     arguments.Custom.BuildFolder = CreateBuildFolderName();
     return arguments;
-}
-
-AssetServerUpdate CreateAssetServerUpdate()
-{
-    return new AssetServerUpdate(
-        AcceleratorConfig("Ip"),
-        80,
-        ProjectName, 
-        AcceleratorConfig("Login"),
-        AcceleratorConfig("Password"));
 }
 
 string CreateBuildFolderName()
