@@ -15,6 +15,7 @@ public class LoadingScreen : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+        _slider.value = 0;
         _canvas.interactable = true;
         _canvas.blocksRaycasts = true;
     }
