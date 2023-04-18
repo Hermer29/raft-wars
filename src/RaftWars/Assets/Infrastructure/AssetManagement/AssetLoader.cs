@@ -37,7 +37,7 @@ namespace RaftWars.Infrastructure.AssetManagement
 
         public static AsyncOperationHandle<GameObject> LoadLevelGenerator(int level)
         {
-            var levelPath = CreateLevelGeneratorPath(level);
+            string levelPath = CreateLevelGeneratorPath(level);
             Debug.Log($"Trying to load {levelPath}");
             return Addressables.LoadAssetAsync<GameObject>(levelPath);
         }

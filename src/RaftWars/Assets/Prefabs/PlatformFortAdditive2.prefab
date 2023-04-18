@@ -54,8 +54,8 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8927156973356173271}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -113,6 +113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1fc4bfa27dc24a4a9647444bdd879bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canTake: 1
   platform: {fileID: 4684615808979959829, guid: 581bd37b834ed4649ac11c6a51463555, type: 3}
 --- !u!54 &1712697953441507261
 Rigidbody:
