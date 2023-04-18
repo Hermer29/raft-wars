@@ -1,13 +1,23 @@
-﻿using Cinemachine;
+﻿using System;
+using System.Collections;
+using Cinemachine;
 using Interface;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using static RaftWars.Infrastructure.AssetManagement.AssetLoader;
 using static UnityEngine.Object;
 
 namespace RaftWars.Infrastructure
 {
-    public static class GameFactory
+    public class GameFactory
     {
+        private readonly ICoroutineRunner _runner;
+
+        public GameFactory(ICoroutineRunner runner)
+        {
+            _runner = runner;
+        }
+        
         public static Explosion CreateExplosion()
         {
             return Instantiate(LoadExplosion());
@@ -28,9 +38,9 @@ namespace RaftWars.Infrastructure
             return Instantiate(LoadIMGUI());
         }
 
-        public static MapGenerator CreateMapGenerator(int level)
+        public AsyncOperationHandle<GameObject> CreateMapGenerator(int level)
         {
-            return Instantiate(LoadLevelGenerator(level));
+            return LoadLevelGenerator(level);
         }
 
         public static GameManager CreateGameManager()

@@ -7,6 +7,8 @@ using Skins;
 using Skins.Hats;
 using Skins.Platforms;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using static RaftWars.Infrastructure.AssetManagement.AssetConstants;
 
 namespace RaftWars.Infrastructure.AssetManagement
@@ -33,10 +35,11 @@ namespace RaftWars.Infrastructure.AssetManagement
             return Resources.Load<GameObject>(IMGUIPath);
         }
 
-        public static MapGenerator LoadLevelGenerator(int level)
+        public static AsyncOperationHandle<GameObject> LoadLevelGenerator(int level)
         {
-            Debug.Log("Trying to load "+ CreateLevelGeneratorPath(level));
-            return Resources.Load<MapGenerator>(CreateLevelGeneratorPath(level));
+            var levelPath = CreateLevelGeneratorPath(level);
+            Debug.Log($"Trying to load {levelPath}");
+            return Addressables.LoadAssetAsync<GameObject>(levelPath);
         }
 
         public static GameManager LoadGameManager()

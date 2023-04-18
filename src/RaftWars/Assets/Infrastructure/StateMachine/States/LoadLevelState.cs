@@ -9,8 +9,9 @@ namespace RaftWars.Infrastructure
         private readonly StateMachine _stateMachine;
         private readonly ICoroutineRunner _coroutines;
         private LoadingScreen _loading;
-        private int _material;
-
+        private readonly GameFactory _factory;
+        
+        private int _level;
         private const int GameplayScene = 1;
 
         public LoadLevelState(StateMachine stateMachine, ICoroutineRunner coroutines, LoadingScreen loading)
@@ -18,11 +19,12 @@ namespace RaftWars.Infrastructure
             _loading = loading;
             _stateMachine = stateMachine;
             _coroutines = coroutines;
+            _factory = new GameFactory(_coroutines);
         }
         
-        public void Enter(int material)
+        public void Enter(int level)
         {
-            _material = material;
+            _level = level;
             _coroutines.StartCoroutine(Load());
         }
 
@@ -33,15 +35,25 @@ namespace RaftWars.Infrastructure
 
         private IEnumerator Load()
         {
+            const float totalOperations = 2;
+
             AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(GameplayScene);
             while (asyncOperation.isDone == false)
             {
-                _loading.SetSliderProcess(asyncOperation.progress);
+                _loading.SetSliderProcess(asyncOperation.progress / totalOperations);
                 yield return null;
             }
+
+            float operationPercent = asyncOperation.progress;
+
+            var loadingLevelAssets = _factory.CreateMapGenerator(_level);
+            while (loadingLevelAssets.IsDone == false)
+            {
+                _loading.SetSliderProcess((loadingLevelAssets.PercentComplete + operationPercent) / totalOperations);
+                yield return null;
+            }
+            Game.MapGenerator = GameObject.Instantiate(loadingLevelAssets.Result).GetComponent<MapGenerator>();
             _loading.SetSliderProcess(1f);
-            
-            Game.MapGenerator = GameFactory.CreateMapGenerator(_material);
             _stateMachine.Enter<CreateServicesState>();
         }
     }

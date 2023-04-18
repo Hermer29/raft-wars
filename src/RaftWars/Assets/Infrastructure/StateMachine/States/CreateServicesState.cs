@@ -38,16 +38,21 @@ namespace RaftWars.Infrastructure
             Game.Hud.AdvertisingForStatsButton.Construct(Game.AdverisingService, Game.PlayerService, Game.GameManager);
             CreateUsingService();
             Game.Hud.SoundButton.Construct(Game.AudioService);
-            if(CrossLevelServices.PrefsService.GetInt("TutorialShown", 0) == 0 || Game.FeatureFlags.TutorialEveryTime)
+            TryShowTutorial();
+
+            _stateMachine.Enter<CreateIMGUIState>();
+            _stateMachine.Enter<CreateShopState>();
+        }
+
+        private static void TryShowTutorial()
+        {
+            if (CrossLevelServices.PrefsService.GetInt("TutorialShown") == 0 || Game.FeatureFlags.TutorialEveryTime)
             {
                 var tutorial = GameFactory.CreateTutorial();
                 tutorial.Construct(Game.Hud.Joystick);
                 CrossLevelServices.PrefsService.SetInt("TutorialShown", 1);
                 Game.GameManager.GameStarted += tutorial.Show;
             }
-
-            _stateMachine.Enter<CreateIMGUIState>();
-            _stateMachine.Enter<CreateShopState>();
         }
 
         private static void CreateUsingService()

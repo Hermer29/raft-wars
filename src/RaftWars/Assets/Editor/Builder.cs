@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.AddressableAssets.Settings;
 using UnityEngine;
 using static UnityEditor.BuildTarget;
 
@@ -14,6 +15,8 @@ namespace Editor
             const BuildTarget Platform = WebGL;
             
             PredefinePlatformSpecificSettings(Platform);
+
+            AddressableAssetSettings.BuildPlayerContent();
             
             BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
