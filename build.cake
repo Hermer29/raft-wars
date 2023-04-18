@@ -52,16 +52,33 @@ UnityEditorArguments CreateUnityEditorArguments()
         LogFile = ArtifactsFolderPath + "/unity.log",
         ExecuteMethod = UnityBuildMethod,
         BuildTarget = BuildTarget.WebGL,
-        ProjectPath = ProjectFolderPath
+        ProjectPath = ProjectFolderPath,
+        AssetServerUpdate = CreateAssetServerUpdate()
     };
     arguments.Custom.BuildFolder = CreateBuildFolderName();
     return arguments;
+}
+
+AssetServerUpdate CreateAssetServerUpdate()
+{
+    return new AssetServerUpdate(
+        AcceleratorConfig("Ip"), 
+        ProjectName, 
+        AcceleratorConfig("Login"),
+        AcceleratorConfig("Password"));
 }
 
 string CreateBuildFolderName()
 {
     return $"{DateTime.Today:d}_{ProjectName}_{DateTime.Now.Hour}_{DateTime.Now.Minute}";
 }
+
+string AcceleratorConfig(string key) => key switch
+{
+    "Ip" => Context.Configuration.GetValue("Accelerator_Ip"),
+    "Login" => Context.Configuration.GetValue("Accelerator_Login"),
+    "Password" => Context.Configuration.GetValue("Accelerator_Password")
+};
 
 #endregion
 
