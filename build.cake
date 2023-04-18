@@ -62,7 +62,8 @@ UnityEditorArguments CreateUnityEditorArguments()
 AssetServerUpdate CreateAssetServerUpdate()
 {
     return new AssetServerUpdate(
-        AcceleratorConfig("Ip"), 
+        AcceleratorConfig("Ip"),
+        80,
         ProjectName, 
         AcceleratorConfig("Login"),
         AcceleratorConfig("Password"));
