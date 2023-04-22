@@ -25,9 +25,9 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   <Guid>k__BackingField: 1f25f28e-7673-4f36-972d-98651a80b6bd
   <OwnedByDefault>k__BackingField: 0
-  <Illustration>k__BackingField: {fileID: 0}
-  <RequiredLevel>k__BackingField: 0
-  <LocalizedName>k__BackingField: 0
-  _defaultSpeedBonus: 0.1
+  <Illustration>k__BackingField: {fileID: 21300000, guid: d2bfea7cbbfeba242944fce71d23129d, type: 3}
+  <RequiredLevel>k__BackingField: 6
+  <LocalizedName>k__BackingField: 36
+  <DefaultSpeedBonus>k__BackingField: 0.1
   _speedUpgradeStep: 0.01
   <ValueType>k__BackingField: 0

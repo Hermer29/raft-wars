@@ -25,9 +25,9 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   <Guid>k__BackingField: 35e607d0-7ff3-4eeb-aee4-7e0b36fb75be
   <OwnedByDefault>k__BackingField: 1
-  <Illustration>k__BackingField: {fileID: 0}
+  <Illustration>k__BackingField: {fileID: 21300000, guid: becc43e294921b14e8c0489b16a11e30, type: 3}
   <RequiredLevel>k__BackingField: 0
-  <LocalizedName>k__BackingField: 0
-  DefaultDamageGain: 11
+  <LocalizedName>k__BackingField: 29
+  <BaseDamage>k__BackingField: 11
   DamageBonusUpgradeStep: 1
   <ValueType>k__BackingField: 1

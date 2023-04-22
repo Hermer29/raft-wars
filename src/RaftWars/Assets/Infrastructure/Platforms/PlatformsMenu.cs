@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using InputSystem;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.Services;
@@ -36,7 +37,7 @@ namespace Infrastructure.Platforms
 
         private void CreateEntries(IEnumerable<SpecialPlatform> platforms)
         {
-            foreach (SpecialPlatform specialPlatform in platforms)
+            foreach (SpecialPlatform specialPlatform in platforms.OrderBy(x => x.Serial))
             {
                 new PlatformsPresenter(_factory.CreatePlatformEntry(_platformsParent),
                     specialPlatform,

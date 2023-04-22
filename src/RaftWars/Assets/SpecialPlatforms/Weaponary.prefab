@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1597723061605727233}
   - component: {fileID: 1597723061605727232}
   - component: {fileID: 1597723061605727239}
+  - component: {fileID: -1320680548481030862}
   m_Layer: 0
   m_Name: Weaponary
   m_TagString: Untagged
@@ -117,6 +118,19 @@ MonoBehaviour:
   isWind: 0
   ishospital: 0
   emptyPlatform: 0
+--- !u!114 &-1320680548481030862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597723061605727238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b86ef9ff714cd9a1e9f8ce683405b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Platform>k__BackingField: {fileID: 11400000, guid: 60f9a5357bc464d4998365ad5aa293d3, type: 2}
 --- !u!1001 &6318402524176102325
 PrefabInstance:
   m_ObjectHideFlags: 0

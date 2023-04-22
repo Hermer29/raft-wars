@@ -2,7 +2,7 @@
 
 namespace RaftWars.Infrastructure.Services
 {
-    public class AllServices
+    public static class AllServices
     {
         public static void Register<TService>(TService instance)
         {

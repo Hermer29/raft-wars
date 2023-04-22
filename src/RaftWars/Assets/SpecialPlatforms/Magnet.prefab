@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1597723061605727233}
   - component: {fileID: 1597723061605727232}
   - component: {fileID: 1597723061605727239}
+  - component: {fileID: -3838151945729611084}
   m_Layer: 0
   m_Name: Magnet
   m_TagString: Untagged
@@ -121,6 +122,20 @@ MonoBehaviour:
   isTurret: 1
   isWind: 0
   ishospital: 0
+  emptyPlatform: 0
+--- !u!114 &-3838151945729611084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597723061605727238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b86ef9ff714cd9a1e9f8ce683405b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Platform>k__BackingField: {fileID: 11400000, guid: b6c7b175cc54eac42b690f85d9e520db, type: 2}
 --- !u!1 &5152235725857541396
 GameObject:
   m_ObjectHideFlags: 0

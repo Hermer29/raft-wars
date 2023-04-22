@@ -105,7 +105,7 @@ public class Turret : MonoBehaviour, ICoroutineSender
         }
         else
         {
-            if (!battle && isWind)
+            if (!battle && isWind && mill != null)
             {
                 mill.transform.RotateAround(Vector3.forward, 0.02f);
             }

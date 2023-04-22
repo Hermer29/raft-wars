@@ -24,7 +24,7 @@ namespace RaftWars.Infrastructure
         public static GameManager GameManager;
         public static StateMachine StateMachine;
         public static FightService FightService;
-        public static UnityEngine.Canvas StatsCanvas;
+        public static Canvas StatsCanvas;
         public static AudioService AudioService;
 
         public Game(Player player, StateMachine stateMachine, ICoroutineRunner coroutineRunner)

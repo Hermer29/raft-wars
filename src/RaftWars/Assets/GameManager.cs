@@ -241,7 +241,7 @@ private void Update()
         {
             _advertising.ShowRewarded(() =>
             {
-                Player.instance.IncreaseHealth(buyableHealthPercent);
+                Player.instance.IncreaseHealth(.1f);
                 UpdateNextHealthUpgrade();
             });
             return;
@@ -249,7 +249,7 @@ private void Update()
         if (IsNotEnoughMoneyToIncreaseHealth()) return;
         
         Game.MoneyService.Spend(healthAmplificationCost);
-        Player.instance.IncreaseHealth((float)buyableHealthPercent);
+        Player.instance.IncreaseHealth(.1f);
         UpdateNextHealthUpgrade();
     }
 
@@ -295,7 +295,7 @@ private void Update()
         {
             _advertising.ShowRewarded(() =>
             {
-                Player.instance.AmplifyDamage(buyableDamagePercent);
+                Player.instance.AmplifyDamage(.1f);
                 UpdateNextDamageUpgrade();
             });
             return;
@@ -304,7 +304,7 @@ private void Update()
         if (IsNotEnoughCoinsToAmplifyDamage()) return;
         
         Game.MoneyService.Spend(damageCost);
-        Player.instance.AmplifyDamage(buyableDamagePercent);
+        Player.instance.AmplifyDamage(.1f);
         UpdateNextDamageUpgrade();
     }
 

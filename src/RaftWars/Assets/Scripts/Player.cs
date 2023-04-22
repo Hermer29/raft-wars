@@ -14,12 +14,14 @@ using RaftWars.Infrastructure;
 using Skins;
 using Skins.Hats;
 using Skins.Platforms;
+using SpecialPlatforms;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Serialization;
 using Visual;
 using Random = UnityEngine.Random;
+using ValueType = SpecialPlatforms.ValueType;
 
 public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCoins, ICanTakePeople
 {
@@ -39,10 +41,15 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     [SerializeField] private GameObject[] _indicators;
 
     public override int PlatformsCount => platforms.Count;
-
-    private int platformHp;
-    private float hpAdditive;
-    private float damageAdditive;
+    public override int Damage => (int) (damage + damage * relativeDamage);
+    public override int Health => (int) (hp + hp * relativeHp);
+    public override float MoveSpeed => (int) (speed + speed * relativeSpeed);
+    
+    private float relativeHp;
+    private float relativeDamage;
+    private float relativeSpeed;
+    private float _actualHp;
+    private float _actualDamage;
     public bool battle;
     public bool isDead;
     public int platformCount = 1;
@@ -167,12 +174,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
             StopCoroutine(_explosionsCoroutine);
     }
 
-    public void AddCoins(int coins)
-    {
-        this.coins += coins;
-        _hud.ShowCoins(this.coins);
-    }
-
     public void AddGems(int gems)
     {
         this.gems += gems;
@@ -188,14 +189,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         RecountStats();
         warrior.ApplyHat(_hat);
     }
-
-    public void AddHealTurret(int healthIncrease)
-    {
-        platformHp += healthIncrease;
-        hp += (int) (healthIncrease * (1 + hpAdditive));
-        RecountStats();
-    }
-
+    
     public override EnemyHud GetHud()
     {
         return _enemyHud;
@@ -230,18 +224,46 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         RecountStats();
     }
 
-    public override void AddTurret(Turret tur)
+    public override void AddHealth(Turret tur, IHealthIncreasing statsHolder)
     {
+        if (statsHolder.ValueType == ValueType.Absolute)
+        {
+            hp += (int) statsHolder.HealthValue;
+        }
+        else if (statsHolder.ValueType == ValueType.Relative)
+        {
+            relativeHp += statsHolder.HealthValue;
+        }
         turrets.Add(tur);
-        platformHp += tur.healthIncrease;
-        hp += (int) (tur.healthIncrease * (1 + hpAdditive));
-        damage += (int) (tur.damageIncrease * (1 + damageAdditive));
         RecountStats();
     }
-    
-    public override void AddFastTurret(Turret tur)
+
+    public override void AddDamage(Turret turret, IDamageAmplifying statsHolder)
     {
-        this.speed += speed;
+        if (statsHolder.ValueType == ValueType.Absolute)
+        {
+            damage += (int) statsHolder.DamageValue;
+        }
+        else if(statsHolder.ValueType == ValueType.Relative)
+        {
+            relativeDamage += statsHolder.DamageValue;
+        }
+        turrets.Add(turret);
+        RecountStats();
+    }
+
+    public override void AddSpeed(Turret tur, ISpeedIncreasing statsHolder)
+    {
+        if (statsHolder.ValueType == ValueType.Absolute)
+        {
+            speed += statsHolder.SpeedBonus;
+        }
+        else if (statsHolder.ValueType == ValueType.Relative)
+        {
+            relativeSpeed += statsHolder.SpeedBonus;
+        }
+        turrets.Add(tur);
+        RecountStats();
     }
 
     private void RecountStats()
@@ -482,15 +504,14 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public void AmplifyDamage(float percent)
     {
-        damage += (int) (damage * (percent - damageAdditive));
-        damageAdditive = percent;
+        //usually percent = 0.2
+        relativeDamage += percent;
         RecountStats();
     }
 
     public void IncreaseHealth(float bonus)
     {
-        hp += (int) (hp * (bonus - hpAdditive));
-        hpAdditive = (int) bonus;
+        relativeHp += bonus;
         RecountStats();
     }
 

@@ -1,5 +1,6 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DefaultNamespace
 {
@@ -14,5 +15,6 @@ namespace DefaultNamespace
         [field: SerializeField] public PrefsOptions PrefsImplementation {get; private set;}
         [field: SerializeField] public bool EnableYandexIap { get; private set; }
         [field: SerializeField] public float PlayerSpeedIncreasingPerPlatform {get; private set;}
+        [FormerlySerializedAs("OwningPropertyDefinition")] [field: SerializeField] public bool OwningOrderDefinition;
     }
 }

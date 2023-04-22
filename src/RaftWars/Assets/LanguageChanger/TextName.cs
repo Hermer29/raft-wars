@@ -33,6 +33,22 @@ namespace LanguageChanger
         BossIsHere,
         PreviousPlatformMustBeOwnedBefore,
         LevelRequired,
-        Towers
+        Towers,
+        
+        Turret,
+        Tower,
+        Magnet,
+        Propeller,
+        Medicine,
+        Weaponary,
+        Barrack,
+        Turbine,
+        Tank,
+        Rockets,
+        Airport,
+        
+        Upgrade,
+        Unlock,
+        Units
     }
 }

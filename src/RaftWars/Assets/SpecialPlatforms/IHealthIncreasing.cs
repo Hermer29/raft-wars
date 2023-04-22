@@ -2,7 +2,8 @@
 {
     public interface IHealthIncreasing
     {
-        public ValueType ValueType { get; }
-        public float HealthValue { get; }
+        ValueType ValueType { get; }
+        float HealthValue { get; }
+        float DefaultHealthGain { get; }
     }
 }

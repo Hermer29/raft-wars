@@ -8,12 +8,14 @@ using Common;
 using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
+using SpecialPlatforms;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
 using Visual;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
+using ValueType = SpecialPlatforms.ValueType;
 using Vector3 = UnityEngine.Vector3;
 
 
@@ -31,9 +33,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     private float damageClear = 0;
     private float turretDamage = 0;
     private float currentHp = 0;
+    private float _relativeHp;
+    private float _relativeDamage;
+    private float _actualHp;
+    private float _actualDamage;
     [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public float hp;
     public bool battle = false;
     private float speed = 5 - 5/4;
+    private float relativeSpeed;
     private Player player;
     private float timer = 0;
     private const float RunningViewportBounds = .05f;
@@ -73,6 +80,9 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     }
 
     public override int PlatformsCount => platforms.Count;
+    public override int Damage => (int)(damage + damage * _relativeDamage);
+    public override int Health => (int)(hp + hp * _relativeHp);
+    public override float MoveSpeed => (int)(speed + speed * relativeSpeed);
 
     public float Extents
     {
@@ -175,15 +185,21 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         _edgesAndAngleWaves?.UpdateVisual(platform.gameObject);
     }
 
-    public override void AddTurret(Turret turret)
+    public override void AddDamage(Turret turret, IDamageAmplifying statsHolder)
     {
         turrets.Add(turret);
-        hp += turret.healthIncrease;
-        damage += turret.damageIncrease;
+        if (statsHolder.ValueType == ValueType.Absolute)
+        {
+            damage += statsHolder.BaseDamage;
+        }
+        else if (statsHolder.ValueType == ValueType.Relative)
+        {
+            _relativeDamage += statsHolder.DamageValue;
+        }
         RecountStats();
     }
 
-    public override void AddFastTurret(Turret turret)
+    public override void AddSpeed(Turret turret, ISpeedIncreasing statsHolder)
     {
         turrets.Add(turret);
         speed += turret.millSpeed;
@@ -420,20 +436,23 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             if (plat.isTurret == false)
                 continue;
 
-            if (plat.ishospital)
+            if (relatedTurret == null)
+                continue;
+            
+            var stats = plat.GetComponent<StatsHolder>();
+            if (stats.Platform is IHealthIncreasing healthIncreasing)
             {
-                currentHp += relatedTurret.healthIncrease;
-                this.hp += relatedTurret.healthIncrease;
+                AddHealth(relatedTurret, healthIncreasing);
             }
-            else if (plat.isTurret)
+            else if (stats.Platform is IDamageAmplifying damageAmplifying)
             {
-                turrets.Add(relatedTurret);
-                turretDamage += relatedTurret.damageIncrease;
-                this.damage += relatedTurret.damageIncrease;
-                currentHp += relatedTurret.healthIncrease;
-                this.hp += relatedTurret.healthIncrease;
-                relatedTurret.DrawInMyColor(_material);
-            }   
+                AddDamage(relatedTurret, damageAmplifying);
+            }
+            else if (stats.Platform is ISpeedIncreasing speedIncreasing)
+            {
+                AddSpeed(relatedTurret, speedIncreasing);
+            }
+            relatedTurret.DrawInMyColor(_material);
         }
 
         foreach (People man in people)
@@ -486,8 +505,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         if(_enemyHud == null)
         {
-        // Мы в этот код попадаем только если враг не создавался генератором, 
-        // к примеру придаток босса с пятого этапа попадает сюда
+            // Мы в этот код попадаем только если враг не создавался генератором, 
+            // к примеру придаток босса с пятого этапа попадает сюда
             _enemyHud = GameFactory.CreateBossHud();
             _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
             if(_enemyHud.Target == null)
@@ -497,8 +516,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             _enemyHud.nickname.text = "";
         }
 
-        _enemyHud.hpText.text = Mathf.RoundToInt(hp).ToString();
-        _enemyHud.damageText.text = Mathf.RoundToInt(damage).ToString();
+        _enemyHud.hpText.text = Health.ToString();
+        _enemyHud.damageText.text = Damage.ToString();
     }
     
     private Vector3 GetScaledRandomPointAmongAllPlatforms()
@@ -673,6 +692,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         battle = false;
         PlayIdleAnimation();
+    }
+
+    public override void AddHealth(Turret turret, IHealthIncreasing stats)
+    {
+        
     }
 
     public override EnemyHud GetHud()

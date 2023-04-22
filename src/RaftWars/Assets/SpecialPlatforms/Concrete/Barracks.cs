@@ -6,10 +6,10 @@ namespace SpecialPlatforms.Concrete
     public class Barracks : SpecialPlatform
     {
         [field: Header("Platform specific")] 
-        [field: SerializeField] private int _spawnPeopleDefaultLimit;
+        [field: SerializeField] public int SpawnPeopleDefaultLimit { get; private set; }
         [field: SerializeField] private int _upgradeLimitStep;
         [field: SerializeField] public int SpawnPeopleTime { get; private set; }
         
-        public int SpawnPeopleLimit => _spawnPeopleDefaultLimit + _upgradeLimitStep * UpgradedLevel;
+        public int SpawnPeopleLimit => SpawnPeopleDefaultLimit + _upgradeLimitStep * UpgradedLevel;
     }
 }

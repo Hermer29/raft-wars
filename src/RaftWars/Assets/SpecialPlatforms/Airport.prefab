@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4684615808979959826}
   - component: {fileID: 4684615808979959827}
   - component: {fileID: 4684615808979959828}
+  - component: {fileID: -4792878957420502802}
   m_Layer: 0
   m_Name: Airport
   m_TagString: Untagged
@@ -117,6 +118,19 @@ MonoBehaviour:
   isWind: 0
   ishospital: 0
   emptyPlatform: 0
+--- !u!114 &-4792878957420502802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4684615808979959829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b86ef9ff714cd9a1e9f8ce683405b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Platform>k__BackingField: {fileID: 11400000, guid: 697c225ff9cc9c74690d58bf7b845c8e, type: 2}
 --- !u!1001 &36064480989925286
 PrefabInstance:
   m_ObjectHideFlags: 0

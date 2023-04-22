@@ -4,5 +4,6 @@
     {
         ValueType ValueType { get; }
         float SpeedBonus { get; }
+        float DefaultSpeedBonus { get; }
     }
 }

@@ -93,7 +93,7 @@ namespace RaftWars.Infrastructure
 
         private void CreateSpecialPlatformsService()
         {
-            var owningSequence = new OwningSequence<SpecialPlatform>(Game.PropertyService);
+            var owningSequence = new OwningSequence<SpecialPlatform>(Game.PropertyService, Game.FeatureFlags);
             AllServices.Register<OwningSequence<SpecialPlatform>>(owningSequence);
             foreach (SpecialPlatform platform in AllServices.GetSingle<IEnumerable<SpecialPlatform>>())
             {

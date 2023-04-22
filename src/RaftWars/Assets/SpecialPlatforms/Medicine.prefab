@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1439582966004701248}
   - component: {fileID: 1439582966004701249}
   - component: {fileID: 1439582966004701254}
+  - component: {fileID: 2881506320353941013}
   m_Layer: 0
   m_Name: Medicine
   m_TagString: Untagged
@@ -116,6 +117,20 @@ MonoBehaviour:
   isTurret: 1
   isWind: 0
   ishospital: 1
+  emptyPlatform: 0
+--- !u!114 &2881506320353941013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439582966004701255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b86ef9ff714cd9a1e9f8ce683405b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Platform>k__BackingField: {fileID: 11400000, guid: c8a7d131fea8dab41a11fde8a45f1d37, type: 2}
 --- !u!1 &3107950582872821301
 GameObject:
   m_ObjectHideFlags: 0

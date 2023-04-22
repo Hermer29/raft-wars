@@ -67,6 +67,38 @@ MonoBehaviour:
     textValue: START BIGGER!
   - textName: 25
     textValue: Boss is here!
+  - textName: 26
+    textValue: Unlock previous
+  - textName: 28
+    textValue: Units
+  - textName: 29
+    textValue: Turret
+  - textName: 30
+    textValue: Tower
+  - textName: 31
+    textValue: Magnet
+  - textName: 32
+    textValue: Propeller
+  - textName: 33
+    textValue: Medicine
+  - textName: 34
+    textValue: Weaponary
+  - textName: 35
+    textValue: Barrack
+  - textName: 36
+    textValue: Turbine
+  - textName: 37
+    textValue: Tank
+  - textName: 38
+    textValue: Rockets
+  - textName: 39
+    textValue: Airport
+  - textName: 40
+    textValue: Upgrade
+  - textName: 41
+    textValue: Unlock
+  - textName: 42
+    textValue: Units
   <Parametrized>k__BackingField:
   - Name: 27
-    Value: 
+    Value: Required level {0}

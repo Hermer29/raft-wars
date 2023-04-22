@@ -6,10 +6,10 @@ namespace SpecialPlatforms.Concrete
     public class Rockets : SpecialPlatform, IDamageAmplifying
     {
         [field: Header("Platform specific")] 
-        [SerializeField] private float DefaultDamageGain;
-
+        [field: SerializeField] public float BaseDamage { get; private set; }
         [SerializeField] private float DamageBonusUpgradeStep;
         [field: SerializeField] public ValueType ValueType { get; private set; }
-        public float DamageValue => DamageBonusUpgradeStep * UpgradedLevel + DefaultDamageGain;
+        public float DamageValue => DamageBonusUpgradeStep * UpgradedLevel + BaseDamage;
+        
     }
 }

@@ -25,9 +25,9 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   <Guid>k__BackingField: 2a46fd0d-13f5-4d59-b25d-b42c7c157f8b
   <OwnedByDefault>k__BackingField: 0
-  <Illustration>k__BackingField: {fileID: 0}
-  <RequiredLevel>k__BackingField: 0
-  <LocalizedName>k__BackingField: 0
-  _spawnPeopleDefaultLimit: 5
+  <Illustration>k__BackingField: {fileID: 21300000, guid: a15e54c7580675149aba6689e03c8b7d, type: 3}
+  <RequiredLevel>k__BackingField: 5
+  <LocalizedName>k__BackingField: 35
+  <SpawnPeopleDefaultLimit>k__BackingField: 5
   _upgradeLimitStep: 1
   <SpawnPeopleTime>k__BackingField: 3

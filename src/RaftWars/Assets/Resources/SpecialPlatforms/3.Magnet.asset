@@ -25,8 +25,8 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   <Guid>k__BackingField: d6eca22b-283f-4464-8eb5-4c80827b868d
   <OwnedByDefault>k__BackingField: 1
-  <Illustration>k__BackingField: {fileID: 0}
-  <RequiredLevel>k__BackingField: 0
-  <LocalizedName>k__BackingField: 0
+  <Illustration>k__BackingField: {fileID: 21300000, guid: b8eaf7bc3295ce84ca2c3a9ddaad7d52, type: 3}
+  <RequiredLevel>k__BackingField: 1
+  <LocalizedName>k__BackingField: 31
   _defaultCollectingRadius: 7
   _collectingRadiusUpgradeStep: 1

@@ -2,7 +2,8 @@
 {
     public interface IDamageAmplifying
     {
-        public ValueType ValueType { get; }
-        public float DamageValue { get; }
+        ValueType ValueType { get; }
+        float DamageValue { get; }
+        float BaseDamage { get; }
     }
 }

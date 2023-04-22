@@ -1,14 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SpecialPlatforms.Concrete
 {
     [CreateAssetMenu(menuName = "Special platforms/🧲Create magnet")]
     public class Magnet : SpecialPlatform
     {
-        [Header("Platform specific")] 
-        [SerializeField] private float _defaultCollectingRadius;
+        [field: FormerlySerializedAs("_defaultCollectingRadius")]
+        [field: Header("Platform specific")] 
+        [field: SerializeField] public float DefaultCollectingRadius { get; private set; }
         [SerializeField] private float _collectingRadiusUpgradeStep;
 
-        public float CollectingRadius => _defaultCollectingRadius + _collectingRadiusUpgradeStep * UpgradedLevel;
+        public float CollectingRadius => DefaultCollectingRadius + _collectingRadiusUpgradeStep * UpgradedLevel;
     }
 }

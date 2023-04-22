@@ -179,6 +179,7 @@ GameObject:
   - component: {fileID: 4799856444384544934}
   - component: {fileID: 4799856444384544935}
   - component: {fileID: 4799856444384544928}
+  - component: {fileID: -3549138352045913665}
   m_Layer: 0
   m_Name: Rockets
   m_TagString: Untagged
@@ -282,6 +283,20 @@ MonoBehaviour:
   isTurret: 1
   isWind: 0
   ishospital: 0
+  emptyPlatform: 0
+--- !u!114 &-3549138352045913665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4799856444384544929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b86ef9ff714cd9a1e9f8ce683405b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Platform>k__BackingField: {fileID: 11400000, guid: 9f88990bff4150043a64ed2a78132b5f, type: 2}
 --- !u!1 &6570941082801947553
 GameObject:
   m_ObjectHideFlags: 0

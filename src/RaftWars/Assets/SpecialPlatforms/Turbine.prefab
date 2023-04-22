@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7270774337718274648}
   - component: {fileID: 7270774337718274649}
   - component: {fileID: 7270774337718274654}
+  - component: {fileID: 530918622720214951}
   m_Layer: 0
   m_Name: Turbine
   m_TagString: Untagged
@@ -116,6 +117,20 @@ MonoBehaviour:
   isTurret: 1
   isWind: 1
   ishospital: 0
+  emptyPlatform: 0
+--- !u!114 &530918622720214951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7270774337718274655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b86ef9ff714cd9a1e9f8ce683405b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Platform>k__BackingField: {fileID: 11400000, guid: 1fdd56e5b795e2041b890afaa9b37eb6, type: 2}
 --- !u!1001 &3630245441975200434
 PrefabInstance:
   m_ObjectHideFlags: 0
