@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecef6dd87e046a7a38f904698b5ce25, type: 3}
+  m_Name: 5.Medicine
+  m_EditorClassIdentifier: 
+  <Serial>k__BackingField: 5
+  <ReadyPlatform>k__BackingField:
+    m_AssetGUID: 892dfda166c4f6d43ae8a0826b30093e
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <PickablePlatform>k__BackingField:
+    m_AssetGUID: 5cb44d67f97db974b97bdac0c34edd38
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <Guid>k__BackingField: 2c4b66f1-4235-4937-9f4c-b729920f62ac
+  <OwnedByDefault>k__BackingField: 0
+  <Illustration>k__BackingField: {fileID: 0}
+  <RequiredLevel>k__BackingField: 0
+  <LocalizedName>k__BackingField: 0
+  DefaultHealthGain: 0.11
+  HealthBonusUpgradeStep: 0.01
+  <ValueType>k__BackingField: 0

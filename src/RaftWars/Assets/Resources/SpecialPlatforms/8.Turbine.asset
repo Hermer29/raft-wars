@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2b1da4de81c47a0ba7a412ea815cb4e, type: 3}
+  m_Name: 8.Turbine
+  m_EditorClassIdentifier: 
+  <Serial>k__BackingField: 8
+  <ReadyPlatform>k__BackingField:
+    m_AssetGUID: 48f38f941c3e8c24faa9a8d3b70ef7cc
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <PickablePlatform>k__BackingField:
+    m_AssetGUID: 2d3f765c420b7704c8bcf1a33feb6163
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <Guid>k__BackingField: 1f25f28e-7673-4f36-972d-98651a80b6bd
+  <OwnedByDefault>k__BackingField: 0
+  <Illustration>k__BackingField: {fileID: 0}
+  <RequiredLevel>k__BackingField: 0
+  <LocalizedName>k__BackingField: 0
+  _defaultSpeedBonus: 0.1
+  _speedUpgradeStep: 0.01
+  <ValueType>k__BackingField: 0

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Infrastructure.Platforms;
+using LanguageChanger;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -7,13 +9,24 @@ using UnityEngine.AddressableAssets;
 namespace SpecialPlatforms
 {
     [CreateAssetMenu(fileName = "SpecialPlatform", menuName = "🚤Create Special platform", order = 0)]
-    public class SpecialPlatform : ScriptableObject, ISaveData
+    public class SpecialPlatform : ScriptableObject, ISavableData, ISequentiallyOwning, ICompletedLevelConditional
     {
-        [field: SerializeField] public AssetReference ReferenceToPrefab { get; private set; }
+        [field: SerializeField] public int Serial { get; private set; }
+        [field: SerializeField] public AssetReference ReadyPlatform { get; private set; }
+        [field: SerializeField] public AssetReference PickablePlatform { get; private set; }
         [field: SerializeField] public string Guid { get; private set; }
+        [field: SerializeField] public bool OwnedByDefault { get; private set; }
+        [field: SerializeField] public Sprite Illustration { get; private set; }
+        [field: SerializeField] public int RequiredLevel { get; private set; }
+        [field: SerializeField] public TextName LocalizedName { get; private set; }
 
-        private int _upgradeLevel;
-        private bool _owned;
+        /// <summary>
+        /// [0, Infinity]
+        /// </summary>
+        public int UpgradedLevel { get; private set; } = 0;
+        public int UpgradeCost => CostPerLevel * (UpgradedLevel + 1);
+        
+        private const int CostPerLevel = 50;
 
         private void OnValidate()
         {
@@ -26,27 +39,30 @@ namespace SpecialPlatforms
 #endif
         }
 
-        public string GetData()
+        public void IncrementUpgradeLevel()
+        {
+            UpgradedLevel++;
+        }
+
+        string ISavableData.GetData()
         {
             var data = new Dictionary<string, string>()
             {
-                {"upgradeLevel", _upgradeLevel.ToString()},
-                {"owned", _owned.ToString()}
+                {"upgradeLevel", UpgradedLevel.ToString()}
             };
             return JsonConvert.SerializeObject(data);
         }
 
-        public string Key()
+        string ISavableData.Key()
         {
             return Guid;
         }
 
-        public void Populate(string data)
+        void ISavableData.Populate(string data)
         {
             var result = JsonConvert.DeserializeAnonymousType(data,
-                new { upgradeLevel = 0, owned = false });
-            _owned = result.owned;
-            _upgradeLevel = result.upgradeLevel;
+                new { upgradeLevel = 0 });
+            UpgradedLevel = result.upgradeLevel;
         }
     }
 }

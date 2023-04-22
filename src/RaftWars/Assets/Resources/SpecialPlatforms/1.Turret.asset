@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c0282b1e99486f899feed7d3593570, type: 3}
+  m_Name: 1.Turret
+  m_EditorClassIdentifier: 
+  <Serial>k__BackingField: 1
+  <ReadyPlatform>k__BackingField:
+    m_AssetGUID: 46ba98983af089b46842de4875690cc8
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <PickablePlatform>k__BackingField:
+    m_AssetGUID: 2bc709524ce0fb048802f14f586bcdc5
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <Guid>k__BackingField: 35e607d0-7ff3-4eeb-aee4-7e0b36fb75be
+  <OwnedByDefault>k__BackingField: 1
+  <Illustration>k__BackingField: {fileID: 0}
+  <RequiredLevel>k__BackingField: 0
+  <LocalizedName>k__BackingField: 0
+  DefaultDamageGain: 11
+  DamageBonusUpgradeStep: 1
+  <ValueType>k__BackingField: 1

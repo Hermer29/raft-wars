@@ -27,6 +27,8 @@ namespace Interface
         public Image _damageUpgradeCoin;
         public Image _healthUpgradeCoin;
         public GameObject[] _diamondsCounter;
+        [SerializeField] public Sprite _completedStageSprite;
+        [SerializeField] public Image _nextLevelImage;
 
         public Joystick Joystick;
         public TMP_Text coinsText;

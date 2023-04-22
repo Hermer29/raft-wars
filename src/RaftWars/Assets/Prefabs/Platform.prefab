@@ -114,11 +114,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9555d54e1e0b4ebb585833cddc716, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorMat: {fileID: 2100000, guid: cf3138a525c310b478208c863e506a65, type: 2}
   isEnemy: 0
   isTurret: 0
   isWind: 0
   ishospital: 0
+  emptyPlatform: 1
 --- !u!1001 &3557450247272322166
 PrefabInstance:
   m_ObjectHideFlags: 0

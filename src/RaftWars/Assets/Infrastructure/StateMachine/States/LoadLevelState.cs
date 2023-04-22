@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using Infrastructure.States;
+using TurretMinigame;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +14,7 @@ namespace RaftWars.Infrastructure
         private readonly GameFactory _factory;
         
         private int _level;
-        private const int GameplayScene = 1;
+        private const int GameplaySceneIndex = 1;
 
         public LoadLevelState(StateMachine stateMachine, ICoroutineRunner coroutines, LoadingScreen loading)
         {
@@ -35,9 +37,9 @@ namespace RaftWars.Infrastructure
 
         private IEnumerator Load()
         {
-            const float totalOperations = 2;
+            const float totalOperations = 3;
 
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(GameplayScene);
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(GameplaySceneIndex);
             while (asyncOperation.isDone == false)
             {
                 _loading.SetSliderProcess(asyncOperation.progress / totalOperations);
@@ -53,8 +55,9 @@ namespace RaftWars.Infrastructure
                 yield return null;
             }
             Game.MapGenerator = GameObject.Instantiate(loadingLevelAssets.Result).GetComponent<MapGenerator>();
-            _loading.SetSliderProcess(1f);
+            _loading.SetSliderProcess(2f / 3f);
             _stateMachine.Enter<CreateServicesState>();
+            //_stateMachine.Enter<TurretMinigameState>();
         }
     }
 }

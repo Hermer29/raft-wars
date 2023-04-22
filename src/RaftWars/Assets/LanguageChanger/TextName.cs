@@ -30,6 +30,9 @@ namespace LanguageChanger
         Player,
         Or,
         StartBigger,
-        BossIsHere
+        BossIsHere,
+        PreviousPlatformMustBeOwnedBefore,
+        LevelRequired,
+        Towers
     }
 }

@@ -8,7 +8,7 @@ namespace Skins
 {
     public class ShopProductPresenter
     {
-        private readonly Entry _entry;
+        private readonly ShopEntry _shopEntry;
         private readonly IShopProduct _product;
         private readonly YandexIAPService _iapService;
         private readonly PlayerMoneyService _moneyService;
@@ -18,25 +18,25 @@ namespace Skins
         public event Action PlayerTriedToBuyAndInssufficientFunds;
         public event Action PlayerTriedToBuyAndIapRaisedError;
         
-        public ShopProductPresenter(Entry entry, IShopProduct product, YandexIAPService iapService, PlayerMoneyService moneyService,
+        public ShopProductPresenter(ShopEntry shopEntry, IShopProduct product, YandexIAPService iapService, PlayerMoneyService moneyService,
             PlayerUsingService usingService, PropertyService propertyService)
         {
-            _entry = entry;
+            _shopEntry = shopEntry;
             _product = product;
             _iapService = iapService;
             _moneyService = moneyService;
             _usingService = usingService;
             _propertyService = propertyService;
 
-            _entry.Use.onClick.AddListener(OnUseClicked);
-            _entry.BuyForCoins.onClick.AddListener(OnBuyWithCoins);
-            _entry.BuyForYans.onClick.AddListener(OnBuyWithYans);
+            _shopEntry.Use.onClick.AddListener(OnUseClicked);
+            _shopEntry.BuyForCoins.onClick.AddListener(OnBuyWithCoins);
+            _shopEntry.BuyForYans.onClick.AddListener(OnBuyWithYans);
 
             if (propertyService.IsOwned(_product))
             {
                 if (_usingService.IsUsed(_product))
                 {
-                    _entry.Use.interactable = false;
+                    _shopEntry.Use.interactable = false;
                     _usingService.Use(_product);
                 }
                 MarkAsBought();
@@ -46,7 +46,7 @@ namespace Skins
                 MarkAsUnbought();
             }
 
-            _entry.ApplyPositionDeltaSize(_product.OverrideEntryDeltaSize);
+            _shopEntry.ApplyPositionDeltaSize(_product.OverrideEntryDeltaSize);
             _usingService.Used += UpdateRequested;
         }
 
@@ -56,7 +56,7 @@ namespace Skins
                 throw new InvalidOperationException("Trying to use item, when it is not bought");
             
             _usingService.Use(_product);
-            _entry.Use.interactable = false;
+            _shopEntry.Use.interactable = false;
         }
 
         private void OnUseClicked()
@@ -68,9 +68,9 @@ namespace Skins
         private void UpdateRequested((EquippedType, IShopProduct) product)
         {
             bool sameType = _product.GetType() == product.Item2.GetType();
-            if (product.Item2 != _product && sameType && _entry.Use.gameObject.activeInHierarchy)
+            if (product.Item2 != _product && sameType && _shopEntry.Use.gameObject.activeInHierarchy)
             {
-                _entry.Use.interactable = true;
+                _shopEntry.Use.interactable = true;
             }
         }
 
@@ -92,14 +92,14 @@ namespace Skins
 
         private void MarkAsBought()
         {
-            _entry.SetActiveBuyingBlock(false);
-            _entry.SetActiveUsingBlock(true);
+            _shopEntry.SetActiveBuyingBlock(false);
+            _shopEntry.SetActiveUsingBlock(true);
         }
 
         private void MarkAsUnbought()
         {
-            _entry.SetActiveBuyingBlock(true);
-            _entry.SetActiveUsingBlock(false);
+            _shopEntry.SetActiveBuyingBlock(true);
+            _shopEntry.SetActiveUsingBlock(false);
         }
 
         private void OnBuyWithCoins()

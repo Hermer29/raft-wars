@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +10,7 @@ namespace LanguageChanger
         [SerializeField] private LanguageDescription _russian;
         [SerializeField] private LanguageDescription _english;
         [Header("Testing")] [SerializeField] private bool _enableTesting;
+        [NaughtyAttributes.ShowIf("_enableTesting")]
         [SerializeField] private string _languageOverride = "ru";
 
         public TMP_FontAsset Font => GetRelevantDescription().Font;
@@ -23,7 +23,14 @@ namespace LanguageChanger
 
         public string this[TextName textName]
         {
-            get { return GetRelevantDescription().First(x => x.Item1 == textName).Item2; }
+            get
+            {
+                (TextName, string) targetRecord = GetRelevantDescription()
+                    .FirstOrDefault(x => x.Item1 == textName);
+                if (targetRecord == default)
+                    return $"{{{textName.ToString().ToUpper()}}}";
+                return targetRecord.Item2;
+            }
         }
 
         private LanguageDescription GetRelevantDescription()
@@ -32,9 +39,18 @@ namespace LanguageChanger
             {
                 return _languageOverride != "ru" ? _english : _russian;
             }
-
-            var lang = Agava.YandexGames.YandexGamesSdk.Environment.i18n.lang;
+            
+            string lang = Agava.YandexGames.YandexGamesSdk.Environment.i18n.lang;
             return lang != "ru" ? _english : _russian;
+        }
+
+        public ParametrizedLocalizableString GetParametrized(TextName textName)
+        {
+            LanguageDescriptionParametrizedPart searched = GetRelevantDescription().Parametrized
+                .FirstOrDefault(x => x.Name == textName);
+            if (searched == null)
+                return new ParametrizedLocalizableString($"{{{textName}}}");
+            return new ParametrizedLocalizableString(searched.Value);
         }
     }
 }

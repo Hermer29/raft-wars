@@ -8,15 +8,20 @@ namespace DefaultNamespace
     {
         private void Start()
         {
-            Process();
+            var parent = transform.parent;
+            if (parent == null)
+                return;
+            var layoutGroup = parent.GetComponent<LayoutGroup>();
+            if (layoutGroup == null)
+                return;
+            Process(layoutGroup);
         }
 
-        private void Process()
+        private void Process(LayoutGroup layoutGroup)
         {
             Canvas.ForceUpdateCanvases();
-            Transform parent = transform.parent;
-            parent.GetComponent<LayoutGroup>().enabled = false;
-            parent.GetComponent<LayoutGroup>().enabled = true;
+            layoutGroup.enabled = false;
+            layoutGroup.enabled = true;
         }
     }
 }

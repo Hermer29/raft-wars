@@ -7,9 +7,9 @@ namespace RaftWars.Infrastructure.AssetManagement
 {
     public class UiAssetLoader
     {
-        public Entry LoadEntry()
+        public ShopEntry LoadEntry()
         {
-            return Resources.Load<Entry>(UiAssetConstants.PathToEntry);
+            return Resources.Load<ShopEntry>(UiAssetConstants.PathToEntry);
         }
 
         public Shop LoadShop()

@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SpecialPlatforms
+  m_EditorClassIdentifier: 
+  m_GroupName: SpecialPlatforms
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 96fe1a8dfe46cbc419f765fb3e964751
+  m_SerializeEntries:
+  - m_GUID: 46ba98983af089b46842de4875690cc8
+    m_Address: Turret_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 91fa7748aba27424d828f467dc1e6d28
+    m_Address: Tank_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 422f0af5bffbbff4fae0f32ebe7b2b1c
+    m_Address: Tank_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 892dfda166c4f6d43ae8a0826b30093e
+    m_Address: Medicine_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 02deb1d061913b14d8e1ac23aac27f48
+    m_Address: Tower_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 49b7bcb7c28564b41879c38857b3cbe2
+    m_Address: Tower_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 5cb44d67f97db974b97bdac0c34edd38
+    m_Address: Medicine_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 087bc40c6a147164cbb4d838cfde775c
+    m_Address: Magnet_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 0ccc6828b26adab4aa2af6dc69e2b610
+    m_Address: Magnet_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 6394c2582231dc84abb247dcee1f03a3
+    m_Address: Propeller_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: c71e76604e904ba49a35e662e3bf7190
+    m_Address: Propeller_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 88f776810ed41f74db580d43d34109d5
+    m_Address: Weaponary_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 9aa67f899f98a99419db8e1cc849771a
+    m_Address: Weaponary_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 69e0e1ba19e64a54897212c22d7c94cd
+    m_Address: Barracks_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: bdd69f13e528c244d9979f14dfe7c268
+    m_Address: Barracks_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 48f38f941c3e8c24faa9a8d3b70ef7cc
+    m_Address: Turbine_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 2d3f765c420b7704c8bcf1a33feb6163
+    m_Address: Turbine_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 50c8a79d4e935004eafde35024ed1bcd
+    m_Address: Rockets_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 4e27396b78bdcca42ba601369959b311
+    m_Address: Rockets_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 8743da520a3d67b4897652e4ecd5c075
+    m_Address: Airport_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: b610424ec64557149b365b52ded92a5e
+    m_Address: Airport_Ready
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  - m_GUID: 2bc709524ce0fb048802f14f586bcdc5
+    m_Address: Turret_Pickable
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - specialPlatforms
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 09c4071c5d3f2b94282bae551e89e888, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fe9f291ecf698444fa2091f8dbeb6760, type: 2}
+    - {fileID: 11400000, guid: 046b69f367b249a4dbabec2e6d016b68, type: 2}

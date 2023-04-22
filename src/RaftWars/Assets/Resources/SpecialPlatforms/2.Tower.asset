@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056b4d80d63e48849f80edb952781931, type: 3}
+  m_Name: 2.Tower
+  m_EditorClassIdentifier: 
+  <Serial>k__BackingField: 2
+  <ReadyPlatform>k__BackingField:
+    m_AssetGUID: 02deb1d061913b14d8e1ac23aac27f48
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <PickablePlatform>k__BackingField:
+    m_AssetGUID: 49b7bcb7c28564b41879c38857b3cbe2
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <Guid>k__BackingField: db55a5c1-54b8-498d-beda-00d4d98c233e
+  <OwnedByDefault>k__BackingField: 1
+  <Illustration>k__BackingField: {fileID: 0}
+  <RequiredLevel>k__BackingField: 0
+  <LocalizedName>k__BackingField: 0
+  DefaultHealthGain: 16
+  HealthBonusUpgradeStep: 5
+  <ValueType>k__BackingField: 1

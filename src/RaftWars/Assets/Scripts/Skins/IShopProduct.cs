@@ -2,7 +2,7 @@
 
 namespace DefaultNamespace.Skins
 {
-    public interface IShopProduct : IOwnable
+    public interface IShopProduct : IAcquirable
     {
         Sprite ShopImage { get; }
         int CoinsCost { get; }
@@ -15,7 +15,7 @@ namespace DefaultNamespace.Skins
         string ProductId { get; }
     }
 
-    public interface IOwnable
+    public interface IAcquirable
     {
         string Guid { get; }
         

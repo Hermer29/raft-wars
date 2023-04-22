@@ -45,6 +45,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 82502efff6774ca4da5308e1b8da9002, type: 2}
   - {fileID: 11400000, guid: 535562dfe83a0514f93a8babf53a0a18, type: 2}
   - {fileID: 11400000, guid: 446cfb8b0f0d3714784b0e44498737e6, type: 2}
+  - {fileID: 11400000, guid: 61313f3748f7d3a418aeb4290c5ff100, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -87,6 +88,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - mapGenerators
+    - specialPlatforms
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: f2b3e022f688f6c429475361325005f5, type: 2}

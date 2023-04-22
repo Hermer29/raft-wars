@@ -44,5 +44,14 @@ namespace InputSystem
             int previous = _prefsService.GetInt(MoneyKey);
             return previous >= amount;
         }
+
+        public bool TrySpendCoins(int amount)
+        {
+            if (HasEnoughCoins(amount) == false)
+                return false;
+            
+            Spend(amount);
+            return true;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using RaftWars.Infrastructure.Services;
 using UnityEngine;
 
 namespace RaftWars.Infrastructure
@@ -25,6 +26,7 @@ namespace RaftWars.Infrastructure
             loadingScreen.FadeInImmediately();
             var stateMachine = new StateMachine(this, loadingScreen);
 
+            AllServices.Register<ICoroutineRunner>(this);
             stateMachine.Enter<ProjectInitialization>();
         }
 

@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
 using RaftWars.Pickables;
+using SpecialPlatforms;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -61,24 +63,82 @@ public class MapGenerator : MonoBehaviour
     private PlayerService _player;
     private Coroutine _coroutine;
     private BossAppearing _appearing;
+    private int _counter;
+    private int _offscreenGenerationCooldown;
+    private IEnumerable<Pickable> _ownedPickableSpecialPlatforms;
+    private IEnumerable<Platform> _ownedReadySpecialPlatforms;
 
-    public void Construct(BossAppearing appearing)
+    public void Construct(BossAppearing appearing, IEnumerable<Pickable> ownedPickable)
     {
         _appearing = appearing;
         _diamondsEnabled = Game.FeatureFlags.DiamondsEnabledInGame;
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;
         _player = Game.PlayerService;
+        _ownedPickableSpecialPlatforms = ownedPickable;
+        _ownedReadySpecialPlatforms =
+            ownedPickable.Cast<AttachablePlatform>().Select(x => x.platform.GetComponent<Platform>());
+
+        Filter();
+    }
+
+    public void SetOwnedPickables(IEnumerable<Pickable> ownedPickable)
+    {
+        _ownedPickableSpecialPlatforms = ownedPickable;
+        _ownedReadySpecialPlatforms =
+            ownedPickable.Cast<AttachablePlatform>().Select(x => x.platform.GetComponent<Platform>());
+        Filter();
+    }
+
+    private void Filter()
+    {
+        platformsToSpawn = _ownedPickableSpecialPlatforms.Cast<AttachablePlatform>()
+            .Append(platformsToSpawn.First()).ToArray();
+        enemiesToSpawn1 = FilterReadyPlatforms(enemiesToSpawn1).ToArray();
+        enemiesToSpawn2 = FilterReadyPlatforms(enemiesToSpawn2).ToArray();
+        enemiesToSpawn3 = FilterReadyPlatforms(enemiesToSpawn3).ToArray();
+        enemiesToSpawn4 = FilterReadyPlatforms(enemiesToSpawn4).ToArray();
+        enemiesToSpawn5 = FilterReadyPlatforms(enemiesToSpawn5).ToArray();
+        enemiesToSpawn1Add = FilterAddPlatforms(enemiesToSpawn1Add).Cast<AttachablePlatform>().ToArray();
+        enemiesToSpawn2Add = FilterAddPlatforms(enemiesToSpawn2Add).Cast<AttachablePlatform>().ToArray();
+        enemiesToSpawn3Add = FilterAddPlatforms(enemiesToSpawn3Add).Cast<AttachablePlatform>().ToArray();
+        enemiesToSpawn4Add = FilterAddPlatforms(enemiesToSpawn4Add).Cast<AttachablePlatform>().ToArray();
+        enemiesToSpawn5Add = FilterAddPlatforms(enemiesToSpawn5Add).Cast<AttachablePlatform>().ToArray();
+    }
+
+    private IEnumerable<Platform> FilterReadyPlatforms(IEnumerable<Platform> platforms)
+    {
+        foreach (Platform platform in platforms)
+        {
+            if (platform.emptyPlatform)
+            {
+                yield return platform;
+                continue;
+            }
+            yield return _ownedReadySpecialPlatforms.Random();
+        }
+    }
+
+    private IEnumerable<Pickable> FilterAddPlatforms(IEnumerable<Pickable> platforms)
+    {
+        foreach (Pickable platform in platforms)
+        {
+            if (platform.notExcludable)
+            {
+                yield return platform;
+                continue;
+            }
+            yield return _ownedPickableSpecialPlatforms.Random();
+        }
     }
 
     private void Start()
     {
+        if(Game.GameManager == null)
+            return;
         Game.GameManager.GameStarted += () => StartCoroutine(Counter());
     }
 
-    private int _counter;
-    private int _offscreenGenerationCooldown;
-    
     private IEnumerator Counter()
     {
         while (true)
@@ -97,7 +157,6 @@ public class MapGenerator : MonoBehaviour
 
     private IEnumerator SpawnOnPlayersPathRandom()
     {
-        Camera camera = Camera.main;
         int probabilityToSpawnPlatformInPercent = 0;
         
         while(true)
@@ -112,29 +171,14 @@ public class MapGenerator : MonoBehaviour
                 yield return null;
                 continue;
             }
-            Vector3 direction = _player.MoveDirectionXZ;
-            direction.y = direction.z;
+            
             const float heightOverTheCollider = 4.5f;
-            var center = new Vector2(.5f, .5f);
-            const float generationDistance = 2;
-            Vector2 viewportPoint = direction.normalized * generationDistance * center + center;
-            Ray ray = camera.ViewportPointToRay(viewportPoint);
-            int raycastPlane = LayerMask.GetMask("Water");
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastPlane))
+            if (TryHitWater(out RaycastHit hit))
             {
                 Debug.Log($"Spawned collectable on way");
                 Vector3 spawnPoint = hit.point + hit.normal * heightOverTheCollider;
                 IEnumerable<Pickable> pickables;
-                if(Random.Range(0, 100) > 80f - probabilityToSpawnPlatformInPercent)
-                {
-                    pickables = platformsToSpawn;
-                    probabilityToSpawnPlatformInPercent = 0;
-                }
-                else
-                {
-                    probabilityToSpawnPlatformInPercent += 10;
-                    pickables = peopleToSpawn.Cast<Pickable>();
-                }
+                pickables = WhichOneToSpawnProbabilityCheck(ref probabilityToSpawnPlatformInPercent);
                 Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));
                 Pickable people = Instantiate(prefabToSpawn, spawnPoint, Quaternion.identity);
                 people.name = "GeneratedOverTime";
@@ -151,6 +195,30 @@ public class MapGenerator : MonoBehaviour
                 $"Offscreen generation cooldown passed. Cooldown seconds remains: {_offscreenGenerationCooldown}, Decreasing counter: {_counter}");
             _counter = 0;
         }
+    }
+
+    private IEnumerable<Pickable> WhichOneToSpawnProbabilityCheck(ref int probabilityToSpawnPlatformInPercent)
+    {
+        if (Random.Range(0, 100) > 80f - probabilityToSpawnPlatformInPercent)
+        {
+            probabilityToSpawnPlatformInPercent = 0;
+            return _ownedPickableSpecialPlatforms;
+        }
+        probabilityToSpawnPlatformInPercent += 10;
+        return peopleToSpawn;
+    }
+
+    private bool TryHitWater(out RaycastHit hit)
+    { 
+        Vector3 direction = _player.MoveDirectionXZ;
+        direction.y = direction.z;;
+        var center = new Vector2(.5f, .5f);
+        const float generationViewportDistance = 2;
+        Vector2 viewportPoint = direction.normalized * generationViewportDistance * center + center;
+        Ray ray = Camera.main.ViewportPointToRay(viewportPoint);
+        int raycastPlane = LayerMask.GetMask("Water");
+        bool isHit = Physics.Raycast(ray, out hit, Mathf.Infinity, raycastPlane);
+        return isHit;
     }
 
     public void Generate(int stage)
@@ -195,12 +263,6 @@ public class MapGenerator : MonoBehaviour
             GameManager.instance.AddEnemy(enemy);
             i++;
         }
-    }
-
-    private void SpawnMiscellaneous()
-    {
-        CreatePickablePeople(stage);
-        CreatePickablePlatforms(stage);
     }
 
     private void CreateBarrels(int stage)

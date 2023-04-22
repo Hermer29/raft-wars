@@ -10,6 +10,7 @@ namespace RaftWars.Pickables
         private CollectiblesService _collectibles;
         
         public bool canTake = true;
+        public bool notExcludable;
         
         private void Start()
         {

@@ -1,7 +1,5 @@
-using System;
 using Common;
 using DefaultNamespace;
-using RaftWars.Infrastructure;
 using Skins.Platforms;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -14,6 +12,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     public bool isTurret;
     public bool isWind;
     public bool ishospital;
+    public bool emptyPlatform;
     private Enemy _relatedEnemy;
     private Material _material;
     private PlatformSkin _skin;

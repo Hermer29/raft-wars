@@ -67,3 +67,6 @@ MonoBehaviour:
     textValue: START BIGGER!
   - textName: 25
     textValue: Boss is here!
+  <Parametrized>k__BackingField:
+  - Name: 27
+    Value: 

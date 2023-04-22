@@ -2912,7 +2912,7 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: -1
   m_TargetDisplay: 0
@@ -4933,6 +4933,8 @@ MonoBehaviour:
   _healthUpgradeCoin: {fileID: 9164477877058549634}
   _diamondsCounter:
   - {fileID: 9164477877035536371}
+  _completedStageSprite: {fileID: 0}
+  _nextLevelImage: {fileID: 0}
   Joystick: {fileID: 6327921243771287275}
   coinsText: {fileID: 1225475922125521400}
   diamondsText: {fileID: 9164477877496287548}

@@ -89,16 +89,16 @@ public class Shop : MonoBehaviour
     {
         foreach (IShopProduct product in products)
         {
-            Entry entry = ShowEntry(product, parent);
-            _entries.Add(new ShopProductPresenter(entry, product, _iapService, _playerMoneyService, _playerUsingService, _propertyService));
+            ShopEntry shopEntry = ShowEntry(product, parent);
+            _entries.Add(new ShopProductPresenter(shopEntry, product, _iapService, _playerMoneyService, _playerUsingService, _propertyService));
         }
     }
 
-    private Entry ShowEntry(IShopProduct product, Transform uiParent)
+    private ShopEntry ShowEntry(IShopProduct product, Transform uiParent)
     {
-        Entry entry = _factory.CreateEntry();
-        entry.Show(product);
-        entry.transform.SetParent(uiParent, worldPositionStays: false);
-        return entry;
+        ShopEntry shopEntry = _factory.CreateEntry();
+        shopEntry.Show(product);
+        shopEntry.transform.SetParent(uiParent, worldPositionStays: false);
+        return shopEntry;
     }
 }

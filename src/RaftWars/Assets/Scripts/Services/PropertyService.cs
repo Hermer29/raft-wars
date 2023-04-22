@@ -1,4 +1,5 @@
-﻿using DefaultNamespace.Skins;
+﻿using System;
+using DefaultNamespace.Skins;
 using RaftWars.Infrastructure.Services;
 
 namespace Services
@@ -12,20 +13,29 @@ namespace Services
             _prefsService = prefsService;
         }
 
-        public bool IsOwned(IOwnable ownable)
+        public event Action<IAcquirable> PropertyOwned;
+
+        public bool IsOwned(IAcquirable acquirable)
         {
-            if (ownable.OwnedByDefault)
+            if (acquirable.OwnedByDefault)
                 return true;
             
-            if (_prefsService.HasKey(ownable.Guid) == false)
+            if (_prefsService.HasKey(ConstructKey(acquirable)) == false)
                 return false;
             
-            return _prefsService.GetInt(ownable.Guid) != 0;
+            return _prefsService.GetInt(ConstructKey(acquirable), defaultValue: 0) == 1;
         }
 
-        public void Own(IOwnable ownable)
+        public void Own(IAcquirable acquirable)
         {
-            _prefsService.SetInt(ownable.Guid, 1);
+            _prefsService.SetInt(ConstructKey(acquirable), 1);
+            PropertyOwned?.Invoke(acquirable);
+        }
+
+        private string ConstructKey(IAcquirable acquirable)
+        {
+            const string PropertyServiceSuffix = "_PropertyService";
+            return acquirable.Guid + PropertyServiceSuffix;
         }
     }
 }

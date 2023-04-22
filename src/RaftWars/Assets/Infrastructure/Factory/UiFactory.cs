@@ -1,6 +1,8 @@
 ﻿using DefaultNamespace.Skins;
+using Infrastructure.Platforms;
 using InputSystem;
 using RaftWars.Infrastructure.AssetManagement;
+using RaftWars.Infrastructure.Services;
 using Services;
 using Skins;
 using static UnityEngine.Object;
@@ -27,7 +29,7 @@ namespace RaftWars.Infrastructure
             _coroutineRunner = coroutineRunner;
         }
 
-        public Entry CreateEntry()
+        public ShopEntry CreateEntry()
         {
             return Instantiate(_loader.LoadEntry());
         }
@@ -38,7 +40,7 @@ namespace RaftWars.Infrastructure
             shop.HideImmediately();
             var loadMenu = Instantiate(_loader.LoadMenu());
             shop.Construct(this, _iapService, _playerMoneyService, _playerUsingService, _propertyService, _coroutineRunner);
-            loadMenu.Construct(shop, Game.GameManager, Game.Hud);
+            loadMenu.Construct(shop, Game.GameManager, Game.Hud, AllServices.GetSingle<PlatformsMenu>());
             return shop;
         }
     }

@@ -11,6 +11,7 @@ namespace LanguageChanger
         [SerializeField] private string _languageName;
         [SerializeField] private TMP_FontAsset _font;
         [SerializeField] private LanguageDescriptionPart[] _description;
+        [field: SerializeField] public LanguageDescriptionParametrizedPart[] Parametrized { get; private set; }
 
         public TMP_FontAsset Font => _font;
         

@@ -26,12 +26,19 @@ namespace RaftWars.Infrastructure
             Game.FeatureFlags = AssetLoader.LoadFeatureFlags();
             if(Game.FeatureFlags.InitializeYandexGames)
             {
-                YandexGamesSdk.Initialize(onSuccessCallback: () => {
-                    ContinueInitialization();
-                });
+                YandexGamesWorkflow();
                 return;
             }
-           ContinueInitialization();
+            ContinueInitialization();
+        }
+
+        private void YandexGamesWorkflow()
+        {
+            if(YandexGamesSdk.IsInitialized == false)
+                _coroutineRunner.StartCoroutine(
+                    YandexGamesSdk.Initialize(onSuccessCallback: ContinueInitialization));
+            else
+                ContinueInitialization();
         }
 
         private void ContinueInitialization()
@@ -52,6 +59,8 @@ namespace RaftWars.Infrastructure
                     break;
             }
             CrossLevelServices.LevelService = new LevelService(CrossLevelServices.PrefsService);
+            AllServices.Register<IPrefsService>(CrossLevelServices.PrefsService);
+            AllServices.Register<LevelService>(CrossLevelServices.LevelService);
         }
     }
 }

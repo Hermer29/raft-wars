@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c52da7fe347249cb8f410536d820ae5f, type: 3}
+  m_Name: 7.Barrack
+  m_EditorClassIdentifier: 
+  <Serial>k__BackingField: 7
+  <ReadyPlatform>k__BackingField:
+    m_AssetGUID: bdd69f13e528c244d9979f14dfe7c268
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <PickablePlatform>k__BackingField:
+    m_AssetGUID: 69e0e1ba19e64a54897212c22d7c94cd
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  <Guid>k__BackingField: 2a46fd0d-13f5-4d59-b25d-b42c7c157f8b
+  <OwnedByDefault>k__BackingField: 0
+  <Illustration>k__BackingField: {fileID: 0}
+  <RequiredLevel>k__BackingField: 0
+  <LocalizedName>k__BackingField: 0
+  _spawnPeopleDefaultLimit: 5
+  _upgradeLimitStep: 1
+  <SpawnPeopleTime>k__BackingField: 3

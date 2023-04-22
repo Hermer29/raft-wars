@@ -113,7 +113,7 @@ private void Update()
             2 => 0.434f,
             3 => 0.644f,
             4 => 0.854f
-        }, .5f);
+        }, 1f);
         _stage++;
     }
 
@@ -163,12 +163,21 @@ private void Update()
 
     private void WinTheGame()
     {
+        hud.stagePanel.SetActive(true);
+        hud.blackBG.SetActive(true);
         _input.Disable();
         Player.instance.canPlay = false;
-        hud.blackBG.SetActive(true);
-        hud.winPanel.SetActive(true);
+        hud.progressFill.DOValue(1f, 1f).OnComplete(() =>
+        {
+            hud._nextLevelImage.sprite = hud._completedStageSprite;
+        });
+        hud.BuyDamage.gameObject.SetActive(false);
+        hud.BuyHealth.gameObject.SetActive(false);
+        
         _advertising.ShowInterstitial();
         CrossLevelServices.LevelService.Increment();
+        hud.NextStage.onClick.RemoveAllListeners();
+        hud.NextStage.onClick.AddListener(Continue);
     }
 
     public void StartGame()
