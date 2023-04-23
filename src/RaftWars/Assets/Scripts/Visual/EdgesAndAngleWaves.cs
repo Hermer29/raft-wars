@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using Common;
 using DefaultNamespace;
 using RaftWars.Infrastructure;
@@ -23,7 +22,7 @@ namespace Visual
         {
             _platformsCarrier = platformsCarrier;
             _color = selectedColor;
-            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().Select(x => x.gameObject).ToArray());
+            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().Select(x => x.gameObject));
             _angles = new PlatformAngles(_edges);
         }
         
@@ -53,15 +52,8 @@ namespace Visual
             }
         }
 
-        public IEnumerable<Vector3> GetAllBorderPoints()
+        public void UpdateVisual(GameObject obj)
         {
-            return _edges.GetPointsOnEdges();
-        }
-
-        public void UpdateVisual(GameObject newPlatform)
-        {
-            _edges.Add(newPlatform);
-            
             _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().ToArray());
             _angles = new PlatformAngles(_edges);
             if (EdgesDisabled == false)

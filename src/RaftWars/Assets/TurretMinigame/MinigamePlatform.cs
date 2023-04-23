@@ -9,7 +9,8 @@ namespace TurretMinigame
         public CinemachineVirtualCamera PlayingCamera;
         public CinemachineVirtualCamera LookingAtTurretCamera;
         public Transform TurretSpawnPoint;
-        
+        public EnemiesGenerator Generator;
+
         public void PlaceTurret(MinigameTurret turretMinigame)
         {
             turretMinigame.transform.position = TurretSpawnPoint.position;

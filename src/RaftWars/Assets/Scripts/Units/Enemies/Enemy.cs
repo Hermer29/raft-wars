@@ -7,17 +7,19 @@ using System.Threading;
 using Common;
 using DefaultNamespace;
 using InputSystem;
+using LanguageChanger;
 using RaftWars.Infrastructure;
 using SpecialPlatforms;
+using SpecialPlatforms.Concrete;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using Visual;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
 using ValueType = SpecialPlatforms.ValueType;
 using Vector3 = UnityEngine.Vector3;
-
 
 public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 {
@@ -31,19 +33,15 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     private int warriorsCount;
     private float hpClear = 0;
     private float damageClear = 0;
-    private float turretDamage = 0;
-    private float currentHp = 0;
     private float _relativeHp;
     private float _relativeDamage;
     private float _actualHp;
     private float _actualDamage;
     [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public float hp;
-    public bool battle = false;
-    private float speed = 5 - 5/4;
+    public bool battle;
     private float relativeSpeed;
     private Player player;
     private float timer = 0;
-    private const float RunningViewportBounds = .05f;
     public bool isDead;
     public bool isBoss = false;
     private List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();
@@ -51,22 +49,21 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     private Vector3 prevSpawnPoint;
     private PlayerService _player;
     public bool boss5Stage = true;
-    private float playerDmg;
-    public bool hasShield = false;
+    public bool hasShield;
     public List<GameObject> enemiesToKill;
     public GameObject shieldToOff;
-    private Vector3? _moveDirection;
     private bool _fleeingPlayer;
     public Material _material;
     private MaterialsService _materialService;
-    private EnemyHud _enemyHud;
-    private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
-    private const int ExclusionSqrDistanceToPlayer = 300*2;
+    
+    private const float RunningViewportBounds = .05f;
     private const int HpAdditive = PeopleConsts.StatsForPeople;
+
+    private EnemyHud _statsHud;
     private EdgesAndAngleWaves _edgesAndAngleWaves;
     private Coroutine _explosionsCoroutine;
 
-    private int StatsSum => (int) (hp + damage);
+    public int StatsSum => Health + Damage;
 
     public event Action Died;
 
@@ -82,22 +79,18 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public override int PlatformsCount => platforms.Count;
     public override int Damage => (int)(damage + damage * _relativeDamage);
     public override int Health => (int)(hp + hp * _relativeHp);
-    public override float MoveSpeed => (int)(speed + speed * relativeSpeed);
+    public override float MoveSpeed => (int)(Speed + Speed * relativeSpeed);
 
-    public float Extents
-    {
-        get
-        {
-            if (_edgesAndAngleWaves == null)
-                return 3;
-            return _edgesAndAngleWaves.Bounds;
-        }
-    }
+    public float Speed { set; get; } = 5 - 5/4;
+    public bool InBattle => battle;
+    public bool IsDead => isDead;
 
     private void Start()
     {
         _player = Game.PlayerService;
         _materialService = Game.MaterialsService;
+        transform.AddComponent<DrivingEnemy>()
+            .Construct(this, _player);
         GenerateRandomColor(when: isBoss && _material == null);
         WarmupEdges();
         Player.Died += OnPlayerDied;
@@ -107,28 +100,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         RecountStats();
     }
 
-    private void TeleportFromOutOfBounds()
-    {
-        bool IsOutOfBounds()
-        {
-            return (transform.position.x > 45f || transform.position.x < -45f) && (transform.position.z > 45f ||
-                transform.position.z < -45f);
-        }
-
-        if (!IsOutOfBounds()) return;
-        Vector3 pointOnBound = GetNearestPointOnBound();
-        Vector3 vectorToCenter = (Vector3.zero - pointOnBound).normalized;
-        const int distanceFromBounds = 5;
-        _moveDirection = -_moveDirection;
-        transform.position = vectorToCenter * distanceFromBounds + pointOnBound;
-    }
-
     private void WarmupEdges()
     {
         if (_disableEdges)
             return;
-        _edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
-        _edgesAndAngleWaves.Construct(this, _material);
+        
         _edgesAndAngleWaves.CreateEdges();
         _edgesAndAngleWaves.CreateWaves();
     }
@@ -138,22 +114,15 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         if (!when)
             return;
 
-        if(boss5Stage)
-        {
-            _material = _materialService.GetMaterialForBoss5Stage();
-        }
-        else 
-        {
-            _material = _materialService.GetRandom();
-        }
+        _material = boss5Stage ? _materialService.GetMaterialForBoss5Stage() : _materialService.GetRandom();
         SetColor(_material);
     }
 
     private void SetColor(Material material)
     {
-        foreach (People warrior in warriors)
+        foreach (People people in warriors)
         {
-            warrior.Material = material;
+            people.Material = material;
         }
     }
 
@@ -194,7 +163,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         }
         else if (statsHolder.ValueType == ValueType.Relative)
         {
-            _relativeDamage += statsHolder.DamageValue;
+            _relativeDamage += statsHolder.BaseDamage;
         }
         RecountStats();
     }
@@ -202,7 +171,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public override void AddSpeed(Turret turret, ISpeedIncreasing statsHolder)
     {
         turrets.Add(turret);
-        speed += turret.millSpeed;
+        if (statsHolder.ValueType == ValueType.Absolute)
+        {
+            Speed += statsHolder.DefaultSpeedBonus;
+        }
+        else if (statsHolder.ValueType == ValueType.Relative)
+        {
+            relativeSpeed += statsHolder.DefaultSpeedBonus;
+        }
     }
 
     private void WarmupPlatforms()
@@ -213,17 +189,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             platform.gameObject.layer = LayerMask.NameToLayer("Enemy");
             if (!platform.isTurret) continue;
             turrets.Add(platform.GetComponentInChildren<Turret>());
-            turretDamage += platform.GetComponentInChildren<Turret>().damageIncrease;
-            currentHp += platform.GetComponentInChildren<Turret>().healthIncrease;
         }
     }
 
     private void Update()
     {
-        TeleportFromOutOfBounds();
         if (hasShield)
         {
-            for(int i = 0; i < enemiesToKill.Count; i++)
+            for(var i = 0; i < enemiesToKill.Count; i++)
             {
                 if (enemiesToKill[i] == null)
                     enemiesToKill.RemoveAt(i);
@@ -233,11 +206,6 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             }
         }
 
-        if (!battle)
-        {
-            TryMoveEnemy(Time.deltaTime);
-        }
-        
         if (player != null && !player.isDead) return;
         battle = false;
         timer = 0;
@@ -248,161 +216,10 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         return platforms[Random.Range(0, platforms.Count)];
     }
 
-    private void TryMoveEnemy(float deltaTime)
-    {
-        if(boss5Stage)
-            return;
-        if (_player.InBattle)
-            return;
-        if (_player.IsDead)
-        {
-        }
-        else if (_player.GameStarted == false)
-            return;
-
-        if (isDead)
-            return;
-
-        if (Bounds.IsInBounds(transform) == false)
-        {
-            _moveDirection = (Bounds.VectorToCenter(transform.position) +
-                              new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5))).normalized;
-        }
-        else
-        {
-            if (_moveDirection == null)
-            {
-                MoveInRandomDirection();
-            }
-
-            float sqrMagnitudeToPlayer = (_player.Position - transform.position).sqrMagnitude;
-            Vector3 escapeVector = -(_player.Position - transform.position).normalized;
-
-            if (sqrMagnitudeToPlayer < ExclusionSqrDistanceToPlayer)
-            {
-                if (_player.ExistsEnemyThatAlreadyInExclusionZone && _player.EnemyInExclusionZone != this)
-                {
-                    _moveDirection = escapeVector;
-                }
-                else
-                {
-                    _player.RegisterAsEnemyInExclusionZone(this);
-                }
-            }
-            else if (_player.EnemyInExclusionZone == this)
-            {
-                _player.UnregisterEnemyInExclusionZone();
-            }
-
-            if (_player.IsDead)
-            {
-            }
-            else if (sqrMagnitudeToPlayer < SqrMagnitudeDistanceToReactOnPlayer)
-            {
-                bool playerSuperior = _player.PlayerStatsSum >= StatsSum;
-                _moveDirection = playerSuperior ? escapeVector : (_player.Position - transform.position).normalized;
-            }
-        }
-
-        if (GameManager.instance.GamePaused)
-            return;
-        transform.position += _moveDirection.Value * (deltaTime * speed);
-    }
-
-    private void MoveInRandomDirection()
-    {
-        float radians = Random.Range(0, 360f) * Mathf.Deg2Rad;
-        _moveDirection = new Vector3(Mathf.Sin(radians), 0, Mathf.Cos(radians));
-    }
-
-    private Vector3 GetNearestPointOnBound()
-    {
-        Vector3 position = transform.position;
-        float distanceToZMaxBound = Mathf.Abs(45 - position.z);
-        float distanceToZMinBound = Mathf.Abs(-45 - position.z);
-        float distanceToXMinBound = Mathf.Abs(-45 - position.x);
-        float distanceToXMaxBound = Mathf.Abs(45 - position.x);
-
-        float minimal = Mathf.Min(distanceToZMaxBound, distanceToZMinBound, distanceToXMinBound, distanceToXMaxBound);
-        Vector3 result = Vector3.zero;
-        if (distanceToZMaxBound == minimal)
-        {
-            result = new Vector3(position.x, 0, 45);
-        }
-
-        if (distanceToZMinBound == minimal)
-        {
-            result = new Vector3(position.x, 0, -45);
-        }
-
-        if (distanceToXMinBound == minimal)
-        {
-            result = new Vector3(-45, 0, position.z);
-        }
-
-        if (distanceToXMaxBound == minimal)
-        {
-            result = new Vector3(45, 0, position.z);
-        }
-
-        return result;
-    }
-
-    private Vector3 GetNormalToNearestBound()
-    {
-        Vector3 position = transform.position;
-        float distanceToZMaxBound = Mathf.Abs(45 - position.z);
-        float distanceToZMinBound = Mathf.Abs(-45 - position.z);
-        float distanceToXMinBound = Mathf.Abs(-45 - position.x);
-        float distanceToXMaxBound = Mathf.Abs(45 - position.x);
-        var minimal = Mathf.Min(distanceToZMaxBound, distanceToZMinBound, distanceToXMinBound, distanceToXMaxBound);
-        if (distanceToZMaxBound == minimal)
-        {
-            return Vector3.back;
-        }
-
-        if (distanceToZMinBound == minimal)
-        {
-            return Vector3.forward;
-        }
-
-        if (distanceToXMinBound == minimal)
-        {
-            
-            return Vector3.right;
-        }
-
-        if (distanceToXMaxBound == minimal)
-        {
-            return Vector3.left;
-        }
-
-        throw new Exception("Unreachable");
-    }
-
     public void SpawnEnvironment(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<AttachablePlatform> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
     {
-        if (isBoss)
-        {
-            _enemyHud = GameFactory.CreateBossHud();
-            _enemyHud.nickname.text = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Boss];
-            //_enemyHud.PrioritizedShow = true;
-        }
-        else
-        {
-            _enemyHud = GameFactory.CreateEnemyHud();
-            var nick = _enemyHud.transform.Cast<Transform>()
-                .First().Cast<Transform>()
-                .First(x => x.name == "NicknameText")
-                .GetComponent<TMP_Text>();
-            var playerText = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Player];
-            nick.text = playerText + Random.Range(1000, 10000);
-        }
+        CreateStatsHud();
 
-        _enemyHud.Target = transform;
-        _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
-        
-        
         if (boss5Stage)
         {
             _materialService = Game.MaterialsService;
@@ -413,6 +230,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             }
             return;
         }
+        
         platformsAdditive = platformsAdd;
         peopleAdditive = peopleAdd;
         this.platforms[0].isEnemy = true;
@@ -432,28 +250,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             plat.isEnemy = true;
             plat.gameObject.layer = LayerMask.NameToLayer("Enemy");
             var relatedTurret = plat.GetComponentInChildren<Turret>();
-            this.platforms.Add(plat);
             if (plat.isTurret == false)
                 continue;
-
             if (relatedTurret == null)
                 continue;
-            
-            var stats = plat.GetComponent<StatsHolder>();
-            if (stats.Platform is IHealthIncreasing healthIncreasing)
-            {
-                AddHealth(relatedTurret, healthIncreasing);
-            }
-            else if (stats.Platform is IDamageAmplifying damageAmplifying)
-            {
-                AddDamage(relatedTurret, damageAmplifying);
-            }
-            else if (stats.Platform is ISpeedIncreasing speedIncreasing)
-            {
-                AddSpeed(relatedTurret, speedIncreasing);
-            }
-            relatedTurret.DrawInMyColor(_material);
+            AddAbstractPlatform(platform, _material);
         }
+        _edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
+        _edgesAndAngleWaves.Construct(this, _material);
 
         foreach (People man in people)
         {
@@ -462,6 +266,25 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         }
 
         RecountStats();
+    }
+
+    private void CreateStatsHud()
+    {
+        _statsHud = GameFactory.CreateStatsHud();
+        _statsHud.Target = transform;
+        _statsHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
+
+        if (isBoss)
+        {
+            _statsHud.nickname.text = DescriptionProvider.Instance[TextName.Boss];
+            return;
+        }
+        var nick = _statsHud.transform.Cast<Transform>()
+            .First().Cast<Transform>()
+            .First(x => x.name == "NicknameText")
+            .GetComponent<TMP_Text>();
+        string playerText = DescriptionProvider.Instance[TextName.Player];
+        nick.text = playerText + Random.Range(1000, 10000);
     }
 
     private Vector3 ThinkOutSpawnPosition(Vector3 startPoint)
@@ -503,21 +326,22 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
     private void RecountStats()
     {
-        if(_enemyHud == null)
+        if(_statsHud == null)
         {
             // Мы в этот код попадаем только если враг не создавался генератором, 
             // к примеру придаток босса с пятого этапа попадает сюда
-            _enemyHud = GameFactory.CreateBossHud();
-            _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
-            if(_enemyHud.Target == null)
+            // потому шо придатки босса содержатся в префабе основного босса
+            _statsHud = GameFactory.CreateStatsHud();
+            _statsHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
+            if(_statsHud.Target == null)
             {
-                _enemyHud.Target = transform;
+                _statsHud.Target = transform;
             }
-            _enemyHud.nickname.text = "";
+            _statsHud.nickname.text = "";
         }
 
-        _enemyHud.hpText.text = Health.ToString();
-        _enemyHud.damageText.text = Damage.ToString();
+        _statsHud.hpText.text = Health.ToString();
+        _statsHud.damageText.text = Damage.ToString();
     }
     
     private Vector3 GetScaledRandomPointAmongAllPlatforms()
@@ -575,28 +399,19 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         }
     }
 
-    public void AttackPlayer(float dmg, Player target)
-    {
-        playerDmg = dmg;
-        player = target;
-        battle = true;
-        
-        PlayShotAnimation(target);
-    }
-
     public void Dead()
     {
         hp = 0;
         isDead = true;
         InstantiateRewards();
-        _enemyHud.Target = null;
+        _statsHud.Target = null;
 
         for(int i = 0; i < warriors.Count; i++)
         {
             warriors[i].PlayDyingAnimation();
             warriors.RemoveAt(i);
             damageClear -= damageIncrease;
-            _enemyHud.damageText.text = damageClear.ToString();
+            _statsHud.damageText.text = damageClear.ToString();
         }
 
         var collider = GetComponent<Collider>();
@@ -654,7 +469,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             if (Random.Range(0f, 1f) > 0.3f)
             {
                 Instantiate(peopleAdditive[Random.Range(0, peopleAdditive.Count)], pos, Quaternion.identity);
-                ;
+                
                 if (Random.Range(0, 2) == 0)
                     pos.x += Random.Range(3, 10);
                 else
@@ -680,7 +495,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
     public IEnumerable<GameObject> GetPlatforms()
     {
-        return platforms.Select(x => x.gameObject).Concat(turrets.Select(x => x.transform.parent.gameObject));
+        return platforms.Select(x => x.gameObject);
     }
 
     private void OnDestroy()
@@ -694,14 +509,28 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         PlayIdleAnimation();
     }
 
-    public override void AddHealth(Turret turret, IHealthIncreasing stats)
+    public override void AddBarracks(Turret turret, Barracks barracks)
     {
         
     }
 
+    public override void AddHealth(Turret turret, IHealthIncreasing stats)
+    {
+        if (stats.ValueType == ValueType.Absolute)
+        {
+            hp += stats.DefaultHealthGain;
+        }
+        else if (stats.ValueType == ValueType.Relative)
+        {
+            _relativeHp += stats.DefaultHealthGain;
+        } 
+        turrets.Add(turret);
+        RecountStats();
+    }
+
     public override EnemyHud GetHud()
     {
-        return _enemyHud;
+        return _statsHud;
     }
 
     public override void DealDamage(int amount = 1)
@@ -711,9 +540,9 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             return (int) hp % hpIncrease == 0;
         }
         
-        var changed = hp - amount;
-        var percent = changed / hp;
-        var newDamage = damage * percent;
+        float changed = hp - amount;
+        float percent = changed / hp;
+        float newDamage = damage * percent;
         damage = newDamage;
 
         if (IsRandomPeopleMustDie())
@@ -770,10 +599,5 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public bool TryTakePeople(GameObject warrior)
     {
         throw new NotImplementedException("Should not be called, cause interface is just a marker");
-    }
-
-    public IEnumerable<Vector3> GetPlatformPoints()
-    {
-        return _edgesAndAngleWaves.GetAllBorderPoints();
     }
 }

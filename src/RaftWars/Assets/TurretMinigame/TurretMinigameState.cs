@@ -15,9 +15,10 @@ namespace Infrastructure.States
         private ICoroutineRunner _coroutineRunner;
         private IPrefsService _prefsService;
         private MinigameTurretInputService _inputService;
+        private MinigamePlatform _platform;
+        private MinigameTurret _turret;
 
         private const string PlayerOwningTurret = "PlayerOwning";
-        private const float AttackCooldown = .3f;
 
         public TurretMinigameState(StateMachine stateMachine, LoadingScreen loadingScreen)
         {
@@ -30,14 +31,24 @@ namespace Infrastructure.States
             ParseServices();
             var turretMinigameFactory = new TurretMinigameFactory(new TurretMinigameAssetLoader());
             int playersTurretIndex = _prefsService.GetInt(PlayerOwningTurret, 1);
-            MinigamePlatform platform = turretMinigameFactory.CreateMinigamePlatform();
-            MinigameTurret turret = turretMinigameFactory.CreateTurret(playersTurretIndex);
-            _inputService.HorizontalDeltaPositionUpdated += turret.Rotate;
+            _platform = turretMinigameFactory.CreateMinigamePlatform();
+            _turret = turretMinigameFactory.CreateTurret(playersTurretIndex);
+            _turret.Construct(turretMinigameFactory);
             
-            platform.PlaceTurret(turret);
-            platform.PlayingCamera.Priority = 10;
+            _inputService.HorizontalDeltaPositionUpdated += _turret.Rotate;
+            _platform.PlaceTurret(_turret);
+            _platform.PlayingCamera.Priority = 10;
             _loadingScreen.FadeOut();
-            _coroutineRunner.StartCoroutine(ShootOverTime());
+            _turret.StartShooting();
+
+            _platform.Generator.PlayerWon += EndGame;
+            _platform.Generator.PlayerLost += EndGame;
+            _platform.Generator.StartGeneration();
+        }
+
+        private void EndGame()
+        {
+            _stateMachine.Enter<LoadLevelState, int>(CrossLevelServices.LevelService.Level);
         }
 
         private void ParseServices()
@@ -47,18 +58,10 @@ namespace Infrastructure.States
             _inputService = new MinigameTurretInputService(_coroutineRunner);
         }
 
-        private IEnumerator ShootOverTime()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(AttackCooldown);
-                
-            }
-        }
-
         public void Exit()
         {
-            
+            Object.Destroy(_turret);
+            Object.Destroy(_platform);
         }
     }
 }

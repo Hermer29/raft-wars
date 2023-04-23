@@ -23,8 +23,8 @@ namespace SpecialPlatforms
         /// <summary>
         /// [0, Infinity]
         /// </summary>
-        public int UpgradedLevel { get; private set; } = 0;
-        public int UpgradeCost => CostPerLevel * (UpgradedLevel + 1);
+        public int UpgradedLevel { get; private set; } = 1;
+        public int UpgradeCost => CostPerLevel * (UpgradedLevel);
         
         private const int CostPerLevel = 50;
 

@@ -177,8 +177,7 @@ public class MapGenerator : MonoBehaviour
             {
                 Debug.Log($"Spawned collectable on way");
                 Vector3 spawnPoint = hit.point + hit.normal * heightOverTheCollider;
-                IEnumerable<Pickable> pickables;
-                pickables = WhichOneToSpawnProbabilityCheck(ref probabilityToSpawnPlatformInPercent);
+                var pickables = WhichOneToSpawnProbabilityCheck(ref probabilityToSpawnPlatformInPercent);
                 Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));
                 Pickable people = Instantiate(prefabToSpawn, spawnPoint, Quaternion.identity);
                 people.name = "GeneratedOverTime";

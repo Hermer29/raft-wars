@@ -9,7 +9,7 @@ namespace DefaultNamespace
     {
         private List<(Vector3[] corners, Vector3 normal)> _edges;
 
-        public PlatformEdges(GameObject[] platforms)
+        public PlatformEdges(IEnumerable<GameObject> platforms)
         {
             _edges = new List<(Vector3[] corners, Vector3 normal)>();
             foreach (GameObject platform in platforms)
@@ -58,7 +58,7 @@ namespace DefaultNamespace
         public IEnumerable<Vector3> GetPointsOnEdges()
         {
             return GetEdges()
-                .SelectMany(x => new Vector3[] { x.a, x.b })
+                .SelectMany(x => new[] { x.a, x.b })
                 .GroupBy(x => x)
                 .Select(x => x.Key);
         }

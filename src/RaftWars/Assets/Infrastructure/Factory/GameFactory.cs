@@ -73,7 +73,7 @@ namespace RaftWars.Infrastructure
             return Instantiate(LoadEnemyHud());
         }
 
-        public static EnemyHud CreateEnemyHud()
+        public static EnemyHud CreateStatsHud()
         {
             return Instantiate(LoadEnemyHud());
         }

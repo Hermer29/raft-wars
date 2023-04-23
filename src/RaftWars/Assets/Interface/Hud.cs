@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using RaftWars.Infrastructure;
 using TMPro;
+using Visual;
 
 namespace Interface
 {
@@ -47,6 +48,7 @@ namespace Interface
         public SoundButton SoundButton;
         public AdvertisingForStatsButton AdvertisingForStatsButton;
         public BossAppearing BossAppearing;
+        public SliderWithPercents NewSpecialPlatformProgress;
 
         private void Start()
         {

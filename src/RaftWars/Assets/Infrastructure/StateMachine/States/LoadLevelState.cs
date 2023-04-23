@@ -57,7 +57,6 @@ namespace RaftWars.Infrastructure
             Game.MapGenerator = GameObject.Instantiate(loadingLevelAssets.Result).GetComponent<MapGenerator>();
             _loading.SetSliderProcess(2f / 3f);
             _stateMachine.Enter<CreateServicesState>();
-            //_stateMachine.Enter<TurretMinigameState>();
         }
     }
 }

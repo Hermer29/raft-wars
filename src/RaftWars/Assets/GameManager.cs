@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DefaultNamespace.Common;
 using DG.Tweening;
+using Infrastructure.States;
 using InputSystem;
 using Interface;
 using RaftWars.Infrastructure;
@@ -114,12 +115,13 @@ private void Update()
             3 => 0.644f,
             4 => 0.854f
         }, 1f);
+        hud.NewSpecialPlatformProgress.SetValue((float) _stage / 5);
         _stage++;
     }
 
     private void WarmupStats()
     {
-        hud.platformsCountAdd.text = "+" + (Player.instance.platformCount - platformsCountOnStart);
+        hud.platformsCountAdd.text = "+" + (Player.instance.PlatformsCount - platformsCountOnStart);
         if (Player.instance.warriorsCount - warriorsCountOnStart >= 0)
         {
             hud.warriorsCountAdd.text = "+" + (Player.instance.warriorsCount - warriorsCountOnStart);
@@ -148,7 +150,7 @@ private void Update()
         }
 
         warriorsCountOnStart = Player.instance.warriorsCount;
-        platformsCountOnStart = Player.instance.platformCount;
+        platformsCountOnStart = Player.instance.PlatformsCount;
         powerCountOnStart = (int)Player.instance.damage;
         healthCountOnStart = (int)Player.instance.hp;
     }
@@ -178,6 +180,7 @@ private void Update()
         CrossLevelServices.LevelService.Increment();
         hud.NextStage.onClick.RemoveAllListeners();
         hud.NextStage.onClick.AddListener(Continue);
+        hud.NewSpecialPlatformProgress.SetValue(1f);
     }
 
     public void StartGame()
@@ -213,7 +216,7 @@ private void Update()
 
     public void Continue()
     {
-        _stateMachine.Enter<LoadLevelState, int>(CrossLevelServices.LevelService.Level);
+        _stateMachine.Enter<RewardedSpecialPlatformState>();
     }
 
     public void RestartLevel()
@@ -361,5 +364,17 @@ private void Update()
             if (_enemies[i] == null)
                 _enemies.RemoveAt(i);
         }
+    }
+
+    public void DestroyAll()
+    {
+        for(var i = 0; i < _enemies.Count; i++)
+        {
+            Enemy current = _enemies[i];
+            Destroy(current);
+            _enemies.Remove(current);
+        }
+
+        Game.PlayerService.Dispose();
     }
 }

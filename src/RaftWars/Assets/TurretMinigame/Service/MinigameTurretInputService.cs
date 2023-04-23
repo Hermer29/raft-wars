@@ -13,7 +13,6 @@ namespace TurretMinigame.Service
         public MinigameTurretInputService(ICoroutineRunner coroutines)
         {
             _coroutines = coroutines;
-            
             _coroutines.StartCoroutine(ClockReadings());
         }
 

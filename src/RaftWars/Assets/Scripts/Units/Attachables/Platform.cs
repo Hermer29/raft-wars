@@ -132,64 +132,64 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
 
     private Vector3 GetSpawnPoint(Vector3 pos)
     {
-         Collider[] outCols;
-            Vector3 spawnPos = transform.position;
-            Vector3 diff = pos - transform.position;
-            if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
-            {
-                if (diff.x > 0)
-                    spawnPos.x += Constants.PlatformSize;
-                else
-                    spawnPos.x -= Constants.PlatformSize;
-            }
+        Collider[] outCols;
+        Vector3 spawnPos = transform.position;
+        Vector3 diff = pos - transform.position;
+        if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
+        {
+            if (diff.x > 0)
+                spawnPos.x += Constants.PlatformSize;
             else
+                spawnPos.x -= Constants.PlatformSize;
+        }
+        else
+        {
+            if (diff.z > 0)
+                spawnPos.z += Constants.PlatformSize;
+            else
+                spawnPos.z -= Constants.PlatformSize;
+        }
+        outCols = Physics.OverlapSphere(spawnPos, 1.2f);
+        if (outCols.Length != 0)
+        {
+            var raft = GetComponentInParent<FighterRaft>();
+            if(raft.PlatformsCount == 1)
+                return spawnPos;
+            var trials = 0; 
+            while (true)
             {
-                if (diff.z > 0)
-                    spawnPos.z += Constants.PlatformSize;
-                else
-                    spawnPos.z -= Constants.PlatformSize;
-            }
-            outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-            if (outCols.Length != 0)
-            {
-                var raft = GetComponentInParent<FighterRaft>();
-                if(raft.PlatformsCount == 1)
-                    return spawnPos;
-                var trials = 0; 
-                while (true)
+                trials++;
+                if (trials == 5)
+                    break;
+                spawnPos = raft.GetAnotherPlatform().transform.position;
+                if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
                 {
-                    trials++;
-                    if (trials == 5)
-                        break;
-                    spawnPos = raft.GetAnotherPlatform().transform.position;
-                    if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
-                    {
-                        if (diff.x > 0)
-                            spawnPos.x += Constants.PlatformSize;
-                        else
-                            spawnPos.x -= Constants.PlatformSize;
-                    }
+                    if (diff.x > 0)
+                        spawnPos.x += Constants.PlatformSize;
                     else
-                    {
-                        if (diff.z > 0)
-                            spawnPos.z += Constants.PlatformSize;
-                        else
-                            spawnPos.z -= Constants.PlatformSize;
-                    }
+                        spawnPos.x -= Constants.PlatformSize;
+                }
+                else
+                {
+                    if (diff.z > 0)
+                        spawnPos.z += Constants.PlatformSize;
+                    else
+                        spawnPos.z -= Constants.PlatformSize;
+                }
 
-                    outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-                    if (outCols.Length == 0)
-                    {
-                        break;
-                    }
+                outCols = Physics.OverlapSphere(spawnPos, 1.2f);
+                if (outCols.Length == 0)
+                {
+                    break;
                 }
             }
-            return spawnPos;
+        }
+        return spawnPos;
     }
 
     public void TakePlatform(GameObject platformPrefab, Vector3 pos)
     {
-        var spawnPos = GetSpawnPoint(pos);
+        Vector3 spawnPos = GetSpawnPoint(pos);
         
         GameObject platformObject = Instantiate(platformPrefab, spawnPos, Quaternion.identity, transform.parent);
         var platformComponent = platformObject.GetComponent<Platform>();

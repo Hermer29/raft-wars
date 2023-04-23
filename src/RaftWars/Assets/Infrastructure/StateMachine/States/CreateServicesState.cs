@@ -11,6 +11,7 @@ using LanguageChanger;
 using RaftWars.Infrastructure.AssetManagement;
 using RaftWars.Infrastructure.Services;
 using RaftWars.Pickables;
+using Services;
 using SpecialPlatforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -34,7 +35,7 @@ namespace RaftWars.Infrastructure
         
         public void Exit()
         {
-            _loadingScreen.FadeOut();
+            
         }
 
         public void Enter()
@@ -48,13 +49,11 @@ namespace RaftWars.Infrastructure
                 AllServices.GetSingle<PlatformsLoader>()));
             var platforms = AllServices.GetSingle<PlatformsFactory>().CreatePlatforms();
             AllServices.Register<IEnumerable<SpecialPlatform>>(platforms);
-            
             var materialService = new MaterialsService();
             Player player = CreatePlayer();
             Game.MaterialsService = materialService;
             var game = new Game(player, _stateMachine, _coroutineRunner);
             Game.GameManager = GameFactory.CreateGameManager();
-
             var ownedPlatforms = platforms.Where(Game.PropertyService.IsOwned);
             var pickablesLoading = ownedPlatforms
                 .Select(x => x.PickablePlatform);
@@ -64,7 +63,6 @@ namespace RaftWars.Infrastructure
                 {
                     Game.MapGenerator.Construct(Game.Hud.BossAppearing,
                         ownedPickable: result.Select(x => x.Result.GetComponent<Pickable>()));
-                    
                     Pause pause = GameFactory.CreatePauseMenu();
                     pause.Construct(Game.Hud.PauseButton, Game.FightService);
                     Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
@@ -86,8 +84,20 @@ namespace RaftWars.Infrastructure
                                 }));
                         }
                     };
-                    _stateMachine.Enter<CreateIMGUIState>();
-                    _stateMachine.Enter<CreateShopState>();
+                    if (Game.FeatureFlags.IMGUIEnabled)
+                    { 
+                        GameFactory.CreateIMGUI();
+                    }
+                    YandexIAPService yandexIapService = Game.IAPService;
+                    PlayerMoneyService moneyService = Game.MoneyService;
+                    PlayerUsingService usingService = Game.UsingService;
+                    PropertyService propertyService = Game.PropertyService;
+            
+                    var uiAssets = new UiAssetLoader();
+                    var uiFactory = new UiFactory(uiAssets, yandexIapService, moneyService, 
+                        usingService, propertyService, _coroutineRunner);
+                    Shop shop = uiFactory.CreateShop();
+                    _loadingScreen.FadeOut();
                 }));
         }
 

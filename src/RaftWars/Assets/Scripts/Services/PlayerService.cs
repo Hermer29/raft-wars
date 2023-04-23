@@ -62,5 +62,10 @@ namespace InputSystem
         {
             PlayerInstance.Amplify(stats);
         }
+
+        public void Dispose()
+        {
+            Object.Destroy(PlayerInstance.gameObject);
+        }
     }
 }

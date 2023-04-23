@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Agava.YandexGames;
 using Cinemachine;
 using Common;
 using DefaultNamespace;
@@ -15,9 +14,8 @@ using Skins;
 using Skins.Hats;
 using Skins.Platforms;
 using SpecialPlatforms;
+using SpecialPlatforms.Concrete;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using UnityEngine.Serialization;
 using Visual;
 using Random = UnityEngine.Random;
@@ -28,17 +26,12 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     [SerializeField] public List<People> warriors;
     [SerializeField] private List<Platform> platforms;
     [SerializeField] private List<Turret> turrets = new List<Turret>();
-    [SerializeField] private TextMeshPro hpText;
-    [SerializeField] private TextMeshPro damageText;
-    [SerializeField] private TextMeshPro nickname;
-    [SerializeField] private Text coinsText, gemsText;
     [FormerlySerializedAs("maximumHp")] [FormerlySerializedAs("fullHp")] public int hp;
     [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public int damage;
     [FormerlySerializedAs("hpIncrease")] [SerializeField] private int hpIncomeForPeople = PeopleConsts.StatsForPeople;
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private int damageIncomeForPeople = PeopleConsts.StatsForPeople;
     [SerializeField] public float speed;
     public CinemachineTargetGroup CameraGroup;
-    [SerializeField] private GameObject[] _indicators;
 
     public override int PlatformsCount => platforms.Count;
     public override int Damage => (int) (damage + damage * relativeDamage);
@@ -52,7 +45,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private float _actualDamage;
     public bool battle;
     public bool isDead;
-    public int platformCount = 1;
     public bool canPlay;
     public int coins;
     public int gems;
@@ -64,7 +56,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private InputService _input;
     public static Player instance;
     private Rigidbody rb;
-    private MaterialsService _materialsService;
     private Material _material;
     private bool idleBehaviour;
     private EdgesAndAngleWaves edgesAndAngleWaves;
@@ -81,7 +72,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private float _stepForPeoplrCapacityBeforeBattle;
 
     public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
-    public float Bounds => edgesAndAngleWaves.Bounds;
 
     public void Construct()
     {
@@ -92,14 +82,13 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     
     private void Start()
     {
-        _enemyHud = GameFactory.CreateEnemyHud();
+        _enemyHud = GameFactory.CreateStatsHud();
         _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
         _enemyHud.Target = center;
         _enemyHud.CannotBeReplaced = true;
         _enemyHud.WorksInFixedUpdate = true;
         _enemyHud.NotParticipateInPrioritization = true;
         _input = Game.InputService;
-        _materialsService = Game.MaterialsService;
         _hud = Game.Hud;
         
         hp = PeopleConsts.StatsForPeople * warriorsCount;
@@ -207,8 +196,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         else
             damage = (int) Mathf.Ceil(_damageBeforeFight * damagePercent);
 
-        var accountedAlreadyLostForPeopl = _lostPercentForPeople * _healthBeforeFight;
-        var willPeopleDie = changedHp < _healthBeforeFight - _lostPercentForPeople * _healthBeforeFight;
+        bool willPeopleDie = changedHp < _healthBeforeFight - _lostPercentForPeople * _healthBeforeFight;
 
         if(willPeopleDie)
         {
@@ -222,6 +210,10 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
             Die();
         }
         RecountStats();
+    }
+
+    public override void AddBarracks(Turret turret, Barracks barracks)
+    {
     }
 
     public override void AddHealth(Turret tur, IHealthIncreasing statsHolder)
@@ -240,13 +232,14 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public override void AddDamage(Turret turret, IDamageAmplifying statsHolder)
     {
-        if (statsHolder.ValueType == ValueType.Absolute)
+        switch (statsHolder.ValueType)
         {
-            damage += (int) statsHolder.DamageValue;
-        }
-        else if(statsHolder.ValueType == ValueType.Relative)
-        {
-            relativeDamage += statsHolder.DamageValue;
+            case ValueType.Absolute:
+                damage += (int) statsHolder.DamageValue;
+                break;
+            case ValueType.Relative:
+                relativeDamage += statsHolder.DamageValue;
+                break;
         }
         turrets.Add(turret);
         RecountStats();
@@ -254,13 +247,14 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public override void AddSpeed(Turret tur, ISpeedIncreasing statsHolder)
     {
-        if (statsHolder.ValueType == ValueType.Absolute)
+        switch (statsHolder.ValueType)
         {
-            speed += statsHolder.SpeedBonus;
-        }
-        else if (statsHolder.ValueType == ValueType.Relative)
-        {
-            relativeSpeed += statsHolder.SpeedBonus;
+            case ValueType.Absolute:
+                speed += statsHolder.SpeedBonus;
+                break;
+            case ValueType.Relative:
+                relativeSpeed += statsHolder.SpeedBonus;
+                break;
         }
         turrets.Add(tur);
         RecountStats();
@@ -270,7 +264,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     {
         _enemyHud.hpText.text = Mathf.RoundToInt(Mathf.Clamp(hp, 0, 99999)).ToString();
         _enemyHud.damageText.text = Mathf.RoundToInt(Mathf.Clamp(damage, 0, 99999)).ToString();
-        warriorsCount = warriors.Count;
     }
 
     private void MakeRandomPeopleDie()
@@ -323,15 +316,16 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public void HandleMovementEvents(Vector3 moveDirectionXz)
     {
-        if (_movingStarted == false && moveDirectionXz.sqrMagnitude != 0)
+        switch (_movingStarted)
         {
-            _movingStarted = true;
-            Game.AudioService.PlaySwimmingSound();
-        }
-        else if (_movingStarted == true && moveDirectionXz.sqrMagnitude == 0)
-        {
-            _movingStarted = false;
-            Game.AudioService.StopPlayingSwimmingSound();
+            case false when moveDirectionXz.sqrMagnitude != 0:
+                _movingStarted = true;
+                Game.AudioService.PlaySwimmingSound();
+                break;
+            case true when moveDirectionXz.sqrMagnitude == 0:
+                _movingStarted = false;
+                Game.AudioService.StopPlayingSwimmingSound();
+                break;
         }
     }
     
@@ -468,23 +462,9 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         return false;
     }
 
-    public Platform GetPlatformWithoutTurret()
-    {
-        Platform _platform;
-        while (true)
-        {
-            _platform = platforms[Random.Range(0, platformCount)];
-            if (!_platform.isTurret)
-            {
-                break;
-            }
-        }
-        return _platform;
-    }
-
     public override Platform GetAnotherPlatform()
     {
-        return platforms[Random.Range(0, platformCount)];
+        return platforms[Random.Range(0, platforms.Count)];
     }
 
     public override void AddPlatform(Platform platform)
@@ -494,7 +474,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
             CameraGroup.AddMember(platform.transform, 1, 7);
         }
 
-        platformCount++;
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
         edgesAndAngleWaves.UpdateVisual(platform.gameObject);

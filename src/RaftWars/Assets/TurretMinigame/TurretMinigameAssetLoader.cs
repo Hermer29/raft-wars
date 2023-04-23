@@ -7,7 +7,7 @@ namespace TurretMinigame
     {
         private const string TurretsPath = "MinigameTurrets/Turret";
         private const string MinigamePlatformPath = "MinigamePlatform";
-        private const string BulletPath = "Prefabs/Bullet";
+        private const string BulletPath = "Prefabs/MinigameBullet";
         
         public MinigameTurret LoadTurret(int tier)
         {

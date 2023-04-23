@@ -1,4 +1,5 @@
 ﻿using SpecialPlatforms;
+using SpecialPlatforms.Concrete;
 using UnityEngine;
 
 namespace Common
@@ -38,6 +39,14 @@ namespace Common
                 {
                     AddDamage(turret, damageAmplifying);
                 }
+                else if (stats.Platform is Magnet magnet)
+                {
+                    
+                }
+                else if (stats.Platform is Barracks barracks)
+                {
+                    AddBarracks(turret, barracks);
+                }
             }
             AddPlatform(platform);
         }
@@ -48,5 +57,6 @@ namespace Common
 
         public abstract void DealDamage(int damage = 1);
         public abstract Platform GetAnotherPlatform();
+        public abstract void AddBarracks(Turret turret, Barracks barracks);
     }
 }
