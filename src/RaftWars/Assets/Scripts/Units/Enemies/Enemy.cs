@@ -77,11 +77,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     }
 
     public override int PlatformsCount => platforms.Count;
-    public override int Damage => (int)(damage + damage * _relativeDamage);
-    public override int Health => (int)(hp + hp * _relativeHp);
+    public override int Damage => (int)(damage + Mathf.Abs(damage * _relativeDamage));
+    public override int Health => (int)(hp + Mathf.Abs(hp * _relativeHp));
     public override float MoveSpeed => (int)(Speed + Speed * relativeSpeed);
 
-    public float Speed { set; get; } = 5 - 5/4;
+    public float Speed { private set; get; } = 5 - 5/4;
     public bool InBattle => battle;
     public bool IsDead => isDead;
 
@@ -90,21 +90,26 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         _player = Game.PlayerService;
         _materialService = Game.MaterialsService;
         transform.AddComponent<DrivingEnemy>()
-            .Construct(this, _player);
+            .Construct(this, _player, Game.FightService);
         GenerateRandomColor(when: isBoss && _material == null);
-        WarmupEdges();
         Player.Died += OnPlayerDied;
+        if (!_disableEdges && _edgesAndAngleWaves == null)
+        {
+            CreateEdges();
+        }
         if (!boss5Stage) return;
-        WarmupPlatforms();
-        AssignRelatedPeople();
+        InitializeTurretsFor5StageBoss();
+        AssignRelatedPeopleFor5StageBoss();
         RecountStats();
     }
 
-    private void WarmupEdges()
+    private void CreateEdges()
     {
         if (_disableEdges)
             return;
         
+        _edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>()
+            .Construct(this, _material);
         _edgesAndAngleWaves.CreateEdges();
         _edgesAndAngleWaves.CreateWaves();
     }
@@ -114,7 +119,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         if (!when)
             return;
 
-        _material = boss5Stage ? _materialService.GetMaterialForBoss5Stage() : _materialService.GetRandom();
+        _material = boss5Stage ? _materialService.GetMaterialForBoss5Stage() 
+            : _materialService.GetRandom();
         SetColor(_material);
     }
 
@@ -126,7 +132,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         }
     }
 
-    private void AssignRelatedPeople()
+    private void AssignRelatedPeopleFor5StageBoss()
     {
         foreach (People people in GetComponentsInChildren<People>(includeInactive: true))
         {
@@ -135,14 +141,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         }
     }
     
-    public bool TryFindNotFullPlatform(out Platform platform)
+    public bool TryFindNotFullPlatform(out Platform sought)
     {
-        platform = null;
-        foreach(Platform plat in platforms)
+        sought = null;
+        foreach(Platform platform in platforms)
         {
-            if (plat.Capacity == 4 || plat.isTurret || plat.ishospital ||
-                plat.isWind) continue;
-            platform = plat;
+            if (platform.Capacity == 4 || platform.isTurret || platform.ishospital ||
+                platform.isWind) continue;
+            sought = platform;
             return true;
         }
         return false;
@@ -151,7 +157,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public override void AddPlatform(Platform platform)
     {
         platforms.Add(platform);
-        _edgesAndAngleWaves?.UpdateVisual(platform.gameObject);
+        _edgesAndAngleWaves?.UpdateVisual();
     }
 
     public override void AddDamage(Turret turret, IDamageAmplifying statsHolder)
@@ -181,7 +187,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         }
     }
 
-    private void WarmupPlatforms()
+    private void InitializeTurretsFor5StageBoss()
     {
         foreach (Platform platform in platforms)
         {
@@ -216,7 +222,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         return platforms[Random.Range(0, platforms.Count)];
     }
 
-    public void SpawnEnvironment(IEnumerable<Platform> platforms, People[] people, int hp, int damage, List<AttachablePlatform> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
+    public void SpawnEnvironment(IEnumerable<Platform> prefabPlatforms, People[] people, int hp, int damage, List<AttachablePlatform> platformsAdd, List<PeopleThatCanBeTaken> peopleAdd)
     {
         CreateStatsHud();
 
@@ -231,6 +237,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
             return;
         }
         
+        CreateEdges();
         platformsAdditive = platformsAdd;
         peopleAdditive = peopleAdd;
         this.platforms[0].isEnemy = true;
@@ -242,26 +249,19 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         warriorsCount = people.Length;
         prevSpawnPoint = startPoint;
         
-        foreach (Platform platform in platforms)
+        foreach (Platform prefabPlatform in prefabPlatforms)
         {
             startPoint = ThinkOutSpawnPosition(startPoint);
-            Platform plat = Instantiate(platform, startPoint, Quaternion.identity, transform);
-            plat.Material = _material;
-            plat.isEnemy = true;
-            plat.gameObject.layer = LayerMask.NameToLayer("Enemy");
-            var relatedTurret = plat.GetComponentInChildren<Turret>();
-            if (plat.isTurret == false)
-                continue;
-            if (relatedTurret == null)
-                continue;
-            AddAbstractPlatform(platform, _material);
+            Platform instantiated = Instantiate(prefabPlatform, startPoint, Quaternion.identity, transform);
+            instantiated.Material = _material;
+            instantiated.isEnemy = true;
+            instantiated.gameObject.layer = LayerMask.NameToLayer("Enemy");
+            AddAbstractPlatform(instantiated, _material);
         }
-        _edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
-        _edgesAndAngleWaves.Construct(this, _material);
 
         foreach (People man in people)
         {
-            this.platforms[Random.Range(0, this.platforms.Count)]
+            platforms[Random.Range(0, this.platforms.Count)]
                 .TryTakePeople(man.gameObject);
         }
 
@@ -495,7 +495,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
     public IEnumerable<GameObject> GetPlatforms()
     {
-        return platforms.Select(x => x.gameObject);
+        return platforms.Select(x => x.gameObject).ToArray();
     }
 
     private void OnDestroy()

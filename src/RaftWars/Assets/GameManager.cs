@@ -368,11 +368,10 @@ private void Update()
 
     public void DestroyAll()
     {
-        for(var i = 0; i < _enemies.Count; i++)
+        foreach (Enemy enemy in FindObjectsOfType<Enemy>())
         {
-            Enemy current = _enemies[i];
-            Destroy(current);
-            _enemies.Remove(current);
+            _enemies.Remove(enemy);
+            Destroy(enemy.gameObject);
         }
 
         Game.PlayerService.Dispose();

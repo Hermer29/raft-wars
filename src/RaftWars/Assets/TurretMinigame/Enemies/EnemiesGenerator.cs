@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
+using TurretMinigame.Player;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace TurretMinigame
+namespace TurretMinigame.Enemies
 {
     public class EnemiesGenerator : MonoBehaviour
     {
@@ -16,11 +17,27 @@ namespace TurretMinigame
         private Coroutine _generation;
         private int _enemyCount;
         private int _counterToSpawn = 5;
-        private float _playerHp = 10;
+        private float _playerHp = MaxPlayerHealth;
+        private MinigameTurret _minigameTurret;
+        private PlayerEnemiesView _view;
+        private const int EnemiesAmount = 9 * 5;
+        private int _enemiesRemaining = EnemiesAmount;
+        private bool _ended;
+
+        private const float MaxPlayerHealth = 10;
 
         public event Action PlayerWon;
         public event Action PlayerLost;
+        public int KillCount => EnemiesAmount - _enemiesRemaining;
+        public bool GameEnded => _ended;
+        public float Completion => (float) _enemiesRemaining / EnemiesAmount;
 
+        public void Construct(MinigameTurret minigameTurret, PlayerEnemiesView view)
+        {
+            _view = view;
+            _minigameTurret = minigameTurret;
+        }
+        
         public void StartGeneration()
         {
             _generation = StartCoroutine(Generate());
@@ -38,10 +55,10 @@ namespace TurretMinigame
                 float zPoint = Random.Range(_zScatter.x, _zScatter.y);
                 float point = position.z + zPoint;
                 position.z = point;
-                var instantiated = Instantiate(_groupPrefab, position, Quaternion.identity);
+                GameObject instantiated = Instantiate(_groupPrefab, position, Quaternion.identity);
                 foreach (TurretMinigameEnemy turretMinigameEnemy in instantiated.GetComponentsInChildren<TurretMinigameEnemy>())
                 {
-                    turretMinigameEnemy.Construct(this);
+                    turretMinigameEnemy.Construct(this, _minigameTurret);
                     foreach (Vector3 wayPoint in _wayPoints)
                     {
                         turretMinigameEnemy.SetupWaypoints(wayPoint);
@@ -56,7 +73,9 @@ namespace TurretMinigame
             if (_playerHp <= 0)
             {
                 PlayerLost?.Invoke();
+                _ended = true;
             }
+            _view.ShowHealth(_playerHp / MaxPlayerHealth);
         }
 
         private void OnDrawGizmos()
@@ -69,11 +88,13 @@ namespace TurretMinigame
 
         public void OneDied()
         {
-            _enemyCount--;
-            if (_enemyCount == 0)
+            _enemiesRemaining--;
+            if (_enemiesRemaining == 0)
             {
                 PlayerWon?.Invoke();
+                _ended = true;
             }
+            _view.ShowEnemies(Completion);
         }
     }
 }

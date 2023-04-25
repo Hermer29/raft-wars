@@ -18,12 +18,14 @@ namespace Visual
         private const string EdgesParentName = "Edges";
         private const string WavesParentName = "Waves";
 
-        public void Construct(IPlatformsCarrier platformsCarrier, Material selectedColor = null)
+        public EdgesAndAngleWaves Construct(IPlatformsCarrier platformsCarrier, Material selectedColor = null)
         {
             _platformsCarrier = platformsCarrier;
             _color = selectedColor;
-            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().Select(x => x.gameObject));
+            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms()
+                .Select(x => x.gameObject));
             _angles = new PlatformAngles(_edges);
+            return this;
         }
         
         public bool EdgesDisabled { get; private set; }
@@ -31,11 +33,13 @@ namespace Visual
         {
             get 
             {
-                var angles = _edges.GetEdges().SelectMany(x => new Vector3[] {x.a, x.b});
-                var maxX = angles.Select(x => x.x).Max();
-                var minX = angles.Select(x => x.x).Min();
-                var maxZ = angles.Select(x => x.z).Max();
-                var minZ = angles.Select(x => x.z).Min();
+                var angles = _edges.GetEdges()
+                    .SelectMany(x => new Vector3[] {x.a, x.b});
+                var enumerated = angles as Vector3[] ?? angles.ToArray();
+                float maxX = enumerated.Select(x => x.x).Max();
+                float minX = enumerated.Select(x => x.x).Min();
+                float maxZ = enumerated.Select(x => x.z).Max();
+                float minZ = enumerated.Select(x => x.z).Min();
                 return Mathf.Max(maxX - minX, maxZ - minZ);
             }
         }
@@ -47,14 +51,14 @@ namespace Visual
             foreach ((Vector3 position, Quaternion rotation) in _edges.GetEdgeMiddlePoints())
             {
                 GameObject edge = CreateEdge();
-                edge.transform.position = position + Vector3.up * HeightOffset;
+                edge.transform.localPosition = position + Vector3.up * HeightOffset;
                 edge.transform.rotation = rotation;
             }
         }
 
-        public void UpdateVisual(GameObject obj)
+        public void UpdateVisual()
         {
-            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms().ToArray());
+            _edges = new PlatformEdges(_platformsCarrier.GetPlatforms());
             _angles = new PlatformAngles(_edges);
             if (EdgesDisabled == false)
             {
@@ -67,7 +71,7 @@ namespace Visual
 
         private void DestroyChildrenOfObjectWithName(string parentName)
         {
-            var edgesParent = transform.Cast<Transform>()
+            Transform edgesParent = transform.Cast<Transform>()
                 .First(x => x.name == parentName);
             foreach (Transform childEdge in edgesParent.transform)
             {
@@ -78,26 +82,31 @@ namespace Visual
         private GameObject CreateEdge()
         {
             GameObject edge = GameFactory.CreatePlatformEdge();
-            edge.transform.parent = GetOrCreateParentWithName(EdgesParentName);
+            edge.transform.SetParent(
+                parent: GetOrCreateParentWithName(EdgesParentName), 
+                worldPositionStays: true);
             edge.GetComponent<MeshRenderer>().material = _color;
             return edge;
         }
 
         private Transform GetOrCreateParentWithName(string parentName)
         {
-            Transform parent = transform.Cast<Transform>().FirstOrDefault(x => x.name == parentName);
-            if (parent != null) return parent;
+            Transform parent = transform.Cast<Transform>()
+                .FirstOrDefault(x => x.name == parentName);
+            if (parent != null) 
+                return parent;
             parent = new GameObject().transform;
+            parent.transform.localPosition = Vector3.zero;
             parent.name = parentName;
-            parent.SetParent(transform);
+            parent.SetParent(transform, worldPositionStays: false);
             return parent;
         }
 
         private GameObject CreateWave()
         {
-            GameObject waves = GameFactory.CreateCornerWaves().gameObject;
-            waves.transform.parent = GetOrCreateParentWithName(WavesParentName);
-            return waves;
+            GameObject wave = GameFactory.CreateCornerWaves().gameObject;
+            wave.transform.SetParent(GetOrCreateParentWithName(WavesParentName), worldPositionStays: false);
+            return wave;
         }
 
         public void CreateWaves()
@@ -106,7 +115,7 @@ namespace Visual
             foreach ((Vector3 position, Vector3 direction) in angles)
             {
                 GameObject wave = CreateWave();
-                wave.transform.position = position;
+                wave.transform.localPosition = position;
                 var particleSystem = wave.GetComponent<ParticleSystem>();
                 ParticleSystem.MainModule main = particleSystem.main;
                 var rotation = new ParticleSystem.MinMaxCurve
@@ -153,7 +162,7 @@ namespace Visual
 
         private void RepaintEdges(Material material)
         {
-            var edgesParent = GetOrCreateParentWithName(EdgesParentName);
+            Transform edgesParent = GetOrCreateParentWithName(EdgesParentName);
             foreach (MeshRenderer edge in edgesParent.Cast<Transform>().Select(x => x.GetComponent<MeshRenderer>()))
             {
                 edge.material = material;

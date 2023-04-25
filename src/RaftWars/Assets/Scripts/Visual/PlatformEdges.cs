@@ -7,7 +7,7 @@ namespace DefaultNamespace
 {
     public class PlatformEdges
     {
-        private List<(Vector3[] corners, Vector3 normal)> _edges;
+        private readonly List<(Vector3[] corners, Vector3 normal)> _edges;
 
         public PlatformEdges(IEnumerable<GameObject> platforms)
         {
@@ -20,7 +20,7 @@ namespace DefaultNamespace
 
         private void ProcessPlatform(GameObject platform)
         {
-            Vector3 center = platform.transform.position;
+            Vector3 center = platform.transform.localPosition;
             Vector3 minXminZ = center + new Vector3(-Constants.PlatformSize / 2, 0, -Constants.PlatformSize / 2);
             Vector3 minXmaxZ = center + new Vector3(-Constants.PlatformSize / 2, 0, Constants.PlatformSize / 2);
             Vector3 maxXminZ = center + new Vector3(Constants.PlatformSize / 2, 0, -Constants.PlatformSize / 2);

@@ -476,7 +476,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
         platforms.Add(platform);
         AddPlatformToCameraTargetGroup();
-        edgesAndAngleWaves.UpdateVisual(platform.gameObject);
+        edgesAndAngleWaves.UpdateVisual();
         _camera.m_Offset.z = edgesAndAngleWaves.Bounds * -1;
         speed += Game.FeatureFlags.PlayerSpeedIncreasingPerPlatform;
     }

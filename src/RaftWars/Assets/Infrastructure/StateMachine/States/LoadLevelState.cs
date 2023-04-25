@@ -3,6 +3,7 @@ using Infrastructure.States;
 using TurretMinigame;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Object;
 
 namespace RaftWars.Infrastructure
 {
@@ -32,7 +33,7 @@ namespace RaftWars.Infrastructure
 
         public void Exit()
         {
-            
+            _loading.FadeOut();
         }
 
         private IEnumerator Load()
@@ -54,8 +55,13 @@ namespace RaftWars.Infrastructure
                 _loading.SetSliderProcess((loadingLevelAssets.PercentComplete + operationPercent) / totalOperations);
                 yield return null;
             }
-            Game.MapGenerator = GameObject.Instantiate(loadingLevelAssets.Result).GetComponent<MapGenerator>();
+            Game.MapGenerator = Instantiate(loadingLevelAssets.Result).GetComponent<MapGenerator>();
             _loading.SetSliderProcess(2f / 3f);
+            if (Game.FeatureFlags.SkipGameplay)
+            {
+                _stateMachine.Enter<TurretMinigameState>();
+                yield break;
+            }
             _stateMachine.Enter<CreateServicesState>();
         }
     }

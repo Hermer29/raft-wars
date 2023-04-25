@@ -7,7 +7,7 @@ namespace Interface
     {
         [SerializeField] private GameManager _gameManager;
         
-        public void OnPointerClick(PointerEventData eventData)
+        public virtual void OnPointerClick(PointerEventData eventData)
         {
             _gameManager.StartGame();
             Destroy(gameObject);

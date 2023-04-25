@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using DG.Tweening;
 using RaftWars.Infrastructure;
+using Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 public class BossAppearing : MonoBehaviour
 {
     private const float TimeToGenerateBoss = 20f;
+    private float _timeout;
     [SerializeField] private Slider _slider;
     [SerializeField] private GameObject _root;
     [SerializeField] private TMP_Text _bossIsHere;
@@ -27,6 +29,12 @@ public class BossAppearing : MonoBehaviour
     {
         _root.SetActive(true);
         _generateBoss = generateBoss;
+        _timeout = Game.FeatureFlags.TimeoutBeforeBossSpawn;
+        StartSpawnTimeout();
+    }
+
+    private void StartSpawnTimeout()
+    {
         StartCoroutine(QueryBossSpawnProcess());
     }
 
@@ -35,8 +43,8 @@ public class BossAppearing : MonoBehaviour
         yield return null;
         _root.GetComponent<CanvasGroup>().alpha = 1;
         _slider.value = 1;
-        _slider.DOValue(0, TimeToGenerateBoss)
-            .OnComplete(OnComplete);
+        _slider.DOValue(0, _timeout)
+            .OnComplete(OnTimeoutEnded);
     }
 
     private void OnDisable()
@@ -44,14 +52,13 @@ public class BossAppearing : MonoBehaviour
         _slider.DOKill();
     }
 
-    private void OnComplete()
+    private void OnTimeoutEnded()
     {
         _generateBoss?.Invoke();
         _generateBoss = null;
         _root.GetComponent<CanvasGroup>().alpha = 0;
         _bossIsHere.gameObject.SetActive(true);
-        _bossIsHere.alpha = 0;
-        _bossIsHere.DOFade(1, .2f);
+        ShowAppearingAnimation();
         Game.AudioService.PlayBossIsHere();
 
         void OnWritingShown()
@@ -64,5 +71,11 @@ public class BossAppearing : MonoBehaviour
         StartCoroutine(
             Coroutines.WaitFor(seconds: 2, 
                 callback: OnWritingShown));
+    }
+
+    private void ShowAppearingAnimation()
+    {
+        _bossIsHere.alpha = 0;
+        _bossIsHere.DOFade(1, .2f);
     }
 }

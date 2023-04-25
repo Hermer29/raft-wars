@@ -1,5 +1,7 @@
 ﻿using System;
 using InputSystem;
+using RaftWars.Infrastructure;
+using Services;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,22 +10,24 @@ public class DrivingEnemy : MonoBehaviour
     private Enemy _relatedEnemy;
     private PlayerService _player;
     private Vector3? _moveDirection;
+    private FightService _fightService;
 
     private const float SqrMagnitudeDistanceToReactOnPlayer = 10 * 10;
     private const int ExclusionSqrDistanceToPlayer = 300*2;
 
-    public DrivingEnemy Construct(Enemy enemy, PlayerService playerService)
+    public DrivingEnemy Construct(Enemy enemy, PlayerService playerService, FightService fightService)
     {
         _player = playerService;
         _relatedEnemy = enemy;
+        _fightService = fightService;
         return this;
     }
 
     private void Update()
     {
         TeleportFromOutOfBounds();
-            
-        if(_relatedEnemy.InBattle == false)
+        
+        if(_fightService.FightStarted == false)
             TryMoveEnemy(Time.deltaTime);
     }
 

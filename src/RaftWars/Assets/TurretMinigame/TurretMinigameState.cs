@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using InputSystem;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.Services;
 using TurretMinigame;
 using TurretMinigame.Player;
 using TurretMinigame.Service;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace Infrastructure.States
 {
@@ -17,38 +21,18 @@ namespace Infrastructure.States
         private MinigameTurretInputService _inputService;
         private MinigamePlatform _platform;
         private MinigameTurret _turret;
+        private TurretMinigameHud _hud;
+        private float _startTime;
+        private TurretMinigameFactory _turretMinigameFactory;
+        private readonly AdvertisingService _advertisingService;
 
         private const string PlayerOwningTurret = "PlayerOwning";
 
-        public TurretMinigameState(StateMachine stateMachine, LoadingScreen loadingScreen)
+        public TurretMinigameState(StateMachine stateMachine, LoadingScreen loadingScreen, AdvertisingService advertisingService)
         {
             _stateMachine = stateMachine;
+            _advertisingService = advertisingService;
             _loadingScreen = loadingScreen;
-        }
-        
-        public void Enter()
-        {
-            ParseServices();
-            var turretMinigameFactory = new TurretMinigameFactory(new TurretMinigameAssetLoader());
-            int playersTurretIndex = _prefsService.GetInt(PlayerOwningTurret, 1);
-            _platform = turretMinigameFactory.CreateMinigamePlatform();
-            _turret = turretMinigameFactory.CreateTurret(playersTurretIndex);
-            _turret.Construct(turretMinigameFactory);
-            
-            _inputService.HorizontalDeltaPositionUpdated += _turret.Rotate;
-            _platform.PlaceTurret(_turret);
-            _platform.PlayingCamera.Priority = 10;
-            _loadingScreen.FadeOut();
-            _turret.StartShooting();
-
-            _platform.Generator.PlayerWon += EndGame;
-            _platform.Generator.PlayerLost += EndGame;
-            _platform.Generator.StartGeneration();
-        }
-
-        private void EndGame()
-        {
-            _stateMachine.Enter<LoadLevelState, int>(CrossLevelServices.LevelService.Level);
         }
 
         private void ParseServices()
@@ -58,8 +42,125 @@ namespace Infrastructure.States
             _inputService = new MinigameTurretInputService(_coroutineRunner);
         }
 
+        public void Enter()
+        {
+            if (Game.AdverisingService == null)
+            {
+                // Происходит когда мы форсируем запуск состояния миниигры, в обход состоянию создания сервисов
+                // это необходимо потому что я совершил ошибку, состояние создания сервисов не только их создаёт, но
+                // ещё и всю игру запускает
+                Game.AdverisingService = new AdvertisingService(
+                    new GameObject().AddComponent<AudioService>());
+            }
+            ParseServices();
+            _turretMinigameFactory = new TurretMinigameFactory(new TurretMinigameAssetLoader());
+            _hud = _turretMinigameFactory.CreateTurretMinigameHud();
+            _platform = _turretMinigameFactory.CreateMinigamePlatform();
+            CreateTurretWithAdvertisingUpgradeOption();
+            _platform.PlayingCamera.Priority = 0;
+            _platform.LookingAtTurretCamera.Priority = 1;
+
+            _hud.ClickedOnScreen += StartGame;
+        }
+
+        private void CreateTurretWithAdvertisingUpgradeOption()
+        {
+            int currentTier = _prefsService.GetInt(PlayerOwningTurret, 1);
+            _turret = _turretMinigameFactory.CreateTurret(currentTier);
+            _turret.Construct(_turretMinigameFactory);
+            _platform.PlaceTurret(_turret);
+            if (_turretMinigameFactory.TryCreateTurretOfTier(currentTier + 1, out _))
+            {
+                _hud.UpgradeTurretForAdvertising.onClick.AddListener(() =>
+                {
+                    Game.AdverisingService.ShowRewarded(() =>
+                    {
+                        _prefsService.SetInt(PlayerOwningTurret, currentTier + 1);
+                        _hud.HideAdvertisingOffer();
+                        CreateTurret();
+                    });
+                });
+                _hud.ShowAdvertisingOffer(_turret.Illustration);
+            }
+        }
+
+        private void CreateTurret()
+        {
+            if (_turret != null)
+            {
+                Object.Destroy(_turret.gameObject);
+            }
+            int currentTier = _prefsService.GetInt(PlayerOwningTurret, 1);
+            _turret = _turretMinigameFactory.CreateTurret(currentTier);
+            _turret.Construct(_turretMinigameFactory);
+            _platform.PlaceTurret(_turret);
+        }
+
+        private void StartGame()
+        {
+            _startTime = Time.time;
+            _hud.HideAdvertisingOffer();
+            _turret.StartShooting();
+            _inputService.HorizontalDeltaPositionUpdated += _turret.Rotate;
+            _platform.LookingAtTurretCamera.Priority = 0;
+            _platform.PlayingCamera.Priority = 1;
+            _platform.Generator.Construct(_turret, _hud.PlayerEnemiesView);
+            _platform.Generator.PlayerWon += OnWon;
+            _platform.Generator.PlayerLost += OnLost;
+            _platform.Generator.StartGeneration();
+            _hud.PlayerEnemiesView.gameObject.SetActive(true);
+        }
+
+        private void OnWon()
+        {
+            EndGame();
+        }
+
+        private void OnLost()
+        {
+            _turret.BreakTower();
+            EndGame();
+        }
+
+        private void EndGame()
+        {
+            _turret.StopShooting();
+            _hud.PlayerEnemiesView.Hide();
+            var coins = (int)((CrossLevelServices.LevelService.Level * 10f) * (1 - _platform.Generator.Completion));
+            var coinsForAdvertising = (int)((CrossLevelServices.LevelService.Level * 15f) * 
+                                            (1 - _platform.Generator.Completion));
+            _hud.ShowMenu(_platform.Generator.KillCount, 
+                (int)(Time.time - _startTime),
+                coins,
+                coinsForAdvertising
+            );
+            _platform.LookingAtTurretCamera.Priority = 1;
+            _platform.PlayingCamera.Priority = 0;
+            _hud.TakeNormalAmount.onClick.AddListener(() =>
+            {
+                Game.MoneyService.AddCoins(coins);
+                Continue();
+            });
+            _hud.TakeAdvertisingAmount.onClick.AddListener(() =>
+            {
+                Game.AdverisingService.ShowRewarded(() =>
+                {
+                    Game.MoneyService.AddCoins(coinsForAdvertising);
+                    Continue();
+                });
+            });
+        }
+
+        private void Continue()
+        {
+            _stateMachine.Enter<LoadLevelState, int>(CrossLevelServices.LevelService.Level);
+        }
+
         public void Exit()
         {
+            _inputService.HorizontalDeltaPositionUpdated -= _turret.Rotate;
+            _platform.Generator.PlayerWon -= EndGame;
+            _platform.Generator.PlayerLost -= EndGame;
             Object.Destroy(_turret);
             Object.Destroy(_platform);
         }

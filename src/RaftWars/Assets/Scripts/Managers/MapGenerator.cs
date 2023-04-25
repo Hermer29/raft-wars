@@ -254,8 +254,8 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
             Enemy enemy = Instantiate(enemyPrefab, posToSpawn, Quaternion.identity);
-            var platforms = ComeUpWithPeopleAndPlatformsCount(stage, out var people, out var pickablePeople
-                ,out var pickablePlatforms);
+            var platforms = ComeUpWithPeopleAndPlatformsCount(stage, out var people, 
+                out var pickablePeople, out var pickablePlatforms);
             enemy.Material = _materials.GetRandom();
             enemy.SpawnEnvironment(platforms.ToArray(), people.ToArray(), hpIncrease[stage - 1],
                 damageIncrease[stage - 1], pickablePlatforms, pickablePeople);

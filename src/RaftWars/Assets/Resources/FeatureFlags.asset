@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d8615834eb41e9b4eca6d0596351c6, type: 3}
   m_Name: FeatureFlags
   m_EditorClassIdentifier: 
-  <IMGUIEnabled>k__BackingField: 1
+  <IMGUIEnabled>k__BackingField: 0
   <DiamondsEnabledInGame>k__BackingField: 0
   <MenuButtonsFading>k__BackingField: 0
   <TutorialEveryTime>k__BackingField: 0
   <InitializeYandexGames>k__BackingField: 0
   <PrefsImplementation>k__BackingField: 1
   <EnableYandexIap>k__BackingField: 0
+  <TimeoutBeforeBossSpawn>k__BackingField: 20
+  <SkipGameplay>k__BackingField: 0
   <PlayerSpeedIncreasingPerPlatform>k__BackingField: 0
   OwningOrderDefinition: 0

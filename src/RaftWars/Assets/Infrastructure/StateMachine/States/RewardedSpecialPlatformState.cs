@@ -14,6 +14,7 @@ namespace RaftWars.Infrastructure
         public void Exit()
         {
             Game.GameManager.DestroyAll();
+            Game.Hud.gameObject.SetActive(false);
         }
 
         public void Enter()

@@ -19,6 +19,7 @@ namespace TurretMinigame
                 actionOnRelease: obj =>
                 {
                     obj.SetActive(false);
+                    obj.GetComponent<TrailRenderer>().enabled = false;
                 },
                 actionOnGet: obj =>
                 {
@@ -49,6 +50,24 @@ namespace TurretMinigame
         public void FreeBullet(GameObject bullet)
         {
             _bullets.Release(bullet);
+        }
+
+        public TurretMinigameHud CreateTurretMinigameHud()
+        {
+            return Instantiate(_loader.LoadTurretMinigameHud());
+        }
+
+        public bool TryCreateTurretOfTier(int tier, out MinigameTurret turret)
+        {
+            MinigameTurret minigameTurret = _loader.LoadTurret(tier);
+            if (minigameTurret != null)
+            {
+                turret = minigameTurret;
+                return true;
+            }
+
+            turret = null;
+            return false;
         }
     }
 }
