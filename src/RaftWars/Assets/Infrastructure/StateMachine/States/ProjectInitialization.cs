@@ -1,4 +1,5 @@
-﻿using Agava.YandexGames;
+﻿using System.Collections;
+using Agava.YandexGames;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
 using RaftWars.Infrastructure.Services;
@@ -15,6 +16,8 @@ namespace Infrastructure.States
         {
             _coroutineRunner = coroutineRunner;
             _stateMachine = stateMachine;
+            
+            YandexGamesSdk.CallbackLogging = true;
         }
         
         public void Exit()
@@ -27,19 +30,16 @@ namespace Infrastructure.States
             Game.FeatureFlags = AssetLoader.LoadFeatureFlags();
             if(Game.FeatureFlags.InitializeYandexGames)
             {
-                YandexGamesWorkflow();
+                _coroutineRunner.StartCoroutine(YandexGamesWorkflow());
                 return;
             }
             ContinueInitialization();
         }
 
-        private void YandexGamesWorkflow()
+        private IEnumerator YandexGamesWorkflow()
         {
-            if(YandexGamesSdk.IsInitialized == false)
-                _coroutineRunner.StartCoroutine(
-                    YandexGamesSdk.Initialize(onSuccessCallback: ContinueInitialization));
-            else
-                ContinueInitialization();
+            yield return YandexGamesSdk.Initialize();
+            ContinueInitialization();
         }
 
         private void ContinueInitialization()
