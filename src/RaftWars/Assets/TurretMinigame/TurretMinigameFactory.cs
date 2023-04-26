@@ -19,7 +19,6 @@ namespace TurretMinigame
                 actionOnRelease: obj =>
                 {
                     obj.SetActive(false);
-                    obj.GetComponent<TrailRenderer>().enabled = false;
                 },
                 actionOnGet: obj =>
                 {
