@@ -56,6 +56,7 @@ namespace Infrastructure.States
                 _coroutineRunner, 
                 Game.AudioService,
                 Resources.Load<FightConstants>("FightConstants"));
+            Game.Hud.AdvertisingForStatsButton.Construct(Game.AdverisingService, Game.PlayerService, Game.GameManager);
             var ownedPlatforms = platforms.Where(Game.PropertyService.IsOwned);
             var pickablesLoading = ownedPlatforms
                 .Select(x => x.PickablePlatform);
@@ -68,7 +69,6 @@ namespace Infrastructure.States
                     Pause pause = GameFactory.CreatePauseMenu();
                     pause.Construct(Game.Hud.PauseButton, Game.FightService);
                     Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
-                    Game.Hud.AdvertisingForStatsButton.Construct(Game.AdverisingService, Game.PlayerService, Game.GameManager);
                     CreateUsingService();
                     Game.Hud.SoundButton.Construct(Game.AudioService);
                     TryShowTutorial();

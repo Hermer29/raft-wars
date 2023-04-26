@@ -112,7 +112,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         platform.Capacity++;
         people.Material = _material;
-        people.SetRelatedPlatform(this);
+        people.SetRelatedPlatform(platform);
         return true;
     }
 

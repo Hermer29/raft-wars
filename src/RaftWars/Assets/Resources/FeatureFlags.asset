@@ -19,7 +19,7 @@ MonoBehaviour:
   <InitializeYandexGames>k__BackingField: 0
   <PrefsImplementation>k__BackingField: 1
   <EnableYandexIap>k__BackingField: 0
-  <TimeoutBeforeBossSpawn>k__BackingField: 2
+  <TimeoutBeforeBossSpawn>k__BackingField: 10
   <SkipGameplay>k__BackingField: 0
   <PlayerSpeedIncreasingPerPlatform>k__BackingField: 0
   OwningOrderDefinition: 0
