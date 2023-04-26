@@ -28,6 +28,8 @@ MonoBehaviour:
   <Illustration>k__BackingField: {fileID: 21300000, guid: 44676a58a2644284796b7257eb1e97b6, type: 3}
   <RequiredLevel>k__BackingField: 5
   <LocalizedName>k__BackingField: 37
+  <StatIcon>k__BackingField: {fileID: 21300000, guid: 70b4514c28206a1498a2acecaca41875, type: 3}
+  <SpRewardIllustration>k__BackingField: {fileID: -687115767, guid: 19cb7873dff91754baf33ae045f8cad7, type: 3}
   <BaseDamage>k__BackingField: 20
   DamageBonusUpgradeStep: 5
-  <ValueType>k__BackingField: 1
+  <ValueType>k__BackingField: 2

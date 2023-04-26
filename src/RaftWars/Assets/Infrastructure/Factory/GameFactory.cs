@@ -2,6 +2,7 @@
 using System.Collections;
 using Cinemachine;
 using Interface;
+using SpecialPlatforms.SPRewardState;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using static RaftWars.Infrastructure.AssetManagement.AssetLoader;
@@ -98,6 +99,11 @@ namespace RaftWars.Infrastructure
             var instance = Instantiate(LoadAudioService());
             instance.Construct(CrossLevelServices.PrefsService);
             return instance;
+        }
+
+        public static SPRewardWindow CreateSPRewardWindow()
+        {
+            return Instantiate(Resources.Load<SPRewardWindow>("SPRewardWindow"));
         }
     }
 }

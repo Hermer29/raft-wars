@@ -11,5 +11,7 @@ namespace SpecialPlatforms.Concrete
 
         [field: SerializeField] public ValueType ValueType { get; private set; }
         public float SpeedBonus => DefaultSpeedBonus + UpgradedLevel * _speedUpgradeStep;
+        public override ValueType Type => ValueType;
+        public override float DefaultAmount => DefaultSpeedBonus;
     }
 }

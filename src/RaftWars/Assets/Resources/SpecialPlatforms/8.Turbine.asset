@@ -28,6 +28,8 @@ MonoBehaviour:
   <Illustration>k__BackingField: {fileID: 21300000, guid: d2bfea7cbbfeba242944fce71d23129d, type: 3}
   <RequiredLevel>k__BackingField: 4
   <LocalizedName>k__BackingField: 36
+  <StatIcon>k__BackingField: {fileID: 21300000, guid: f3a01c0966253ab45a902af1616a09b5, type: 2}
+  <SpRewardIllustration>k__BackingField: {fileID: -226032415, guid: cd9c8d36b0fcfde4cb131d775a306e59, type: 3}
   <DefaultSpeedBonus>k__BackingField: 0.1
   _speedUpgradeStep: 0.01
-  <ValueType>k__BackingField: 0
+  <ValueType>k__BackingField: 1

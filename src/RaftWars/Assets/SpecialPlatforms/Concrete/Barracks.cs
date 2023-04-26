@@ -11,5 +11,7 @@ namespace SpecialPlatforms.Concrete
         [field: SerializeField] public int SpawnPeopleTime { get; private set; }
         
         public int SpawnPeopleLimit => SpawnPeopleDefaultLimit + _upgradeLimitStep * UpgradedLevel;
+        public override ValueType Type => ValueType.NotSuitable;
+        public override float DefaultAmount => SpawnPeopleDefaultLimit;
     }
 }

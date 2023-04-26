@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -18,5 +19,12 @@ namespace DefaultNamespace
         [field: SerializeField] public bool SkipGameplay { get; private set; }
         [field: SerializeField] public float PlayerSpeedIncreasingPerPlatform {get; private set;}
         [FormerlySerializedAs("OwningPropertyDefinition")] [field: SerializeField] public bool OwningOrderDefinition;
+    }
+
+    [Serializable]
+    public enum SkipTo
+    {
+        Gameplay,
+        LevelRewards
     }
 }

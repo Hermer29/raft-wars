@@ -9,7 +9,7 @@ using UnityEngine.AddressableAssets;
 namespace SpecialPlatforms
 {
     [CreateAssetMenu(fileName = "SpecialPlatform", menuName = "🚤Create Special platform", order = 0)]
-    public class SpecialPlatform : ScriptableObject, ISavableData, ISequentiallyOwning, ICompletedLevelConditional
+    public abstract class SpecialPlatform : ScriptableObject, ISavableData, ISequentiallyOwning, ICompletedLevelConditional, IGenericStatsInformer
     {
         [field: SerializeField] public int Serial { get; private set; }
         [field: SerializeField] public AssetReference ReadyPlatform { get; private set; }
@@ -19,12 +19,17 @@ namespace SpecialPlatforms
         [field: SerializeField] public Sprite Illustration { get; private set; }
         [field: SerializeField] public int RequiredLevel { get; private set; }
         [field: SerializeField] public TextName LocalizedName { get; private set; }
+        [field: SerializeField] public Sprite StatIcon { get; private set; }
+        [field: SerializeField] public Sprite SpRewardIllustration { get; private set; }
 
         /// <summary>
         /// [0, Infinity]
         /// </summary>
         public int UpgradedLevel { get; private set; } = 1;
         public int UpgradeCost => CostPerLevel * (UpgradedLevel);
+        public abstract ValueType Type { get; }
+        public abstract float DefaultAmount { get; }
+        
         
         private const int CostPerLevel = 50;
 

@@ -1,6 +1,6 @@
 ﻿namespace SpecialPlatforms
 {
-    public interface IDamageAmplifying
+    public interface IDamageAmplifyer
     {
         ValueType ValueType { get; }
         float DamageValue { get; }

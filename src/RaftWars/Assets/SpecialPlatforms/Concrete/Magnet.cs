@@ -12,5 +12,7 @@ namespace SpecialPlatforms.Concrete
         [SerializeField] private float _collectingRadiusUpgradeStep;
 
         public float CollectingRadius => DefaultCollectingRadius + _collectingRadiusUpgradeStep * UpgradedLevel;
+        public override ValueType Type => ValueType.Relative;
+        public override float DefaultAmount => DefaultCollectingRadius;
     }
 }

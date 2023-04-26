@@ -10,5 +10,7 @@ namespace SpecialPlatforms.Concrete
         [SerializeField] private float HealthBonusUpgradeStep;
         [field: SerializeField] public ValueType ValueType { get; private set; }
         public float HealthValue => HealthBonusUpgradeStep * UpgradedLevel + DefaultHealthGain;
+        public override ValueType Type => ValueType;
+        public override float DefaultAmount => DefaultHealthGain;
     }
 }

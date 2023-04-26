@@ -43,7 +43,7 @@ namespace Common
                 {
                     AddHealthForPlatformType(stats.Platform.GetType());
                 }
-                else if (stats.Platform is IDamageAmplifying)
+                else if (stats.Platform is IDamageAmplifyer)
                 {
                     AddDamageForPlatformType(stats.Platform.GetType());
                 }

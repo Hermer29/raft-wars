@@ -2,6 +2,7 @@
 {
     public enum ValueType
     {
+        NotSuitable,
         Relative,
         Absolute
     }

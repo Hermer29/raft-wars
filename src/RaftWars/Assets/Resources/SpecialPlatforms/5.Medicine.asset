@@ -28,6 +28,8 @@ MonoBehaviour:
   <Illustration>k__BackingField: {fileID: 21300000, guid: 2cc832cf82e46e84491e28cacb65f1fc, type: 3}
   <RequiredLevel>k__BackingField: 1
   <LocalizedName>k__BackingField: 33
+  <StatIcon>k__BackingField: {fileID: 21300000, guid: 111e5fcbbcc6d264ab969e2557c62a8f, type: 3}
+  <SpRewardIllustration>k__BackingField: {fileID: 835462733, guid: 407349c88104559498c6404b8773934f, type: 3}
   <DefaultHealthGain>k__BackingField: 0.11
   HealthBonusUpgradeStep: 0.01
-  <ValueType>k__BackingField: 0
+  <ValueType>k__BackingField: 1

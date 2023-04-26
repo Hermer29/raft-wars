@@ -438,7 +438,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     protected override void AddDamageForPlatformType(Type data)
     {
-        var statsHolder = FindPlatformDataWithConcreteType<IDamageAmplifying>(data);
+        var statsHolder = FindPlatformDataWithConcreteType<IDamageAmplifyer>(data);
         switch (statsHolder.ValueType)
         {
             case ValueType.Absolute:

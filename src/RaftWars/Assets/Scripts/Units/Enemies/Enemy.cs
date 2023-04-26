@@ -177,7 +177,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
     protected override void AddDamageForPlatformType(Type data)
     {
-        var platform = FindPlatformDataWithConcreteType<IDamageAmplifying>(data);
+        var platform = FindPlatformDataWithConcreteType<IDamageAmplifyer>(data);
         if (platform.ValueType == ValueType.Absolute)
         {
             damage += platform.BaseDamage;
