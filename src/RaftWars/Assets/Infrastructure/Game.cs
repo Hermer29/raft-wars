@@ -1,11 +1,11 @@
-﻿using System.Runtime.Versioning;
-using DefaultNamespace;
+﻿using DefaultNamespace;
 using InputSystem;
 using Interface;
+using RaftWars.Infrastructure;
 using Services;
 using UnityEngine;
 
-namespace RaftWars.Infrastructure
+namespace Infrastructure
 {
     internal class Game
     {
@@ -27,22 +27,15 @@ namespace RaftWars.Infrastructure
         public static Canvas StatsCanvas;
         public static AudioService AudioService;
 
-        public Game(Player player, StateMachine stateMachine, ICoroutineRunner coroutineRunner)
+        public Game(StateMachine stateMachine)
         {
             StateMachine = stateMachine;
             CollectiblesService = new CollectiblesService();
-            PlayerService = new PlayerService(player);
-            Hud = GameFactory.CreateHud();
-            InputService = new InputService(Hud.Joystick);
             IAPService = new YandexIAPService();
-            MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService, Hud);
+            MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService);
             PropertyService = new PropertyService(CrossLevelServices.PrefsService);
-            AudioService = GameFactory.CreateAudioService();
-            AdverisingService = new AdvertisingService(AudioService);
-            FightService = new FightService(
-                new FightCameraService(GameFactory.CreatePlayerVirtualCamera()), PlayerService, coroutineRunner, AudioService,
-                Resources.Load<FightConstants>("FightConstants"));
-            StatsCanvas = GameFactory.CreateStatsCanvas();
+            AdverisingService = new AdvertisingService();
+            MaterialsService = new MaterialsService();
         }
     }
 }

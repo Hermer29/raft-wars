@@ -1,8 +1,9 @@
-﻿using RaftWars.Infrastructure.AssetManagement;
+﻿using Agava.YandexGames;
+using RaftWars.Infrastructure;
+using RaftWars.Infrastructure.AssetManagement;
 using RaftWars.Infrastructure.Services;
-using Agava.YandexGames;
 
-namespace RaftWars.Infrastructure
+namespace Infrastructure.States
 {
     public class ProjectInitialization : IState
     {

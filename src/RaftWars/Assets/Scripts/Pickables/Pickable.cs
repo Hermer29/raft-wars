@@ -1,4 +1,5 @@
-﻿using InputSystem;
+﻿using Infrastructure;
+using InputSystem;
 using RaftWars.Infrastructure;
 using UnityEngine;
 

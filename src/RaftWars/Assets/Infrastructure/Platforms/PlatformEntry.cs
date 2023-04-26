@@ -25,9 +25,9 @@ namespace Infrastructure.Platforms
         [field: SerializeField] public Button Upgrade { get; private set; }
         [field: SerializeField] public Button OpenForAdvertising { get; private set; }
 
-        private DescriptionProvider _provider;
+        private LocalizationService _provider;
         
-        public void Construct(DescriptionProvider provider)
+        public void Construct(LocalizationService provider)
         {
             _provider = provider;
         }

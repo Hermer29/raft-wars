@@ -1,42 +1,39 @@
 ﻿using System;
-using Interface;
 using RaftWars.Infrastructure.Services;
 
-namespace InputSystem
+namespace Services
 {
     public class PlayerMoneyService
     {
         private readonly IPrefsService _prefsService;
-        private readonly Hud _hud;
 
         private const string MoneyKey = "Money";
 
-        public PlayerMoneyService(IPrefsService prefsService, Hud hud)
+        public PlayerMoneyService(IPrefsService prefsService)
         {
             _prefsService = prefsService;
-            _hud = hud;
-
-            _hud.coinsText.text = Amount.ToString();
         }
 
         public int Amount => _prefsService.GetInt(MoneyKey);
+
+        public event Action<int> AmountUpdated;
 
         public void Spend(int amount)
         {
             int previous = _prefsService.GetInt(MoneyKey);
             if (previous < amount)
             {
-                throw new InvalidOperationException("Insufficient coins");
+                throw new InvalidOperationException("Insufficient funds");
             }
             _prefsService.SetInt(MoneyKey, previous - amount);
-            _hud.coinsText.text = Amount.ToString();
+            AmountUpdated?.Invoke(Amount);
         }
 
         public void AddCoins(int coins)
         {
             int previous = _prefsService.GetInt(MoneyKey);
             _prefsService.SetInt(MoneyKey, previous + coins);
-            _hud.coinsText.text = Amount.ToString();
+            AmountUpdated?.Invoke(Amount);
         }
 
         public bool HasEnoughCoins(int amount)

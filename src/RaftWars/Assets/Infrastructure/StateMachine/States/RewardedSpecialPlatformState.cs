@@ -1,6 +1,6 @@
-﻿using Infrastructure.States;
+﻿using RaftWars.Infrastructure;
 
-namespace RaftWars.Infrastructure
+namespace Infrastructure.States
 {
     public class RewardedSpecialPlatformState : IState
     {

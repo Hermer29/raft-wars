@@ -7,6 +7,7 @@ using Cinemachine;
 using Common;
 using DefaultNamespace;
 using DG.Tweening;
+using Infrastructure;
 using InputSystem;
 using Interface;
 using RaftWars.Infrastructure;
@@ -32,6 +33,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     [FormerlySerializedAs("damageIncrease")] [SerializeField] private int damageIncomeForPeople = PeopleConsts.StatsForPeople;
     [SerializeField] public float speed;
     public CinemachineTargetGroup CameraGroup;
+    private bool _movingStarted = false;
 
     public override int PlatformsCount => platforms.Count;
     public override int Damage => (int) (damage + damage * relativeDamage);
@@ -73,8 +75,11 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
 
-    public void Construct()
+    public void Construct(IEnumerable<SpecialPlatform> specialPlatforms)
     {
+        base.Construct(
+            specialPlatforms, 
+            useDefaultBalanceValues: false);
         edgesAndAngleWaves = gameObject.AddComponent<EdgesAndAngleWaves>();
         edgesAndAngleWaves.Construct(this);
         platforms[0].Capacity = 2;
@@ -126,7 +131,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     private void TryGenerateNickname()
     {
-        string nick = LanguageChanger.DescriptionProvider.Instance[LanguageChanger.TextName.Player];
+        string nick = LanguageChanger.LocalizationService.Instance[LanguageChanger.TextName.Player];
         _enemyHud.nickname.text = nick;
     }
 
@@ -212,54 +217,6 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         RecountStats();
     }
 
-    public override void AddBarracks(Turret turret, Barracks barracks)
-    {
-    }
-
-    public override void AddHealth(Turret tur, IHealthIncreasing statsHolder)
-    {
-        if (statsHolder.ValueType == ValueType.Absolute)
-        {
-            hp += (int) statsHolder.HealthValue;
-        }
-        else if (statsHolder.ValueType == ValueType.Relative)
-        {
-            relativeHp += statsHolder.HealthValue;
-        }
-        turrets.Add(tur);
-        RecountStats();
-    }
-
-    public override void AddDamage(Turret turret, IDamageAmplifying statsHolder)
-    {
-        switch (statsHolder.ValueType)
-        {
-            case ValueType.Absolute:
-                damage += (int) statsHolder.DamageValue;
-                break;
-            case ValueType.Relative:
-                relativeDamage += statsHolder.DamageValue;
-                break;
-        }
-        turrets.Add(turret);
-        RecountStats();
-    }
-
-    public override void AddSpeed(Turret tur, ISpeedIncreasing statsHolder)
-    {
-        switch (statsHolder.ValueType)
-        {
-            case ValueType.Absolute:
-                speed += statsHolder.SpeedBonus;
-                break;
-            case ValueType.Relative:
-                relativeSpeed += statsHolder.SpeedBonus;
-                break;
-        }
-        turrets.Add(tur);
-        RecountStats();
-    }
-
     private void RecountStats()
     {
         _enemyHud.hpText.text = Mathf.RoundToInt(Mathf.Clamp(hp, 0, 99999)).ToString();
@@ -311,10 +268,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
             rb.velocity = Vector3.zero;
         }
     }
-    
-    private bool _movingStarted = false;
 
-    public void HandleMovementEvents(Vector3 moveDirectionXz)
+    private void HandleMovementEvents(Vector3 moveDirectionXz)
     {
         switch (_movingStarted)
         {
@@ -467,7 +422,57 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         return platforms[Random.Range(0, platforms.Count)];
     }
 
-    public override void AddPlatform(Platform platform)
+    protected override void AddHealthForPlatformType(Type data)
+    {
+        var statsHolder = FindPlatformDataWithConcreteType<IHealthIncreasing>(data);
+        if (statsHolder.ValueType == ValueType.Absolute)
+        {
+            hp += (int) statsHolder.HealthValue;
+        }
+        else if (statsHolder.ValueType == ValueType.Relative)
+        {
+            relativeHp += statsHolder.HealthValue;
+        }
+        RecountStats();
+    }
+
+    protected override void AddDamageForPlatformType(Type data)
+    {
+        var statsHolder = FindPlatformDataWithConcreteType<IDamageAmplifying>(data);
+        switch (statsHolder.ValueType)
+        {
+            case ValueType.Absolute:
+                damage += (int) statsHolder.DamageValue;
+                break;
+            case ValueType.Relative:
+                relativeDamage += statsHolder.DamageValue;
+                break;
+        }
+        RecountStats();
+    }
+
+    protected override void AddSpeedForPlatformType(Type data)
+    {
+        var statsHolder = FindPlatformDataWithConcreteType<ISpeedIncreasing>(data);
+        switch (statsHolder.ValueType)
+        {
+            case ValueType.Absolute:
+                speed += statsHolder.SpeedBonus;
+                break;
+            case ValueType.Relative:
+                relativeSpeed += statsHolder.SpeedBonus;
+                break;
+        }
+        RecountStats();
+    }
+
+    protected override void AddMagnetWithPlatformType(Type data, Turret turret)
+    {
+        var magnet = FindPlatformDataWithConcreteType<Magnet>(data);
+        (turret as IMagnetTurret).ModifyPickingSpace(magnet.CollectingRadius);
+    }
+
+    protected override void AddPlatform(Platform platform)
     {
         void AddPlatformToCameraTargetGroup()
         {
@@ -479,6 +484,11 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         edgesAndAngleWaves.UpdateVisual();
         _camera.m_Offset.z = edgesAndAngleWaves.Bounds * -1;
         speed += Game.FeatureFlags.PlayerSpeedIncreasingPerPlatform;
+    }
+
+    public override bool TryGetNotFullPlatform(out Platform platform)
+    {
+        return TryFindNotFullPlatform(out platform);
     }
 
     public void AmplifyDamage(float percent)
@@ -567,19 +577,21 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         OnBattleEnded();
     }
 
-    public bool TryTakeBarrel(int damage)
+    bool ICanTakeBarrel.TryTakeBarrel(int damage)
     {
+        if(Health < 100)
+            return true;
         DealDamage(damage);
         return true;
     }
 
-    public bool TryTakeCoins(int coins)
+    bool ICanTakeCoins.TryTakeCoins(int coins)
     {
         Game.MoneyService.AddCoins(coins);
         return true;
     }
 
-    public bool TryTakePeople(GameObject warrior)
+    bool ICanTakePeople.TryTakePeople(GameObject warriorPrefab, Vector3? specifiedSpawnPoint)
     {
         throw new InvalidOperationException("Should not be called, cause interface is just a marker");
     }
@@ -594,5 +606,10 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     public void Amplify(int amount)
     {
         IncreaseStats(amount);
+    }
+
+    public bool TryTakePeople(GameObject warriorPrefab, Vector3? specifiedSpawnPoint = null)
+    {
+        throw new NotImplementedException();
     }
 }

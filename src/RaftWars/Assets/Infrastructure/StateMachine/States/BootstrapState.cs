@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+﻿using RaftWars.Infrastructure;
 using UnityEngine.SceneManagement;
 
-namespace RaftWars.Infrastructure
+namespace Infrastructure.States
 {
     public class BootstrapState : IState
     {
@@ -19,8 +19,7 @@ namespace RaftWars.Infrastructure
             {
                 SceneManager.LoadScene(BootSceneName);
             }
-            _stateMachine.Enter<LoadLevelState, int>(
-                Mathf.Clamp(CrossLevelServices.LevelService.Level, 1, 999));
+            _stateMachine.Enter<CreateServicesState>();
         }
 
         public void Exit()

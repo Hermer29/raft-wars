@@ -40,9 +40,9 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         _relatedEnemy = GetComponentInParent<Enemy>();
     }
 
-    public bool TryTakePeople(GameObject warrior)
+    public bool TryTakePeople(GameObject warriorPrefab, Vector3? specifiedSpawnPoint = null)
     {
-        Assert.IsNotNull(warrior);
+        Assert.IsNotNull(warriorPrefab);
 
         if (TryGetFighterRaftImplementation<ICanTakePeople>(out _) == false)
         {
@@ -53,12 +53,12 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         {
             if(Capacity == 4)
             {
-                return TryFigureOutWhereSpawnPeopleInstead(warrior);
+                return TryFigureOutWhereSpawnPeopleInstead(warriorPrefab);
             }
             Capacity++;
-            Vector3 spawnPoint = transform.position;
+            Vector3 spawnPoint = specifiedSpawnPoint ?? transform.position;
             spawnPoint = FindPointOnPlatform(spawnPoint);
-            People people = Instantiate(warrior, spawnPoint, Quaternion.identity, transform).GetComponent<People>();
+            People people = Instantiate(warriorPrefab, spawnPoint, Quaternion.identity, transform).GetComponent<People>();
             
             if (transform.parent.GetComponent<Player>() != null)
             {
@@ -73,7 +73,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         }
         else
         {
-            return TryFigureOutWhereSpawnPeopleInstead(warrior);
+            return TryFigureOutWhereSpawnPeopleInstead(warriorPrefab);
         }
         return true;
     }

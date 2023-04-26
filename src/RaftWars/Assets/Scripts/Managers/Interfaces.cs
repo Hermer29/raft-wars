@@ -2,7 +2,7 @@ using UnityEngine;
 
 interface ICanTakePeople
 {
-    public bool TryTakePeople(GameObject warrior);
+    public bool TryTakePeople(GameObject warriorPrefab, Vector3? specifiedSpawnPoint = null);
 }
 
 interface ICanTakePlatform

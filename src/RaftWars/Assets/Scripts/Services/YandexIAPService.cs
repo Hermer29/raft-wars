@@ -2,6 +2,7 @@
 using Agava.YandexGames;
 using RaftWars.Infrastructure;
 using System;
+using Infrastructure;
 using UnityEngine;
 
 namespace InputSystem

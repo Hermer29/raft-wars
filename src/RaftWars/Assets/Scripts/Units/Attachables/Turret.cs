@@ -2,7 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 
 
-public class Turret : MonoBehaviour, ICoroutineSender
+public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
 {
     public bool isAdditive;
 
@@ -34,12 +34,14 @@ public class Turret : MonoBehaviour, ICoroutineSender
 
     public bool nonBattle = false;
     public bool isMagnet = false;
+    public GameObject _magnetEffect;
 
     private Collider[] cols;
     private Vector3 posToCast;
     LayerMask mask;
 
     public MeshRenderer[] objectsToDraw;
+    private float _radius;
 
     private void Start()
     {
@@ -114,7 +116,8 @@ public class Turret : MonoBehaviour, ICoroutineSender
         {
             posToCast = transform.position;
             toRotate.transform.RotateAround(Vector3.up, 0.02f);
-            cols = Physics.OverlapSphere(posToCast, 6, ~mask, QueryTriggerInteraction.Collide);
+            _radius = 6;
+            cols = Physics.OverlapSphere(posToCast, _radius, ~mask, QueryTriggerInteraction.Collide);
             if (cols != null)
             {
                 foreach (Collider col in cols)
@@ -169,5 +172,11 @@ public class Turret : MonoBehaviour, ICoroutineSender
                 mesh.material = mat;
             }
         }
+    }
+
+    void IMagnetTurret.ModifyPickingSpace(float modifier)
+    {
+        _radius *= modifier;
+        _magnetEffect.transform.localScale *= modifier;
     }
 }

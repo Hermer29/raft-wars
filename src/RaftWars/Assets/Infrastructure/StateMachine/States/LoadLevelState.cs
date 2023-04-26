@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using Infrastructure.States;
-using TurretMinigame;
+using RaftWars.Infrastructure;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEngine.Object;
 
-namespace RaftWars.Infrastructure
+namespace Infrastructure.States
 {
     public class LoadLevelState : IPayloadedState<int>
     {
@@ -33,7 +32,6 @@ namespace RaftWars.Infrastructure
 
         public void Exit()
         {
-            _loading.FadeOut();
         }
 
         private IEnumerator Load()
@@ -62,7 +60,7 @@ namespace RaftWars.Infrastructure
                 _stateMachine.Enter<TurretMinigameState>();
                 yield break;
             }
-            _stateMachine.Enter<CreateServicesState>();
+            _stateMachine.Enter<LoadGameplayState>();
         }
     }
 }

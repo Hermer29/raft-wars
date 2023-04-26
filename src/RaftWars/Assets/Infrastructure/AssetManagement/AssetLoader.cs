@@ -126,5 +126,10 @@ namespace RaftWars.Infrastructure.AssetManagement
         {
             return Resources.Load<AudioService>(AudioServicePath);
         }
+
+        public static People LoadPeople()
+        {
+            return Resources.Load<People>(PeoplePath);
+        }
     }
 }

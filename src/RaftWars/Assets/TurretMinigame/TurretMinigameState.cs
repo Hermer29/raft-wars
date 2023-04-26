@@ -49,8 +49,7 @@ namespace Infrastructure.States
                 // Происходит когда мы форсируем запуск состояния миниигры, в обход состоянию создания сервисов
                 // это необходимо потому что я совершил ошибку, состояние создания сервисов не только их создаёт, но
                 // ещё и всю игру запускает
-                Game.AdverisingService = new AdvertisingService(
-                    new GameObject().AddComponent<AudioService>());
+                Game.AdverisingService = new AdvertisingService();
             }
             ParseServices();
             _turretMinigameFactory = new TurretMinigameFactory(new TurretMinigameAssetLoader());

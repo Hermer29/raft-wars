@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Infrastructure;
 using Infrastructure.States;
-using InputSystem;
-using Services;
 
 namespace RaftWars.Infrastructure
 {
@@ -17,10 +16,11 @@ namespace RaftWars.Infrastructure
             {
                 [typeof(BootstrapState)] = new BootstrapState(this),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, coroutineRunner, loadingScreen),
-                [typeof(CreateServicesState)] = new CreateServicesState(this, loadingScreen, coroutineRunner),
+                [typeof(LoadGameplayState)] = new LoadGameplayState(this, loadingScreen, coroutineRunner),
                 [typeof(ProjectInitialization)] = new ProjectInitialization(coroutineRunner, this),
                 [typeof(TurretMinigameState)] = new TurretMinigameState(this, loadingScreen, Game.AdverisingService),
-                [typeof(RewardedSpecialPlatformState)] = new RewardedSpecialPlatformState(this)
+                [typeof(RewardedSpecialPlatformState)] = new RewardedSpecialPlatformState(this),
+                [typeof(CreateServicesState)] = new CreateServicesState(this, coroutineRunner)
             };
         }
 

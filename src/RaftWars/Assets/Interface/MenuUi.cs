@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using Infrastructure;
 using Infrastructure.Platforms;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,7 +48,7 @@ namespace Interface
             _hud = hud;
             _platformsMenu = platformsMenu;
             
-            if(RaftWars.Infrastructure.Game.FeatureFlags.MenuButtonsFading)
+            if(Game.FeatureFlags.MenuButtonsFading)
             {
                 shop.Detector.ScrolledDown += OnScrollDown;
                 shop.Detector.ScrolledUp += OnScrollUp;

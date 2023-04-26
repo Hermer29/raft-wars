@@ -28,5 +28,5 @@ MonoBehaviour:
   <Illustration>k__BackingField: {fileID: 21300000, guid: b8eaf7bc3295ce84ca2c3a9ddaad7d52, type: 3}
   <RequiredLevel>k__BackingField: 1
   <LocalizedName>k__BackingField: 31
-  _defaultCollectingRadius: 7
-  _collectingRadiusUpgradeStep: 1
+  <DefaultCollectingRadius>k__BackingField: 1
+  _collectingRadiusUpgradeStep: 0.5

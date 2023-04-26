@@ -199,6 +199,7 @@ MonoBehaviour:
   laser: {fileID: 0}
   nonBattle: 1
   isMagnet: 1
+  _magnetEffect: {fileID: 4529815012384199648}
   objectsToDraw: []
 --- !u!1 &8010469851613385198
 GameObject:
@@ -518,6 +519,11 @@ PrefabInstance:
 --- !u!4 &4529815012384006502 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 471988, guid: 79cd481c8e7a27a44ba9a78fbb16b903, type: 3}
+  m_PrefabInstance: {fileID: 4529815012384330450}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4529815012384199648 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 131378, guid: 79cd481c8e7a27a44ba9a78fbb16b903, type: 3}
   m_PrefabInstance: {fileID: 4529815012384330450}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4567985120345660209

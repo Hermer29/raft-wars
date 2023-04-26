@@ -10,7 +10,7 @@
             _text.text = _text.text.Replace("{n}", value);
         }
 
-        protected override void SetText(DescriptionProvider provider)
+        protected override void SetText(LocalizationService provider)
         {
             if (_parameter != null)
             {

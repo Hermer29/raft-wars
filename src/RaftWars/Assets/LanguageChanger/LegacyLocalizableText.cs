@@ -11,7 +11,7 @@ namespace LanguageChanger
         
         private void Start()
         {
-            var provider = FindObjectOfType<DescriptionProvider>();
+            var provider = FindObjectOfType<LocalizationService>();
             if (provider == null)
             {
                 Debug.LogWarning($"[{nameof(LocalizableText)}] Not found language description provider. Component disabled");
@@ -21,7 +21,7 @@ namespace LanguageChanger
             SetText(provider);
         }
 
-        protected virtual void SetText(DescriptionProvider provider)
+        protected virtual void SetText(LocalizationService provider)
         {
             _text.text = provider[_name];
         }

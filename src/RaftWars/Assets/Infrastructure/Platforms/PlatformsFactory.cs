@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Infrastructure;
 using Infrastructure.Platforms;
 using LanguageChanger;
 using RaftWars.Infrastructure.AssetManagement;
@@ -48,7 +49,7 @@ namespace RaftWars.Infrastructure
         public PlatformEntry CreatePlatformEntry(Transform parent)
         {
             PlatformEntry instance = Instantiate(_loader.LoadPlatformEntry(), parent, false);
-            instance.Construct(AllServices.GetSingle<DescriptionProvider>());
+            instance.Construct(AllServices.GetSingle<LocalizationService>());
             return instance;
         }
     }

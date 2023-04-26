@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using Common;
 using DefaultNamespace;
+using Infrastructure;
 using InputSystem;
 using LanguageChanger;
 using RaftWars.Infrastructure;
@@ -62,6 +63,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     private EnemyHud _statsHud;
     private EdgesAndAngleWaves _edgesAndAngleWaves;
     private Coroutine _explosionsCoroutine;
+    private IEnumerable<SpecialPlatform> _platformsData;
 
     public int StatsSum => Health + Damage;
 
@@ -85,6 +87,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public bool InBattle => battle;
     public bool IsDead => isDead;
 
+    public new void Construct(IEnumerable<SpecialPlatform> platformsBalanceData)
+    {
+        base.Construct(platformsBalanceData, useDefaultBalanceValues: true);
+    }
+    
     private void Start()
     {
         _player = Game.PlayerService;
@@ -154,36 +161,44 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         return false;
     }
 
-    public override void AddPlatform(Platform platform)
+    protected override void AddPlatform(Platform platform)
     {
+        var turret = platform.GetComponentInChildren<Turret>();
+        if(turret != null)
+            turrets.Add(turret);
         platforms.Add(platform);
         _edgesAndAngleWaves?.UpdateVisual();
     }
 
-    public override void AddDamage(Turret turret, IDamageAmplifying statsHolder)
+    public override bool TryGetNotFullPlatform(out Platform platform)
     {
-        turrets.Add(turret);
-        if (statsHolder.ValueType == ValueType.Absolute)
+        return TryFindNotFullPlatform(out platform);
+    }
+
+    protected override void AddDamageForPlatformType(Type data)
+    {
+        var platform = FindPlatformDataWithConcreteType<IDamageAmplifying>(data);
+        if (platform.ValueType == ValueType.Absolute)
         {
-            damage += statsHolder.BaseDamage;
+            damage += platform.BaseDamage;
         }
-        else if (statsHolder.ValueType == ValueType.Relative)
+        else if (platform.ValueType == ValueType.Relative)
         {
-            _relativeDamage += statsHolder.BaseDamage;
+            _relativeDamage += platform.BaseDamage;
         }
         RecountStats();
     }
 
-    public override void AddSpeed(Turret turret, ISpeedIncreasing statsHolder)
+    protected override void AddSpeedForPlatformType(Type type)
     {
-        turrets.Add(turret);
-        if (statsHolder.ValueType == ValueType.Absolute)
+        var platformData = FindPlatformDataWithConcreteType<ISpeedIncreasing>(type);
+        if (platformData.ValueType == ValueType.Absolute)
         {
-            Speed += statsHolder.DefaultSpeedBonus;
+            Speed += platformData.DefaultSpeedBonus;
         }
-        else if (statsHolder.ValueType == ValueType.Relative)
+        else if (platformData.ValueType == ValueType.Relative)
         {
-            relativeSpeed += statsHolder.DefaultSpeedBonus;
+            relativeSpeed += platformData.DefaultSpeedBonus;
         }
     }
 
@@ -276,14 +291,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
 
         if (isBoss)
         {
-            _statsHud.nickname.text = DescriptionProvider.Instance[TextName.Boss];
+            _statsHud.nickname.text = LocalizationService.Instance[TextName.Boss];
             return;
         }
         var nick = _statsHud.transform.Cast<Transform>()
             .First().Cast<Transform>()
             .First(x => x.name == "NicknameText")
             .GetComponent<TMP_Text>();
-        string playerText = DescriptionProvider.Instance[TextName.Player];
+        string playerText = LocalizationService.Instance[TextName.Player];
         nick.text = playerText + Random.Range(1000, 10000);
     }
 
@@ -509,23 +524,23 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         PlayIdleAnimation();
     }
 
-    public override void AddBarracks(Turret turret, Barracks barracks)
+    protected override void AddHealthForPlatformType(Type data)
     {
-        
+        var relatedPlatform = FindPlatformDataWithConcreteType<IHealthIncreasing>(data);
+        if (relatedPlatform.ValueType == ValueType.Absolute)
+        {
+            hp += relatedPlatform.DefaultHealthGain;
+        }
+        else if (relatedPlatform.ValueType == ValueType.Relative)
+        {
+            _relativeHp += relatedPlatform.DefaultHealthGain;
+        } 
+        RecountStats();
     }
 
-    public override void AddHealth(Turret turret, IHealthIncreasing stats)
+    protected override void AddMagnetWithPlatformType(Type data, Turret turret)
     {
-        if (stats.ValueType == ValueType.Absolute)
-        {
-            hp += stats.DefaultHealthGain;
-        }
-        else if (stats.ValueType == ValueType.Relative)
-        {
-            _relativeHp += stats.DefaultHealthGain;
-        } 
-        turrets.Add(turret);
-        RecountStats();
+        
     }
 
     public override EnemyHud GetHud()
@@ -596,7 +611,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
         explosion.transform.position = GetScaledRandomPointAmongAllPlatforms();
     }
 
-    public bool TryTakePeople(GameObject warrior)
+    public bool TryTakePeople(GameObject warriorPrefab, Vector3? specifiedSpawnPoint)
     {
         throw new NotImplementedException("Should not be called, cause interface is just a marker");
     }

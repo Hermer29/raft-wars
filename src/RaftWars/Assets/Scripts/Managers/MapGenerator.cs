@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
+using Infrastructure;
 using InputSystem;
 using RaftWars.Infrastructure;
+using RaftWars.Infrastructure.Services;
 using RaftWars.Pickables;
 using SpecialPlatforms;
 using UnityEngine;
@@ -254,6 +256,7 @@ public class MapGenerator : MonoBehaviour
                 continue;
             }
             Enemy enemy = Instantiate(enemyPrefab, posToSpawn, Quaternion.identity);
+            enemy.Construct(AllServices.GetSingle<IEnumerable<SpecialPlatform>>());
             var platforms = ComeUpWithPeopleAndPlatformsCount(stage, out var people, 
                 out var pickablePeople, out var pickablePlatforms);
             enemy.Material = _materials.GetRandom();
@@ -489,6 +492,7 @@ public class MapGenerator : MonoBehaviour
             }
 
             Enemy enemy = Instantiate(bosses[stage - 1], posToSpawn, Quaternion.identity);
+            enemy.Construct(AllServices.GetSingle<IEnumerable<SpecialPlatform>>());
             List<Platform> platforms = new List<Platform>();
             List<People> people = new List<People>();
             List<PeopleThatCanBeTaken> peopleAdditive = new List<PeopleThatCanBeTaken>();

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace LanguageChanger
 {
-    public class DescriptionProvider : MonoBehaviour
+    public class LocalizationService : MonoBehaviour
     {
-        public static DescriptionProvider Instance;
+        public static LocalizationService Instance;
         [SerializeField] private LanguageDescription _russian;
         [SerializeField] private LanguageDescription _english;
         [Header("Testing")] [SerializeField] private bool _enableTesting;
