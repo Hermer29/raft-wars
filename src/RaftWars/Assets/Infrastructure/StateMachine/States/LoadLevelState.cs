@@ -60,7 +60,7 @@ namespace Infrastructure.States
                 _stateMachine.Enter<TurretMinigameState>();
                 yield break;
             }
-            _stateMachine.Enter<LoadGameplayState>();
+            _stateMachine.Enter<GameplayState>();
         }
     }
 }

@@ -117,7 +117,7 @@ Task(SendBuildNotificationTask)
     var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
     using var tgClient = new WTelegram.Client(TelegramConfig, opened);
     var account = await tgClient.LoginUserIfNeeded();
-    var dialogs = await tgClient.Messages_GetAllChats();
+    var dialogs = await tgClient.Channels_GetAdminedPublicChannels();
     var dialog = dialogs.chats[chatId];
     await tgClient.SendMessageAsync(dialog, CreateTelegramMessage());
 });

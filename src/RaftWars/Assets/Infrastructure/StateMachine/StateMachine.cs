@@ -16,7 +16,7 @@ namespace RaftWars.Infrastructure
             {
                 [typeof(BootstrapState)] = new BootstrapState(this),
                 [typeof(LoadLevelState)] = new LoadLevelState(this, coroutineRunner, loadingScreen),
-                [typeof(LoadGameplayState)] = new LoadGameplayState(this, loadingScreen, coroutineRunner),
+                [typeof(GameplayState)] = new GameplayState(this, loadingScreen, coroutineRunner),
                 [typeof(ProjectInitialization)] = new ProjectInitialization(coroutineRunner, this),
                 [typeof(TurretMinigameState)] = new TurretMinigameState(this, loadingScreen, Game.AdverisingService),
                 [typeof(RewardedSpecialPlatformState)] = new RewardedSpecialPlatformState(this),

@@ -65,6 +65,7 @@ namespace InputSystem
 
         public void Dispose()
         {
+            Object.Destroy(PlayerInstance._camera.gameObject);
             Object.Destroy(PlayerInstance.gameObject);
         }
     }

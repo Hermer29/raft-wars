@@ -17,13 +17,13 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Infrastructure.States
 {
-    public class LoadGameplayState : IState
+    public class GameplayState : IState
     {
         private readonly StateMachine _stateMachine;
         private readonly LoadingScreen _loadingScreen;
         private readonly ICoroutineRunner _coroutineRunner;
 
-        public LoadGameplayState(StateMachine stateMachine, LoadingScreen loadingScreen, ICoroutineRunner coroutineRunner)
+        public GameplayState(StateMachine stateMachine, LoadingScreen loadingScreen, ICoroutineRunner coroutineRunner)
         {
             _loadingScreen = loadingScreen;
             _coroutineRunner = coroutineRunner;
