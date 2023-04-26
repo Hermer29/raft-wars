@@ -1016,12 +1016,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnPoint: {fileID: 7278746733135500283}
   _spawnFrequency: 4
-  _zScatter: {x: 0.5, y: -0.5}
+  _zScatter: {x: 0.3, y: -0.3}
   _groupPrefab: {fileID: 5753453401170363499, guid: 8de88a2f366a9874ba68506dc48e2dd1, type: 3}
   _wayPoints:
-  - {x: -5.57, y: 1, z: 0}
-  - {x: -3.63, y: 1, z: 0}
-  - {x: 0.55, y: 1.6, z: 0}
+  - {x: -6.16, y: 1, z: 0}
+  - {x: -1.46, y: 1, z: 0}
+  - {x: 1.7, y: 1.6, z: 0}
   - {x: 5.61, y: 1.6, z: 0}
 --- !u!1 &8010626765157748329
 GameObject:

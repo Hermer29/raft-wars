@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TurretMinigame.Enemies;
 using TurretMinigame.Player;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace TurretMinigame
         [SerializeField] private float _speed;
         [SerializeField] private Animator _animator;
         
-        private Queue<Vector3> _wayPoints = new Queue<Vector3>();
+        private Queue<(Vector3, string)> _wayPoints = new Queue<(Vector3, string)>();
         private EnemiesGenerator _generator;
         private int _counter = 4;
         private MinigameTurret _turret;
@@ -21,18 +22,19 @@ namespace TurretMinigame
         {
             _turret = turret;
             _generator = generator;
-            _animator.Play("Running");
+            _animator.Play("Swim");
         }
         
-        public void SetupWaypoints(Vector3 XYWaypoint)
+        public void SetupWaypoints(Vector3 XYWaypoint, string animationName)
         {
-            _wayPoints.Enqueue(XYWaypoint);
+            _wayPoints.Enqueue((XYWaypoint, animationName));
         }
 
         private void Update()
         {
             if (_generator.GameEnded)
             {
+                _animator.Play("Idle");
                 return;
             }
             if (_attackInProgess)
@@ -42,7 +44,7 @@ namespace TurretMinigame
             }
             bool IsDestinationNear()
             {
-                Vector3 vectorTowardsWaypoint = _wayPoints.Peek() - transform.position;
+                Vector3 vectorTowardsWaypoint = _wayPoints.Peek().Item1 - transform.position;
                 const float CriticalDistance = 20;
                 return vectorTowardsWaypoint.sqrMagnitude < CriticalDistance;
             }
@@ -53,7 +55,7 @@ namespace TurretMinigame
                 return;
             }
 
-            Vector3 waypoint = _wayPoints.Peek();
+            Vector3 waypoint = _wayPoints.Peek().Item1;
             Vector3 position = transform.position;
             position = Vector3.MoveTowards(position,
                 new Vector3(waypoint.x, waypoint.y, position.z), 
@@ -63,6 +65,8 @@ namespace TurretMinigame
             if (IsDestinationNear())
             {
                 _wayPoints.Dequeue();
+                if (_wayPoints.Count != 0)
+                    _animator.Play(_wayPoints.Peek().Item2);
             }
         }
 
@@ -73,17 +77,34 @@ namespace TurretMinigame
             _attackInProgess = true;
         }
 
-        private void OnTriggerEnter(Collider collision)
+        private void OnCollisionStay(Collision collision)
         {
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Bullet"))
+            DetectEnemyWhichFinishedThePath(collision);
+        }
+
+        private void DetectEnemyWhichFinishedThePath(Collision collision)
+        {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("MinigameEnemies"))
             {
-                _turret.ReturnBullet(collision.gameObject);
-                _counter--;
-                if (_counter == 0)
-                {
-                    _generator.OneDied();
-                    Destroy(gameObject);
-                }
+                var other = collision.gameObject.GetComponent<TurretMinigameEnemy>();
+                if(other._attackInProgess)
+                    StartAttackingPlayer();
+            }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            DetectEnemyWhichFinishedThePath(collision);
+        }
+        
+        public void TakeHit(GameObject bullet)
+        {
+            _turret.ReturnBullet(bullet);
+            _counter--;
+            if (_counter == 0)
+            {
+                _generator.OneDied();
+                Destroy(gameObject);
             }
         }
     }

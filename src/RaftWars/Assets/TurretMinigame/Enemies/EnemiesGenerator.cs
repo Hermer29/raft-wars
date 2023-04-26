@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using TurretMinigame.Player;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -59,9 +60,13 @@ namespace TurretMinigame.Enemies
                 foreach (TurretMinigameEnemy turretMinigameEnemy in instantiated.GetComponentsInChildren<TurretMinigameEnemy>())
                 {
                     turretMinigameEnemy.Construct(this, _minigameTurret);
-                    foreach (Vector3 wayPoint in _wayPoints)
+                    foreach (Vector3 wayPoint in _wayPoints.Take(3))
                     {
-                        turretMinigameEnemy.SetupWaypoints(wayPoint);
+                        turretMinigameEnemy.SetupWaypoints(wayPoint, "Swim");
+                    }
+                    foreach (Vector3 waypoint in _wayPoints.Skip(3))
+                    {
+                        turretMinigameEnemy.SetupWaypoints(waypoint, "Running");
                     }
                 }
             }
@@ -82,6 +87,7 @@ namespace TurretMinigame.Enemies
         {
             for (int i = 0, j = 1; j < _wayPoints.Length; i++, j++)
             {
+                Gizmos.DrawSphere(_wayPoints[i], .5f);
                 Gizmos.DrawLine(_wayPoints[i], _wayPoints[j]);
             }
         }
@@ -96,5 +102,7 @@ namespace TurretMinigame.Enemies
             }
             _view.ShowEnemies(Completion);
         }
+
+        
     }
 }

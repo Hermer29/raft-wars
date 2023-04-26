@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Water
   - WorldSpaceHud
+  - Missile
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Player
   - Bullet
   - PlatformGround
+  - MinigameEnemiesHitbox
   - MinigameEnemies
-  - 
   - 
   - 
   - 
