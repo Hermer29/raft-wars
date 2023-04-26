@@ -26,7 +26,7 @@ MonoBehaviour:
   <Guid>k__BackingField: a426bfa8-fc0d-4b44-9cab-ae5d444561c4
   <OwnedByDefault>k__BackingField: 0
   <Illustration>k__BackingField: {fileID: 21300000, guid: 53f094187bfa47b49810649d8a995c85, type: 3}
-  <RequiredLevel>k__BackingField: 4
+  <RequiredLevel>k__BackingField: 2
   <LocalizedName>k__BackingField: 34
   <BaseDamage>k__BackingField: 0.1
   DamageBonusUpgradeStep: 0.01

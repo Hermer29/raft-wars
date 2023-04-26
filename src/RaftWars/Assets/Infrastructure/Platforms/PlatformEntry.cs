@@ -61,6 +61,7 @@ namespace Infrastructure.Platforms
             SetCurrentUpgradeLevelAsZero();
             HideMaxNotificationLimit();
             ShowLocked();
+            HideUpgradeForAdvertising();
         }
 
         public void ShowUpgradableByAdvertising(int level)
