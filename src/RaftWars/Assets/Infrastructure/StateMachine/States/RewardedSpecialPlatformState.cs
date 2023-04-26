@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DefaultNamespace;
 using InputSystem;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.Services;
 using Services;
 using SpecialPlatforms;
+using SpecialPlatforms.SPRewardState;
+using Object = UnityEngine.Object;
 
 namespace Infrastructure.States
 {
@@ -16,6 +17,7 @@ namespace Infrastructure.States
         private PropertyService _props;
         private IEnumerable<SpecialPlatform> _specialPlatforms;
         private SpecialPlatform _specialOne;
+        private SPRewardWindow _window;
 
         public RewardedSpecialPlatformState(StateMachine stateMachine)
         {
@@ -25,13 +27,14 @@ namespace Infrastructure.States
         public void Exit()
         {
             Game.GameManager.DestroyAll();
-            Game.Hud.gameObject.SetActive(false);
+            Object.Destroy(_window);
         }
 
         public void Enter()
         {
-            _ads = AllServices.GetSingle<AdvertisingService>();
-            _props = AllServices.GetSingle<PropertyService>();
+            Game.Hud.gameObject.SetActive(false);
+            _ads = Game.AdverisingService;
+            _props = Game.PropertyService;
             _specialPlatforms = AllServices.GetSingle<IEnumerable<SpecialPlatform>>();
 
             _specialOne =
@@ -43,6 +46,7 @@ namespace Infrastructure.States
                 return;
             }
             var window = GameFactory.CreateSPRewardWindow();
+            _window = window;
             window.Claim.onClick.AddListener(WatchAd);
             window.NotClaim.onClick.AddListener(Continue);
             window.ShowSpecialPlatform(_specialOne.SpRewardIllustration, _specialOne);

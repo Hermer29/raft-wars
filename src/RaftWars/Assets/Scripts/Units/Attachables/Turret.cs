@@ -177,6 +177,6 @@ public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
     void IMagnetTurret.ModifyPickingSpace(float modifier)
     {
         _radius *= modifier;
-        _magnetEffect.transform.localScale *= modifier;
+        _magnetEffect.transform.localScale *= (modifier / 2);
     }
 }
