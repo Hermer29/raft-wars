@@ -24,14 +24,13 @@ namespace Infrastructure.States
         private TurretMinigameHud _hud;
         private float _startTime;
         private TurretMinigameFactory _turretMinigameFactory;
-        private readonly AdvertisingService _advertisingService;
 
         private const string PlayerOwningTurret = "PlayerOwning";
+        private const float CoinsPerKill = 10f;
 
         public TurretMinigameState(StateMachine stateMachine, LoadingScreen loadingScreen, AdvertisingService advertisingService)
         {
             _stateMachine = stateMachine;
-            _advertisingService = advertisingService;
             _loadingScreen = loadingScreen;
         }
 
@@ -58,7 +57,6 @@ namespace Infrastructure.States
             CreateTurretWithAdvertisingUpgradeOption();
             _platform.PlayingCamera.Priority = 0;
             _platform.LookingAtTurretCamera.Priority = 1;
-
             _hud.ClickedOnScreen += StartGame;
         }
 
@@ -125,9 +123,8 @@ namespace Infrastructure.States
         {
             _turret.StopShooting();
             _hud.PlayerEnemiesView.Hide();
-            var coins = (int)((CrossLevelServices.LevelService.Level * 10f) * (1 - _platform.Generator.Completion));
-            var coinsForAdvertising = (int)((CrossLevelServices.LevelService.Level * 15f) * 
-                                            (1 - _platform.Generator.Completion));
+            var coins = (int)(_platform.Generator.KillCount * CoinsPerKill);
+            var coinsForAdvertising = (int)(coins * 3);
             _hud.ShowMenu(_platform.Generator.KillCount, 
                 (int)(Time.time - _startTime),
                 coins,

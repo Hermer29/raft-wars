@@ -9,12 +9,14 @@ namespace TurretMinigame
     public class TurretMinigameEnemy : MonoBehaviour
     {
         private const int DamagePerSecond = 1;
+        private const int HitsToKill = 3;
+        
         [SerializeField] private float _speed;
         [SerializeField] private Animator _animator;
         
         private Queue<(Vector3, string)> _wayPoints = new Queue<(Vector3, string)>();
         private EnemiesGenerator _generator;
-        private int _counter = 4;
+        private int _counter = HitsToKill;
         private MinigameTurret _turret;
         private bool _attackInProgess;
 

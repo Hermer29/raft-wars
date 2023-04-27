@@ -219,8 +219,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     private void RecountStats()
     {
-        _enemyHud.hpText.text = Mathf.RoundToInt(Mathf.Clamp(hp, 0, 99999)).ToString();
-        _enemyHud.damageText.text = Mathf.RoundToInt(Mathf.Clamp(damage, 0, 99999)).ToString();
+        _enemyHud.hpText.text = Mathf.RoundToInt(Mathf.Clamp(Health, 0, 99999)).ToString();
+        _enemyHud.damageText.text = Mathf.RoundToInt(Mathf.Clamp(Damage, 0, 99999)).ToString();
     }
 
     private void MakeRandomPeopleDie()
