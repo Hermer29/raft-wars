@@ -69,19 +69,18 @@ public class MapGenerator : MonoBehaviour
     private int _offscreenGenerationCooldown;
     private IEnumerable<Pickable> _ownedPickableSpecialPlatforms;
     private IEnumerable<Platform> _ownedReadySpecialPlatforms;
+    private AttachablePlatform _emptyPlatform;
+    private int _guranteedEmptyPlatforms = 3;
 
     public void Construct(BossAppearing appearing, IEnumerable<Pickable> ownedPickable)
     {
+        _emptyPlatform = platformsToSpawn.First();
         _appearing = appearing;
         _diamondsEnabled = Game.FeatureFlags.DiamondsEnabledInGame;
         _collectibles = Game.CollectiblesService;
         _materials = Game.MaterialsService;
         _player = Game.PlayerService;
-        _ownedPickableSpecialPlatforms = ownedPickable;
-        _ownedReadySpecialPlatforms =
-            ownedPickable.Cast<AttachablePlatform>().Select(x => x.platform.GetComponent<Platform>());
-
-        Filter();
+        SetOwnedPickables(ownedPickable);
     }
 
     public void SetOwnedPickables(IEnumerable<Pickable> ownedPickable)
@@ -95,7 +94,7 @@ public class MapGenerator : MonoBehaviour
     private void Filter()
     {
         platformsToSpawn = _ownedPickableSpecialPlatforms.Cast<AttachablePlatform>()
-            .Append(platformsToSpawn.First()).ToArray();
+            .Append(_emptyPlatform).ToArray();
         enemiesToSpawn1 = FilterReadyPlatforms(enemiesToSpawn1).ToArray();
         enemiesToSpawn2 = FilterReadyPlatforms(enemiesToSpawn2).ToArray();
         enemiesToSpawn3 = FilterReadyPlatforms(enemiesToSpawn3).ToArray();
@@ -200,13 +199,23 @@ public class MapGenerator : MonoBehaviour
 
     private IEnumerable<Pickable> WhichOneToSpawnProbabilityCheck(ref int probabilityToSpawnPlatformInPercent)
     {
-        if (Random.Range(0, 100) > 80f - probabilityToSpawnPlatformInPercent)
+        if (Random.Range(0, 100) > ProbabilityToSpawnPlatformInPercent(probabilityToSpawnPlatformInPercent))
         {
             probabilityToSpawnPlatformInPercent = 0;
+            if (_guranteedEmptyPlatforms > 0)
+            {
+                _guranteedEmptyPlatforms--;
+                return Enumerable.Repeat(_emptyPlatform, 1);
+            }
             return _ownedPickableSpecialPlatforms;
         }
         probabilityToSpawnPlatformInPercent += 10;
         return peopleToSpawn;
+    }
+
+    private static float ProbabilityToSpawnPlatformInPercent(int probabilityToSpawnPlatformInPercent)
+    {
+        return 80f - probabilityToSpawnPlatformInPercent;
     }
 
     private bool TryHitWater(out RaycastHit hit)

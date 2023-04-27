@@ -1,4 +1,5 @@
-﻿using Infrastructure.Platforms;
+﻿using System.Collections.Generic;
+using Infrastructure.Platforms;
 using LanguageChanger;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
@@ -32,6 +33,8 @@ namespace Infrastructure.States
             AllServices.Register<PlatformsFactory>(new PlatformsFactory(
                 AllServices.GetSingle<SaveService>(),
                 AllServices.GetSingle<PlatformsLoader>()));
+            AllServices.Register<IEnumerable<SpecialPlatform>>(
+                AllServices.GetSingle<PlatformsFactory>().CreatePlatforms());
             new Game(_stateMachine);
             var owningSequence = new OwningSequence<SpecialPlatform>(Game.PropertyService, Game.FeatureFlags);
             AllServices.Register<OwningSequence<SpecialPlatform>>(owningSequence);

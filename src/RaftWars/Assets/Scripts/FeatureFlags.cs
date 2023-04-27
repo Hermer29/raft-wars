@@ -16,7 +16,7 @@ namespace DefaultNamespace
         [field: SerializeField] public PrefsOptions PrefsImplementation {get; private set;}
         [field: SerializeField] public bool EnableYandexIap { get; private set; }
         [field: SerializeField] public float TimeoutBeforeBossSpawn { get; private set; } = 20;
-        [field: SerializeField] public bool SkipGameplay { get; private set; }
+        [field: SerializeField] public SkipTo SkipTo { get; private set; }
         [field: SerializeField] public float PlayerSpeedIncreasingPerPlatform {get; private set;}
         [FormerlySerializedAs("OwningPropertyDefinition")] [field: SerializeField] public bool OwningOrderDefinition;
     }
@@ -24,6 +24,7 @@ namespace DefaultNamespace
     [Serializable]
     public enum SkipTo
     {
+        NoSkipping,
         Gameplay,
         LevelRewards
     }

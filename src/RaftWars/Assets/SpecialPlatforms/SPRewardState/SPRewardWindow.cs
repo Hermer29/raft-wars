@@ -8,13 +8,16 @@ namespace SpecialPlatforms.SPRewardState
     {
         [SerializeField] private TMP_Text _statText;
         [SerializeField] private Image _statIcon;
+        [SerializeField] private Animation _illustrationAnimation;
+        [SerializeField] private Image _illustration;
 
         public Button Claim;
         public Button NotClaim;
         
-        public void ShowSpecialPlatform(Sprite sprite, SpecialPlatform platform)
+        public void ShowSpecialPlatform(SpecialPlatform platform)
         {
-            _statIcon.sprite = platform.StatIcon;
+            ShowIcon(platform.StatIcon);
+            _illustration.sprite = platform.SpRewardIllustration;
             var statsInformer = platform as IGenericStatsInformer;
 
             switch (statsInformer.Type)
@@ -23,14 +26,13 @@ namespace SpecialPlatforms.SPRewardState
                     HideStatsInfo();
                     break;
                 case ValueType.Absolute:
-                    ShowIcon(sprite);
                     _statText.text = $"{statsInformer.DefaultAmount}";
                     break;
                 case ValueType.Relative:
-                    ShowIcon(sprite);
                     _statText.text = $"{Mathf.Floor(statsInformer.DefaultAmount * 100)}%";
                     break;
             }
+            _illustrationAnimation.Play();
         }
 
         private void ShowIcon(Sprite sprite)

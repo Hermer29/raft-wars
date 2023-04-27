@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using DefaultNamespace;
 using RaftWars.Infrastructure;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -55,12 +56,23 @@ namespace Infrastructure.States
             }
             Game.MapGenerator = Instantiate(loadingLevelAssets.Result).GetComponent<MapGenerator>();
             _loading.SetSliderProcess(2f / 3f);
-            if (Game.FeatureFlags.SkipGameplay)
+            yield return DetermineNextGameState();
+        }
+
+        private IEnumerator DetermineNextGameState()
+        {
+            switch (Game.FeatureFlags.SkipTo)
             {
-                _stateMachine.Enter<TurretMinigameState>();
-                yield break;
+                case SkipTo.Gameplay:
+                    _stateMachine.Enter<TurretMinigameState>();
+                    yield break;
+                case SkipTo.LevelRewards:
+                    _stateMachine.Enter<RewardedSpecialPlatformState>();
+                    yield break;
+                case SkipTo.NoSkipping:
+                    _stateMachine.Enter<GameplayState>();
+                    yield break;
             }
-            _stateMachine.Enter<GameplayState>();
         }
     }
 }

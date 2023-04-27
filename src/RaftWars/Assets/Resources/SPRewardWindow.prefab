@@ -601,6 +601,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _statText: {fileID: 1969828713214224555}
   _statIcon: {fileID: 1969828713982236553}
+  _illustrationAnimation: {fileID: 1969828714504117515}
+  _illustration: {fileID: 1969828714504117517}
   Claim: {fileID: 1969828712732540252}
   NotClaim: {fileID: 1969828713868715508}
 --- !u!1 &1969828713214224557
@@ -1089,7 +1091,7 @@ GameObject:
   - component: {fileID: 1969828713982236550}
   - component: {fileID: 1969828713982236553}
   m_Layer: 5
-  m_Name: Image
+  m_Name: stats-icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1166,7 +1168,7 @@ GameObject:
   - component: {fileID: 1969828714504117517}
   - component: {fileID: 1969828714504117515}
   m_Layer: 5
-  m_Name: Image
+  m_Name: illustration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1239,10 +1241,10 @@ Animation:
   m_GameObject: {fileID: 1969828714504117519}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 0}
+  m_Animation: {fileID: 7400000, guid: ab343556cfba2bc4989faeb143c74b8a, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: ab343556cfba2bc4989faeb143c74b8a, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0

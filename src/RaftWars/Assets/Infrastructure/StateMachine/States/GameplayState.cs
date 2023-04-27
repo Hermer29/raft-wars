@@ -46,8 +46,7 @@ namespace Infrastructure.States
             Game.MoneyService.AmountUpdated += Game.Hud.ShowCoins;
             Game.Hud.ShowCoins(Game.MoneyService.Amount);
             Game.StatsCanvas = GameFactory.CreateStatsCanvas();
-            var platforms = AllServices.GetSingle<PlatformsFactory>().CreatePlatforms();
-            AllServices.Register<IEnumerable<SpecialPlatform>>(platforms);
+            var platforms = AllServices.GetSingle<IEnumerable<SpecialPlatform>>();
             Player player = CreatePlayer();
             Game.PlayerService = new PlayerService(player);
             Game.FightService = new FightService(

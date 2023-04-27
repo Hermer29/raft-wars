@@ -26,13 +26,16 @@ namespace Infrastructure.States
         
         public void Exit()
         {
-            Game.GameManager.DestroyAll();
-            Object.Destroy(_window);
+            Game.GameManager?.DestroyAll();
+            if(_window != null)
+                Object.Destroy(_window.gameObject);
         }
 
         public void Enter()
         {
-            Game.Hud.gameObject.SetActive(false);
+            if(Game.Hud != null)
+                Game.Hud.gameObject.SetActive(false);
+            
             _ads = Game.AdverisingService;
             _props = Game.PropertyService;
             _specialPlatforms = AllServices.GetSingle<IEnumerable<SpecialPlatform>>();
@@ -49,7 +52,7 @@ namespace Infrastructure.States
             _window = window;
             window.Claim.onClick.AddListener(WatchAd);
             window.NotClaim.onClick.AddListener(Continue);
-            window.ShowSpecialPlatform(_specialOne.SpRewardIllustration, _specialOne);
+            window.ShowSpecialPlatform(_specialOne);
         }
 
         private void WatchAd()

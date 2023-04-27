@@ -255,6 +255,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         if (!canPlay)
         {
             rb.velocity = Vector3.zero;
+            Game.AudioService.StopPlayingSwimmingSound();
             return;
         }
         

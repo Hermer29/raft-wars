@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Common;
+using Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
 using UnityEngine;
 
@@ -36,6 +37,7 @@ namespace Units
         {
             while (_spawnLimit > 0)
             {
+                yield return new WaitWhile(() => Game.FightService.FightStarted);
                 yield return new WaitWhile(() => TryCreateNewPeople() == false);
                 _spawnLimit--;
                 yield return new WaitForSeconds(_balanceData.SpawnPeopleTime);
