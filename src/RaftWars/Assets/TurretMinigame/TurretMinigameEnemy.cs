@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TurretMinigame.Enemies;
 using TurretMinigame.Player;
@@ -13,12 +14,14 @@ namespace TurretMinigame
         
         [SerializeField] private float _speed;
         [SerializeField] private Animator _animator;
+        [SerializeField] private ParticleSystem _shotParticles;
         
         private Queue<(Vector3, string)> _wayPoints = new Queue<(Vector3, string)>();
         private EnemiesGenerator _generator;
         private int _counter = HitsToKill;
         private MinigameTurret _turret;
         private bool _attackInProgess;
+        private Coroutine _shootingOverTime;
 
         public void Construct(EnemiesGenerator generator, MinigameTurret turret)
         {
@@ -30,6 +33,18 @@ namespace TurretMinigame
         public void SetupWaypoints(Vector3 XYWaypoint, string animationName)
         {
             _wayPoints.Enqueue((XYWaypoint, animationName));
+        }
+        
+        private IEnumerator ShotOverTime()
+        {
+            while (true)
+            {
+                if(_generator.GameEnded)
+                    yield break;
+                _shotParticles.Stop();
+                _shotParticles.Play();
+                yield return new WaitForSeconds(1.5f);
+            }
         }
 
         private void Update()
@@ -74,6 +89,7 @@ namespace TurretMinigame
 
         private void StartAttackingPlayer()
         {
+            _shootingOverTime = StartCoroutine(ShotOverTime());
             _animator.Play("Shoot");
             GetComponentInChildren<Rigidbody>().isKinematic = true;
             _attackInProgess = true;
@@ -92,6 +108,20 @@ namespace TurretMinigame
                 if(other._attackInProgess)
                     StartAttackingPlayer();
             }
+        }
+
+        private void OnDestroy()
+        {
+            TryStopShooting();
+        }
+
+        private void TryStopShooting()
+        {
+            if (_shootingOverTime == null)
+                return;
+
+            _shotParticles.Stop();
+            StopCoroutine(_shootingOverTime);
         }
 
         private void OnCollisionEnter(Collision collision)

@@ -20,6 +20,6 @@ MonoBehaviour:
   <PrefsImplementation>k__BackingField: 1
   <EnableYandexIap>k__BackingField: 0
   <TimeoutBeforeBossSpawn>k__BackingField: 20
-  <SkipTo>k__BackingField: 0
+  <SkipTo>k__BackingField: 1
   <PlayerSpeedIncreasingPerPlatform>k__BackingField: 0
   OwningOrderDefinition: 0
