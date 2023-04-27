@@ -15,6 +15,7 @@ namespace TurretMinigame
         [SerializeField] private float _speed;
         [SerializeField] private Animator _animator;
         [SerializeField] private ParticleSystem _shotParticles;
+        [SerializeField] private AudioSource _shootingSound;
         
         private Queue<(Vector3, string)> _wayPoints = new Queue<(Vector3, string)>();
         private EnemiesGenerator _generator;
@@ -22,9 +23,11 @@ namespace TurretMinigame
         private MinigameTurret _turret;
         private bool _attackInProgess;
         private Coroutine _shootingOverTime;
+        private AudioService _audioService;
 
-        public void Construct(EnemiesGenerator generator, MinigameTurret turret)
+        public void Construct(EnemiesGenerator generator, MinigameTurret turret, AudioService audioService)
         {
+            _audioService = audioService;
             _turret = turret;
             _generator = generator;
             _animator.Play("Swim");
@@ -43,6 +46,8 @@ namespace TurretMinigame
                     yield break;
                 _shotParticles.Stop();
                 _shotParticles.Play();
+                _shootingSound.Stop();
+                _shootingSound.Play();
                 yield return new WaitForSeconds(1.5f);
             }
         }
@@ -131,6 +136,7 @@ namespace TurretMinigame
         
         public void TakeHit(GameObject bullet)
         {
+            _audioService.PlayHitMarker();
             _turret.ReturnBullet(bullet);
             _counter--;
             if (_counter == 0)

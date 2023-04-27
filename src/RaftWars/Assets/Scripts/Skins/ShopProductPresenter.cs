@@ -47,6 +47,7 @@ namespace Skins
                 MarkAsUnbought();
             }
 
+            _propertyService.PropertyOwned += UpdateRequested;
             _shopEntry.ApplyPositionDeltaSize(_product.OverrideEntryDeltaSize);
             _usingService.Used += UpdateRequested;
         }
@@ -66,12 +67,20 @@ namespace Skins
             OnUse();
         }
 
+        private void UpdateRequested(IAcquirable obj)
+        {
+            if (obj.Guid == _product.Guid)
+            {
+                MarkAsBought();
+            }
+        }
+
         private void UpdateRequested((EquippedType, IShopProduct) product)
         {
             bool sameType = _product.GetType() == product.Item2.GetType();
-            if (product.Item2 != _product && sameType && _shopEntry.Use.gameObject.activeInHierarchy)
+            if (sameType && _shopEntry.Use.gameObject.activeInHierarchy)
             {
-                _shopEntry.Use.interactable = true;
+                _shopEntry.Use.interactable = product.Item2 != _product;
             }
         }
 

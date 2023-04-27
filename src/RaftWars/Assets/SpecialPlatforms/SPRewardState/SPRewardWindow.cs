@@ -1,10 +1,11 @@
-﻿using TMPro;
+﻿using Interface.RewardWindows;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace SpecialPlatforms.SPRewardState
 {
-    public class SPRewardWindow : MonoBehaviour
+    public class SPRewardWindow : MonoBehaviour, IRewardWindow<SpecialPlatform>
     {
         [SerializeField] private TMP_Text _statText;
         [SerializeField] private Image _statIcon;
@@ -14,7 +15,7 @@ namespace SpecialPlatforms.SPRewardState
         public Button Claim;
         public Button NotClaim;
         
-        public void ShowSpecialPlatform(SpecialPlatform platform)
+        public void Show(SpecialPlatform platform)
         {
             ShowIcon(platform.StatIcon);
             _illustration.sprite = platform.SpRewardIllustration;

@@ -38,7 +38,7 @@ namespace Services
             if (FightStarted)
                 return;
             FightStarted = true;
-            
+            enemy.GetHud().PrioritizedShow = true;
             _currentFightEnemy = enemy;
             _fightCamera.FightStarted(_player.PlayerInstance, enemy);
             _runner.StartCoroutine(PlayerFightProcess());

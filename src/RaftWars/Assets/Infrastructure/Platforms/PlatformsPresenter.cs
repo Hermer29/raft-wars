@@ -1,4 +1,5 @@
-﻿using DefaultNamespace.Skins;
+﻿using System;
+using DefaultNamespace.Skins;
 using InputSystem;
 using RaftWars.Infrastructure.Services;
 using Services;
@@ -6,7 +7,7 @@ using SpecialPlatforms;
 
 namespace Infrastructure.Platforms
 {
-    public class PlatformsPresenter
+    public class PlatformsPresenter : IDisposable
     {
         private readonly PlatformEntry _entry;
         private readonly SpecialPlatform _platform;
@@ -146,6 +147,11 @@ namespace Infrastructure.Platforms
             }
 
             _entry.ShowUpgradableByMoney(_platform.UpgradeCost, _platform.UpgradedLevel);
+        }
+
+        public void Dispose()
+        {
+            _propertyService.PropertyOwned -= OnAcquiredOtherPlatform;
         }
     }
 }

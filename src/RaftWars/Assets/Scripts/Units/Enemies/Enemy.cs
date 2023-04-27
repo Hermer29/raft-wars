@@ -399,7 +399,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
     {
         if (isBoss)
         {
-            warriors = GetComponentsInChildren<People>().ToList();
+            warriors = GetComponentsInChildren<People>().Where(x => x.isDead == false)
+                .ToList();
         }
         foreach (People people in warriors)
         {
@@ -505,6 +506,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
             return;
         People warrior = warriors[Random.Range(0, warriors.Count)];
         warrior.MakeGrey();
+        warrior.isDead = true;
         warrior.PlayDyingAnimation();
         warriors.Remove(warrior);
     }

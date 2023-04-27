@@ -2,6 +2,7 @@
 using System.Collections;
 using Cinemachine;
 using Interface;
+using Interface.RewardWindows;
 using SpecialPlatforms.SPRewardState;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -104,6 +105,11 @@ namespace RaftWars.Infrastructure
         public static SPRewardWindow CreateSPRewardWindow()
         {
             return Instantiate(Resources.Load<SPRewardWindow>("SPRewardWindow"));
+        }
+
+        public static RandomRewardWindow CreateRewardWindow()
+        {
+            return Instantiate(Resources.Load<RandomRewardWindow>("RandomRewardWindow"));
         }
     }
 }

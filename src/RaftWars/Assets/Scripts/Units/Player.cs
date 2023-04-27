@@ -73,6 +73,8 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     private int _damageBeforeFight;
     private float _lostPercentForPeople;
     private float _stepForPeoplrCapacityBeforeBattle;
+    private Material _beforeDeathValue;
+    private Vector3 _beforeDeathPosition;
 
     public Vector3 MoveDirectionXZ => new(_input.Horizontal, 0, _input.Vertical);
 
@@ -262,7 +264,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         
         if (!battle)
         {
-            rb.velocity = MoveDirectionXZ * speed;
+            rb.velocity = MoveDirectionXZ * MoveSpeed;
             HandleMovementEvents(MoveDirectionXZ);
         }
         else
@@ -338,22 +340,17 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         {
             warrior.PlayDyingAnimation();
         }
+        warriors.Clear();
         GameManager.instance.PlayerLost();
         Died?.Invoke();
         foreach (var collider in GetComponentsInChildren<Collider>())
         {
             collider.enabled = false;
         }
+        _beforeDeathValue = _material;
         RepaintWith(RaftWars.Infrastructure.AssetManagement.AssetLoader.LoadPlayerDeathMaterial());
 
         _enemyHud.Target = null;
-        if(enemyForBattle != null)
-        {
-            foreach(Platform platform in enemyForBattle.platforms)
-            {   
-                CameraGroup.RemoveMember(platform.transform);
-            }
-        }
         if (_explosionsCoroutine != null)
             StopCoroutine(_explosionsCoroutine);
         StartExplosions(new CancellationTokenSource().Token);
@@ -361,6 +358,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         var virtualCamera = _camera.GetComponent<CinemachineVirtualCamera>();
         virtualCamera.m_Follow = null;
         virtualCamera.m_LookAt = CameraGroup.transform;
+        _beforeDeathPosition = transform.position;
         transform.DOMoveY(-999, .65f).SetSpeedBased(true);
     }
 
@@ -618,5 +616,32 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     public Vector3 GetRandomTarget()
     {
         return platforms.Random().GetRandomPoint();
+    }
+
+    public void Revive()
+    {
+        isDead = false;
+        canPlay = true;
+        foreach (var collider in GetComponentsInChildren<Collider>())
+        {
+            collider.enabled = true;
+        }
+        RepaintWith(_beforeDeathValue);
+        _enemyHud.Target = center;
+        if (_explosionsCoroutine != null)
+            StopCoroutine(_explosionsCoroutine);
+        var virtualCamera = _camera.GetComponent<CinemachineVirtualCamera>();
+        virtualCamera.m_Follow = CameraGroup.transform;
+        virtualCamera.m_LookAt = CameraGroup.transform;
+        transform.DOKill();
+        Vector3 spawnPosition = Game.MapGenerator.GetRandomSpawnPosition();
+        var colliders = Physics.OverlapSphere(_beforeDeathPosition, edgesAndAngleWaves.Bounds / 2);
+
+        while (colliders.Any(x => x.TryGetComponent(out Platform platform) && platform.isEnemy))
+        {
+            spawnPosition = Game.MapGenerator.GetRandomSpawnPosition();
+            colliders = Physics.OverlapSphere(_beforeDeathPosition, edgesAndAngleWaves.Bounds / 2);
+        }
+        transform.position = spawnPosition;
     }
 }

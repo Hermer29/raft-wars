@@ -298,7 +298,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private Vector3 GetRandomSpawnPosition()
+    public Vector3 GetRandomSpawnPosition()
     {
         const int eligibleDistanceToCenter = 40;
         Vector3 posToSpawn = Vector3.zero;

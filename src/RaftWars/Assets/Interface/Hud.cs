@@ -16,6 +16,7 @@ namespace Interface
         public GameObject blackBG;
         public GameObject stagePanel;
         public Slider progressFill;
+        public Slider sliderOnLoseScreen;
         
         [Space]
         public Text damagePercentText, damageCostText, hpPercentText, hpCostText;
@@ -43,13 +44,14 @@ namespace Interface
         public Button NextStage;
         public Arrow Arrow;
         public Button PauseButton;
-        public TMP_Text PreviousLevel;
-        public TMP_Text NextLevel;
-        public Image Tint;
+        public TMP_Text[] PreviousLevel;
+        public TMP_Text[] NextLevel;
         public SoundButton SoundButton;
         public AdvertisingForStatsButton AdvertisingForStatsButton;
         public BossAppearing BossAppearing;
         public SliderWithPercents NewSpecialPlatformProgress;
+        public Button MoneyForAdvertisingEndMenu;
+        public Button Revive;
 
         private void Start()
         {
@@ -64,6 +66,8 @@ namespace Interface
                     counter.SetActive(true);
                 }
             }
+
+            sliderOnLoseScreen.value = 0;
             stagePanel.gameObject.SetActive(false);
             failedPanel.gameObject.SetActive(false);
         }
@@ -84,6 +88,22 @@ namespace Interface
         public void ShowGems(int gems)
         {
             diamondsText.text = gems.ToString();
+        }
+
+        public void ShowPreviousLevel(string currentLevel)
+        {
+            foreach (TMP_Text tmpText in PreviousLevel)
+            {
+                tmpText.text = currentLevel;
+            }
+        }
+
+        public void ShowNextLevel(string currentLevel)
+        {
+            foreach (TMP_Text tmpText in NextLevel)
+            {
+                tmpText.text = currentLevel;
+            }
         }
     }
 }

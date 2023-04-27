@@ -1,6 +1,7 @@
 using System.Collections;
 using RaftWars.Infrastructure.Services;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class AudioService : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class AudioService : MonoBehaviour
     [SerializeField] private AudioSource _shopBuy;
     [SerializeField] private AudioSource _bossIsHere;
     [SerializeField] private AudioSource _battleCry;
+    [SerializeField] private AudioSource _shotSound;
+    [SerializeField] private AudioSource _hitMarker;
 
     private const string AudioKey = "Audio";
 
@@ -97,5 +100,17 @@ public class AudioService : MonoBehaviour
     public void PlayBossIsHere()
     {
         _bossIsHere.Play();
+    }
+
+    public void PlayShotSound()
+    {
+        _shotSound.Stop();
+        _shotSound.Play();
+    }
+
+    public void PlayHitMarker()
+    {
+        _hitMarker.Stop();
+        _hitMarker.Play();
     }
 }

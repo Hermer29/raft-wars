@@ -53,8 +53,11 @@ public class GameManager : MonoBehaviour
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
         hud.NextStage.onClick.AddListener(NextStage);
-        hud.PreviousLevel.text = CrossLevelServices.LevelService.Level.ToString();
-        hud.NextLevel.text = (CrossLevelServices.LevelService.Level + 1).ToString();
+        hud.MoneyForAdvertisingEndMenu.gameObject.SetActive(false);
+        hud.Revive.onClick.AddListener(Revive);
+        var currentLevel = CrossLevelServices.LevelService.Level.ToString();
+        hud.ShowPreviousLevel(currentLevel);
+        hud.ShowNextLevel(currentLevel + 1);
         _stateMachine = stateMachine;
         _input = Game.InputService;
         _input.Disable();
@@ -109,15 +112,25 @@ private void Update()
         WarmupUiStats();
         WarmupStats();
         hud.stagePanel.SetActive(true);
-        hud.progressFill.DOValue(_stage switch
+        var progress = _stage switch
         {
             1 => 0.223f,
             2 => 0.434f,
             3 => 0.644f,
             4 => 0.854f
-        }, 1f);
-        hud.NewSpecialPlatformProgress.SetValue((float) _stage / 5);
+        };
+        hud.progressFill.DOValue(progress, 1f);
+        hud.sliderOnLoseScreen.value = progress;
+        hud.NewSpecialPlatformProgress.SetValue((float)_stage / 5);
         _stage++;
+    }
+
+    private void Revive()
+    {
+        _input.Enable();
+        hud.blackBG.SetActive(false);
+        hud.failedPanel.SetActive(false);
+        Game.PlayerService.Revive();
     }
 
     private void WarmupStats()
@@ -176,7 +189,14 @@ private void Update()
         });
         hud.BuyDamage.gameObject.SetActive(false);
         hud.BuyHealth.gameObject.SetActive(false);
-        
+        hud.MoneyForAdvertisingEndMenu.gameObject.SetActive(true);
+        hud.MoneyForAdvertisingEndMenu.onClick.AddListener(() =>
+        {
+            _advertising.ShowRewarded(() =>
+            {
+                Game.MoneyService.AddCoins(100);
+            });
+        });
         _advertising.ShowInterstitial();
         CrossLevelServices.LevelService.Increment();
         hud.NextStage.onClick.RemoveAllListeners();

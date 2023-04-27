@@ -51,6 +51,7 @@ MonoBehaviour:
   _speed: 0.7
   _animator: {fileID: 7195653520262600136}
   _shotParticles: {fileID: 2681717123392743911}
+  _shootingSound: {fileID: 5316583412382452977}
 --- !u!54 &-2138345766342129152
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -658,6 +659,11 @@ Transform:
 --- !u!4 &1798313727394119511 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1662162535736052206, guid: 5133ba14a184e8544b27eeed83ea16bc, type: 3}
+  m_PrefabInstance: {fileID: 1145555651423532729}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &5316583412382452977 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5056865882718878280, guid: 5133ba14a184e8544b27eeed83ea16bc, type: 3}
   m_PrefabInstance: {fileID: 1145555651423532729}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &7195653520262600136 stripped

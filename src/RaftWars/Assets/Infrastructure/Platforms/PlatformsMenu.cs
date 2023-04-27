@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using InputSystem;
 using RaftWars.Infrastructure;
@@ -17,6 +18,7 @@ namespace Infrastructure.Platforms
         private OwningSequence<SpecialPlatform> _owningSequence;
         private LevelService _levelService;
         private PlayerMoneyService _moneyService;
+        private List<PlatformsPresenter> _presenters;
         
         [SerializeField] private Transform _platformsParent;
         [SerializeField] private CanvasGroup _group;
@@ -30,22 +32,24 @@ namespace Infrastructure.Platforms
             _owningSequence = owningSequence;
             _levelService = levelService;
             _moneyService = moneyService;
-            
+
             CreateEntries(platforms);
             HideImmediately();
         }
 
         private void CreateEntries(IEnumerable<SpecialPlatform> platforms)
         {
+            _presenters = new List<PlatformsPresenter>();
             foreach (SpecialPlatform specialPlatform in platforms.OrderBy(x => x.Serial))
             {
-                new PlatformsPresenter(_factory.CreatePlatformEntry(_platformsParent),
+                var presenter = new PlatformsPresenter(_factory.CreatePlatformEntry(_platformsParent),
                     specialPlatform,
                     _advertisingService,
                     _propertyService,
                     _owningSequence,
                     _levelService,
                     _moneyService);
+                _presenters.Add(presenter);
             }
         }
         
@@ -61,6 +65,14 @@ namespace Infrastructure.Platforms
             _group.alpha = 0;
             _group.interactable = false;
             _group.blocksRaycasts = false;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (PlatformsPresenter platformsPresenter in _presenters)
+            {
+                platformsPresenter.Dispose();
+            }
         }
     }
 }

@@ -68,5 +68,12 @@ namespace InputSystem
             Object.Destroy(PlayerInstance._camera.gameObject);
             Object.Destroy(PlayerInstance.gameObject);
         }
+
+        public void Revive()
+        {
+            PlayerInstance.Revive();
+            AddPeople();
+            AddPeople();
+        }
     }
 }

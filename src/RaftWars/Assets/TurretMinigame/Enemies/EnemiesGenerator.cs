@@ -24,6 +24,7 @@ namespace TurretMinigame.Enemies
         private const int EnemiesAmount = 9 * 5;
         private int _enemiesRemaining = EnemiesAmount;
         private bool _ended;
+        private AudioService _audioService;
 
         private const float MaxPlayerHealth = 10;
 
@@ -33,10 +34,11 @@ namespace TurretMinigame.Enemies
         public bool GameEnded => _ended;
         public float Completion => (float) _enemiesRemaining / EnemiesAmount;
 
-        public void Construct(MinigameTurret minigameTurret, PlayerEnemiesView view)
+        public void Construct(MinigameTurret minigameTurret, PlayerEnemiesView view, AudioService service)
         {
             _view = view;
             _minigameTurret = minigameTurret;
+            _audioService = service;
         }
         
         public void StartGeneration()
@@ -59,7 +61,7 @@ namespace TurretMinigame.Enemies
                 GameObject instantiated = Instantiate(_groupPrefab, position, Quaternion.identity);
                 foreach (TurretMinigameEnemy turretMinigameEnemy in instantiated.GetComponentsInChildren<TurretMinigameEnemy>())
                 {
-                    turretMinigameEnemy.Construct(this, _minigameTurret);
+                    turretMinigameEnemy.Construct(this, _minigameTurret, _audioService);
                     foreach (Vector3 wayPoint in _wayPoints.Take(3))
                     {
                         turretMinigameEnemy.SetupWaypoints(wayPoint, "Swim");

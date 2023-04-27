@@ -54,25 +54,9 @@ namespace Infrastructure.States
                 _loading.SetSliderProcess((loadingLevelAssets.PercentComplete + operationPercent) / totalOperations);
                 yield return null;
             }
-            Game.MapGenerator = Instantiate(loadingLevelAssets.Result).GetComponent<MapGenerator>();
             _loading.SetSliderProcess(2f / 3f);
-            yield return DetermineNextGameState();
-        }
-
-        private IEnumerator DetermineNextGameState()
-        {
-            switch (Game.FeatureFlags.SkipTo)
-            {
-                case SkipTo.Gameplay:
-                    _stateMachine.Enter<TurretMinigameState>();
-                    yield break;
-                case SkipTo.LevelRewards:
-                    _stateMachine.Enter<RewardedSpecialPlatformState>();
-                    yield break;
-                case SkipTo.NoSkipping:
-                    _stateMachine.Enter<GameplayState>();
-                    yield break;
-            }
+            _stateMachine.Enter<PostLevelCreateServicesState, MapGenerator>(
+                loadingLevelAssets.Result.GetComponent<MapGenerator>());
         }
     }
 }

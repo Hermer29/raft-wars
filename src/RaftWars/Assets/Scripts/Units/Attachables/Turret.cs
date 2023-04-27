@@ -42,7 +42,7 @@ public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
     LayerMask mask;
 
     public MeshRenderer[] objectsToDraw;
-    private float _radius;
+    private float _radius = 6;
 
     private void Start()
     {

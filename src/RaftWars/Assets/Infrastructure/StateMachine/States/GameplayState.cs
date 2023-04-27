@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
+using DefaultNamespace.Skins;
 using Infrastructure.Platforms;
 using InputSystem;
 using RaftWars.Infrastructure;
@@ -14,6 +15,7 @@ using SpecialPlatforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Random = UnityEngine.Random;
 
 namespace Infrastructure.States
 {
@@ -40,7 +42,6 @@ namespace Infrastructure.States
             Game.GameManager = GameFactory.CreateGameManager();
             Game.Hud = GameFactory.CreateHud();
             Game.InputService = new InputService(Game.Hud.Joystick);
-            Game.AudioService = GameFactory.CreateAudioService();
             Game.AdverisingService.RewardedEnded += () => Game.AudioService.SetState(true);
             Game.AdverisingService.RewardedStarted += () => Game.AudioService.SetState(false);
             Game.MoneyService.AmountUpdated += Game.Hud.ShowCoins;
@@ -59,47 +60,66 @@ namespace Infrastructure.States
             var ownedPlatforms = platforms.Where(Game.PropertyService.IsOwned);
             var pickablesLoading = ownedPlatforms
                 .Select(x => x.PickablePlatform);
+
+            void Continuation(IEnumerable<AsyncOperationHandle<GameObject>> result)
+            {
+                Game.MapGenerator.Construct(Game.Hud.BossAppearing, ownedPickable: result.Select(x => x.Result.GetComponent<Pickable>()));
+                Pause pause = GameFactory.CreatePauseMenu();
+                pause.Construct(Game.Hud.PauseButton, Game.FightService);
+                Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
+                CreateUsingService();
+                Game.Hud.SoundButton.Construct(Game.AudioService);
+                TryShowTutorial();
+                CreateSpecialPlatforms();
+
+                Game.PropertyService.PropertyOwned += newOwned =>
+                {
+                    if (newOwned is SpecialPlatform)
+                    {
+                        _coroutineRunner.StartCoroutine(WaitForSpecialPlatformsLoading(platforms.Where(Game.PropertyService.IsOwned).Select(x => x.PickablePlatform), result => { Game.MapGenerator.SetOwnedPickables(result.Select(x => x.Result.GetComponent<Pickable>())); }));
+                    }
+                };
+                if (Game.FeatureFlags.IMGUIEnabled)
+                {
+                    GameFactory.CreateIMGUI();
+                }
+
+                YandexIAPService yandexIapService = Game.IAPService;
+                PlayerMoneyService moneyService = Game.MoneyService;
+                PlayerUsingService usingService = Game.UsingService;
+                PropertyService propertyService = Game.PropertyService;
+
+                var uiAssets = new UiAssetLoader();
+                var uiFactory = new UiFactory(uiAssets, yandexIapService, moneyService, usingService, propertyService, _coroutineRunner);
+                Shop shop = uiFactory.CreateShop();
+                _loadingScreen.FadeOut();
+
+                ShowRewardsWindow();
+            }
+
             _coroutineRunner.StartCoroutine(WaitForSpecialPlatformsLoading(
                 pickablesLoading,
-                (result) =>
-                {
-                    Game.MapGenerator.Construct(Game.Hud.BossAppearing,
-                        ownedPickable: result.Select(x => x.Result.GetComponent<Pickable>()));
-                    Pause pause = GameFactory.CreatePauseMenu();
-                    pause.Construct(Game.Hud.PauseButton, Game.FightService);
-                    Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
-                    CreateUsingService();
-                    Game.Hud.SoundButton.Construct(Game.AudioService);
-                    TryShowTutorial();
-                    CreateSpecialPlatforms();
+                Continuation));
+        }
 
-                    Game.PropertyService.PropertyOwned += newOwned =>
-                    {
-                        if (newOwned is SpecialPlatform)
-                        {
-                            _coroutineRunner.StartCoroutine(WaitForSpecialPlatformsLoading(
-                                platforms.Where(Game.PropertyService.IsOwned).Select(x => x.PickablePlatform), result =>
-                                {
-                                    Game.MapGenerator.SetOwnedPickables(
-                                        result.Select(x => x.Result.GetComponent<Pickable>()));
-                                }));
-                        }
-                    };
-                    if (Game.FeatureFlags.IMGUIEnabled)
-                    { 
-                        GameFactory.CreateIMGUI();
-                    }
-                    YandexIAPService yandexIapService = Game.IAPService;
-                    PlayerMoneyService moneyService = Game.MoneyService;
-                    PlayerUsingService usingService = Game.UsingService;
-                    PropertyService propertyService = Game.PropertyService;
-            
-                    var uiAssets = new UiAssetLoader();
-                    var uiFactory = new UiFactory(uiAssets, yandexIapService, moneyService, 
-                        usingService, propertyService, _coroutineRunner);
-                    Shop shop = uiFactory.CreateShop();
-                    _loadingScreen.FadeOut();
-                }));
+        private static void ShowRewardsWindow()
+        {
+            const string firstPlayKey = "FirstStart_RewardsWindow";
+            var isFirstStart = CrossLevelServices.PrefsService.GetInt(firstPlayKey, 0) == 0;
+            if (isFirstStart == false)
+            {
+                if (Random.Range(0, 100) > 10)
+                    MakeRewardWindow();
+            }
+            CrossLevelServices.PrefsService.SetInt(firstPlayKey, 1);
+        }
+
+        private static void MakeRewardWindow()
+        {
+            var hats = AssetLoader.LoadHatSkins().Cast<IShopProduct>();
+            var colors = AssetLoader.LoadPlatformSkins().Cast<IShopProduct>();
+            var allSkins = hats.Concat(colors);
+            new RewardWindowProcessing(allSkins, Game.PropertyService, Game.AdverisingService, Game.UsingService);
         }
 
         private void CreateSpecialPlatforms()

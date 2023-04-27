@@ -22,7 +22,7 @@ public class People : MonoBehaviour
     public bool battle;
     private float timer = 0;
     private Vector3 target;
-    private bool isDead = false;
+    public bool isDead = false;
     public bool isFlamer = false;
     public GameObject flame;
     public AudioSource audio;

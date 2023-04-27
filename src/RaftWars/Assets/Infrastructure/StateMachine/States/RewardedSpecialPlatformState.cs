@@ -49,10 +49,11 @@ namespace Infrastructure.States
                 return;
             }
             var window = GameFactory.CreateSPRewardWindow();
+            
             _window = window;
             window.Claim.onClick.AddListener(WatchAd);
             window.NotClaim.onClick.AddListener(Continue);
-            window.ShowSpecialPlatform(_specialOne);
+            window.Show(_specialOne);
         }
 
         private void WatchAd()

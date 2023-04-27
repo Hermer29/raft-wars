@@ -24,6 +24,7 @@ namespace Infrastructure.States
         private TurretMinigameHud _hud;
         private float _startTime;
         private TurretMinigameFactory _turretMinigameFactory;
+        private AudioService _audioService;
 
         private const string PlayerOwningTurret = "PlayerOwning";
         private const float CoinsPerKill = 10f;
@@ -39,6 +40,7 @@ namespace Infrastructure.States
             _coroutineRunner = AllServices.GetSingle<ICoroutineRunner>();
             _prefsService = AllServices.GetSingle<IPrefsService>();
             _inputService = new MinigameTurretInputService(_coroutineRunner);
+            _audioService = Game.AudioService;
         }
 
         public void Enter()
@@ -64,7 +66,7 @@ namespace Infrastructure.States
         {
             int currentTier = _prefsService.GetInt(PlayerOwningTurret, 1);
             _turret = _turretMinigameFactory.CreateTurret(currentTier);
-            _turret.Construct(_turretMinigameFactory);
+            _turret.Construct(_turretMinigameFactory, _audioService);
             _platform.PlaceTurret(_turret);
             if (_turretMinigameFactory.TryCreateTurretOfTier(currentTier + 1, out _))
             {
@@ -89,7 +91,7 @@ namespace Infrastructure.States
             }
             int currentTier = _prefsService.GetInt(PlayerOwningTurret, 1);
             _turret = _turretMinigameFactory.CreateTurret(currentTier);
-            _turret.Construct(_turretMinigameFactory);
+            _turret.Construct(_turretMinigameFactory, _audioService);
             _platform.PlaceTurret(_turret);
         }
 
@@ -101,7 +103,7 @@ namespace Infrastructure.States
             _inputService.HorizontalDeltaPositionUpdated += _turret.Rotate;
             _platform.LookingAtTurretCamera.Priority = 0;
             _platform.PlayingCamera.Priority = 1;
-            _platform.Generator.Construct(_turret, _hud.PlayerEnemiesView);
+            _platform.Generator.Construct(_turret, _hud.PlayerEnemiesView, _audioService);
             _platform.Generator.PlayerWon += OnWon;
             _platform.Generator.PlayerLost += OnLost;
             _platform.Generator.StartGeneration();

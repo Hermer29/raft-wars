@@ -18,12 +18,14 @@ namespace TurretMinigame.Player
         [SerializeField] private ParticleSystem _lostParticles;
         [SerializeField] private float _attackFrequency = .25f;
         public Sprite Illustration;
+        private AudioService _audio;
 
         private const float Sensitivity = 1f;
 
-        public void Construct(TurretMinigameFactory factory)
+        public void Construct(TurretMinigameFactory factory, AudioService audio)
         {
             _factory = factory;
+            _audio = audio;
         }
         
         public void StartShooting()
@@ -48,6 +50,7 @@ namespace TurretMinigame.Player
             while (true)
             {
                 yield return new WaitForSeconds(_attackFrequency);
+                _audio.PlayShotSound();
                 GameObject bullet = _factory.CreateBullet();
                 var trailRenderer = bullet.GetComponent<TrailRenderer>();
                 float prevTime = trailRenderer.time;
