@@ -16,13 +16,14 @@ using Skins.Hats;
 using Skins.Platforms;
 using SpecialPlatforms;
 using SpecialPlatforms.Concrete;
+using Units.Enemies;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Visual;
 using Random = UnityEngine.Random;
 using ValueType = SpecialPlatforms.ValueType;
 
-public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCoins, ICanTakePeople
+public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCoins, ICanTakePeople, ITargetable
 {
     [SerializeField] public List<People> warriors;
     [SerializeField] private List<Platform> platforms;
@@ -323,7 +324,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     {
         foreach (People warrior in warriors)
         {
-            warrior.PlayShotAnimation(enemy.transform);
+            warrior.PlayShotAnimation(enemy);
         }
     }
 
@@ -612,5 +613,10 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
     public bool TryTakePeople(GameObject warriorPrefab, Vector3? specifiedSpawnPoint = null)
     {
         throw new NotImplementedException();
+    }
+
+    public Vector3 GetRandomTarget()
+    {
+        return platforms.Random().GetRandomPoint();
     }
 }

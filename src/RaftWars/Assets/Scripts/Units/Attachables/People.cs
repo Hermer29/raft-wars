@@ -3,6 +3,7 @@ using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
 using Services;
 using Skins.Hats;
+using Units.Enemies;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Serialization;
@@ -100,6 +101,8 @@ public class People : MonoBehaviour
     {
         if (!battle || isDead) 
             return;
+
+        RotateTowardsTarget();
         if (timer >= Random.Range(0.6f, 1f))
         {
             timer = 0;
@@ -128,15 +131,20 @@ public class People : MonoBehaviour
         audio.Play();
     }
 
-    public void PlayShotAnimation(Transform target)
+    public void PlayShotAnimation(ITargetable target)
     {
-        this.target = target.position;
+        this.target = target.GetRandomTarget();
         this.target.y = transform.position.y;
         targetShoot = this.target + Vector3.up;
         //transform.LookAt(target.position, Vector3.up);
-        transform.rotation = Quaternion.LookRotation(target.position - transform.position);
+        RotateTowardsTarget();
         battle = true;
         animator.Play("Idle Aiming");
+    }
+
+    private void RotateTowardsTarget()
+    {
+        transform.rotation = Quaternion.LookRotation(this.target - transform.position, Vector3.up);
     }
 
     public void PlayRunAnimation()

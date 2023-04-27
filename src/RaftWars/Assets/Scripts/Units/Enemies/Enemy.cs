@@ -14,6 +14,7 @@ using SpecialPlatforms;
 using SpecialPlatforms.Concrete;
 using UnityEngine;
 using TMPro;
+using Units.Enemies;
 using Unity.VisualScripting;
 using UnityEngine.Serialization;
 using Visual;
@@ -22,7 +23,7 @@ using Random = UnityEngine.Random;
 using ValueType = SpecialPlatforms.ValueType;
 using Vector3 = UnityEngine.Vector3;
 
-public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
+public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
 {
     [SerializeField] public List<Platform> platforms = new List<Platform>();
     [FormerlySerializedAs("maximumDamage")] [FormerlySerializedAs("fullDamage")] public float damage;
@@ -377,14 +378,14 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     {
         foreach (People people in warriors)
         {
-            people.PlayShotAnimation(target.transform);
+            people.PlayShotAnimation(target);
         }
 
         if(boss5Stage)
         {
             foreach(var people in GetComponentsInChildren<People>())
             {
-                people.PlayShotAnimation(target.transform);
+                people.PlayShotAnimation(target);
             }
         }
 
@@ -614,5 +615,10 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople
     public bool TryTakePeople(GameObject warriorPrefab, Vector3? specifiedSpawnPoint)
     {
         throw new NotImplementedException("Should not be called, cause interface is just a marker");
+    }
+
+    public Vector3 GetRandomTarget()
+    {
+        return platforms.Random().GetRandomPoint();
     }
 }
