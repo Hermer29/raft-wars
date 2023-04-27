@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using Units.Attachables;
 
 
 public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
@@ -163,15 +164,15 @@ public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
         coroutine = null;
     }
 
-    public void DrawInMyColor(Material mat)
+    public void DrawInMyColor(Material material)
     {
-        if (objectsToDraw.Length > 0)
+        var visual = GetComponent<PlatformsVisual>();
+        if (visual == null)
         {
-            foreach (MeshRenderer mesh in objectsToDraw)
-            {
-                mesh.material = mat;
-            }
+            Debug.LogWarning($"[Turret] Unable to draw color on turret {name}");
+            return;
         }
+        visual.Colorize(material);
     }
 
     void IMagnetTurret.ModifyPickingSpace(float modifier)

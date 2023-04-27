@@ -227,7 +227,7 @@ PrefabInstance:
     - target: {fileID: 242027601945640022, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 81e611005a2c91a4c866077acc59f84f, type: 2}
+      objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 672221882971161554, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -284,16 +284,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: TankFree_Blue
       objectReference: {fileID: 0}
+    - target: {fileID: 4339861350199996378, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7479840771013675249, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 81e611005a2c91a4c866077acc59f84f, type: 2}
+      objectReference: {fileID: 2100000, guid: a4754d58fb9495c42960ab9c8ec76165, type: 2}
     - target: {fileID: 8808128122493214712, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 81e611005a2c91a4c866077acc59f84f, type: 2}
+      objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+--- !u!23 &4097094592441234232 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7479840771013675249, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+  m_PrefabInstance: {fileID: 6851794030085487561}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5698999725725962154 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1153093373755847779, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
@@ -317,7 +326,7 @@ MonoBehaviour:
   bullet: {fileID: 0}
   shootPoint: {fileID: 0}
   shootEffect: {fileID: 0}
-  toRotate: {fileID: 0}
+  toRotate: {fileID: 6742879070785662139}
   isFlamer: 0
   flame:
   - {fileID: 0}
@@ -329,9 +338,29 @@ MonoBehaviour:
   laser: {fileID: 0}
   nonBattle: 1
   isMagnet: 0
+  _magnetEffect: {fileID: 0}
   objectsToDraw: []
+--- !u!114 &447737705954679325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698999725725962154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0c08505fd442b39fce7cc681e48c98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderers:
+  - {fileID: 4097094592441234232}
 --- !u!4 &6215601231916611611 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 672221882971161554, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
+  m_PrefabInstance: {fileID: 6851794030085487561}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6742879070785662139 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 181818077799470962, guid: a30540c41d7d5ed4281d72b4916afb5e, type: 3}
   m_PrefabInstance: {fileID: 6851794030085487561}
   m_PrefabAsset: {fileID: 0}

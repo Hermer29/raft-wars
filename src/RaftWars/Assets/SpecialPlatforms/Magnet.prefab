@@ -146,6 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 426150010099442527}
   - component: {fileID: 774990182448712643}
+  - component: {fileID: 3056477680391343828}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -201,6 +202,20 @@ MonoBehaviour:
   isMagnet: 1
   _magnetEffect: {fileID: 4529815012384199648}
   objectsToDraw: []
+--- !u!114 &3056477680391343828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5152235725857541396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0c08505fd442b39fce7cc681e48c98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderers:
+  - {fileID: 6990471635566320440}
 --- !u!1 &8010469851613385198
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,13 +931,18 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 74e092edb7ce44941939618a6dd8a27a, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 58580be5a1ee44d42a9966d48abb8758, type: 2}
+      objectReference: {fileID: 2100000, guid: 4238d1a3fc745134ebdf0e07e1319124, type: 2}
     - target: {fileID: 919132149155446097, guid: 74e092edb7ce44941939618a6dd8a27a, type: 3}
       propertyPath: m_Name
       value: MultifunctionalTower
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74e092edb7ce44941939618a6dd8a27a, type: 3}
+--- !u!23 &6990471635566320440 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 74e092edb7ce44941939618a6dd8a27a, type: 3}
+  m_PrefabInstance: {fileID: 8557597179936327612}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8162783356761677911 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 74e092edb7ce44941939618a6dd8a27a, type: 3}

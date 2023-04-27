@@ -1,6 +1,7 @@
 using Common;
 using DefaultNamespace;
 using Skins.Platforms;
+using Units.Attachables;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -24,8 +25,10 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         set
         {
             _material = value;
-            var turret = GetComponentInChildren<Turret>();
-            turret?.DrawInMyColor(_material);
+            var visual = GetComponentInChildren<PlatformsVisual>();
+            if (visual == null)
+                return;
+            visual.Colorize(value);
         }
         get => _material;
     }

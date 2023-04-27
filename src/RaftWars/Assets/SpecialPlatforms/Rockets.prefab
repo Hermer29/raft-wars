@@ -707,7 +707,22 @@ MonoBehaviour:
   laser: {fileID: 0}
   nonBattle: 0
   isMagnet: 0
+  _magnetEffect: {fileID: 0}
   objectsToDraw:
+  - {fileID: 8427434279138606559}
+--- !u!114 &8996882732158572375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5595589468613224973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0c08505fd442b39fce7cc681e48c98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _renderers:
   - {fileID: 8427434279138606559}
 --- !u!23 &8427434279138606559 stripped
 MeshRenderer:
