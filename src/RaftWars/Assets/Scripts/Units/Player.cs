@@ -580,7 +580,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
 
     bool ICanTakeBarrel.TryTakeBarrel(int damage)
     {
-        if(Health < 100)
+        if(Health < 50)
             return true;
         DealDamage(damage);
         return true;
