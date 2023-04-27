@@ -13,13 +13,33 @@ using System.Text.RegularExpressions;
 const string ProjectName = "RaftWars";
 const string ArtifactsFolderPath = "./artifacts";
 
-var target = Argument("target", SendBuildNotificationTask);
+var target = Argument("target", SendBuildNotificationEndingTask);
+
+#region Send-Build-Notification-Start
+
+const string SendBuildNotificationStartingTask = "Send-Build-Notification-Start";
+
+Task(SendBuildNotificationStartingTask)
+    .Does(() => 
+{
+    WriteTelegramMessage(CreateStartingTelegramMessage());
+});
+
+string CreateStartingTelegramMessage()
+{
+    var lastCommit = GitLog(new DirectoryPath("."), 1).First();
+    var message = $"❗❗❗Начат билд по проекту {ProjectName}! " + 
+        $"Произошедшие изменения: {lastCommit.Message}\n";
+    return message;
+}
+#endregion
 
 #region Clean-Artifacts
 
 const string CleanArtifactsTask = "Clean-Artifacts";
 
 Task(CleanArtifactsTask)
+    .IsDependentOn(SendBuildNotificationStartingTask)
     .Does(() => 
 {
     CleanDirectory(ArtifactsFolderPath);
@@ -98,9 +118,9 @@ string FtpConfig(string key) => key switch
 
 #endregion
 
-#region Send-Build-Notification
+#region Send-Build-Notification-Ending
 
-const string SendBuildNotificationTask = "Send-Build-Notification";
+const string SendBuildNotificationEndingTask = "Send-Build-Notification-Ending";
 const string TelegramSessionPathParameter = "Telegram_SessionPath";
 const string TelegramChatIdParameter = "Telegram_ChatId";
 const string TelegramApiIdParameter = "Telegram_ApiId";
@@ -109,9 +129,14 @@ const string TelegramPhoneNumberParameter = "Telegram_PhoneNumber";
 
 string TelegramSessionPath => Context.Configuration.GetValue(TelegramSessionPathParameter);
 
-Task(SendBuildNotificationTask)
+Task(SendBuildNotificationEndingTask)
     .IsDependentOn(UploadFileTask)
-    .Does(async () => 
+    .Does(() => 
+{
+    WriteTelegramMessage(CreateEndingTelegramMessage());
+});
+
+async void WriteTelegramMessage(string message)
 {
     Int64 chatId = Int64.Parse(Context.Configuration.GetValue(TelegramChatIdParameter));
     var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
@@ -119,8 +144,8 @@ Task(SendBuildNotificationTask)
     var account = await tgClient.LoginUserIfNeeded();
     var dialogs = await tgClient.Channels_GetAdminedPublicChannels();
     var dialog = dialogs.chats[chatId];
-    await tgClient.SendMessageAsync(dialog, CreateTelegramMessage());
-});
+    await tgClient.SendMessageAsync(dialog, message);
+}
 
 string TelegramConfig(string what)
 {
@@ -138,10 +163,10 @@ string TelegramConfig(string what)
     }
 }
 
-string CreateTelegramMessage()
+string CreateEndingTelegramMessage()
 {
     var lastCommit = GitLog(new DirectoryPath("."), 1).First();
-    var message = $"Новый билд по проекту {ProjectName}! " + 
+    var message = $"❗❗❗Новый билд по проекту {ProjectName}! " + 
         $"Произошедшие изменения: {lastCommit.Message}\n" +
         $"Демонстрационная ссылка: https://immgames.ru/Games/Wolf/{ProjectName}. "+
         $"Внимание! После следующего обновления эта версия игры \"сгорит\" из ссылки";
