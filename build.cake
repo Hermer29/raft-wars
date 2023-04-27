@@ -10,8 +10,16 @@ using FluentFTP;
 using System.IO;
 using System.Text.RegularExpressions;
 
+
+
 const string ProjectName = "RaftWars";
 const string ArtifactsFolderPath = "./artifacts";
+
+
+var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
+var tgClient = new WTelegram.Client(TelegramConfig, opened);
+var account = await tgClient.LoginUserIfNeeded();
+var dialogs = await tgClient.Channels_GetAdminedPublicChannels();
 
 var target = Argument("target", SendBuildNotificationEndingTask);
 
@@ -139,10 +147,6 @@ Task(SendBuildNotificationEndingTask)
 async void WriteTelegramMessage(string message)
 {
     Int64 chatId = Int64.Parse(Context.Configuration.GetValue(TelegramChatIdParameter));
-    var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
-    using var tgClient = new WTelegram.Client(TelegramConfig, opened);
-    var account = await tgClient.LoginUserIfNeeded();
-    var dialogs = await tgClient.Channels_GetAdminedPublicChannels();
     var dialog = dialogs.chats[chatId];
     await tgClient.SendMessageAsync(dialog, message);
 }
