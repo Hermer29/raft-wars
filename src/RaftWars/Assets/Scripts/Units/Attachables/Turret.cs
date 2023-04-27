@@ -117,7 +117,6 @@ public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
         {
             posToCast = transform.position;
             toRotate.transform.RotateAround(Vector3.up, 0.02f);
-            _radius = 6;
             cols = Physics.OverlapSphere(posToCast, _radius, ~mask, QueryTriggerInteraction.Collide);
             if (cols != null)
             {
@@ -178,6 +177,6 @@ public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
     void IMagnetTurret.ModifyPickingSpace(float modifier)
     {
         _radius *= modifier;
-        _magnetEffect.transform.localScale *= (modifier / 2);
+        _magnetEffect.transform.localScale *= modifier;
     }
 }
