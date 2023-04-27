@@ -123,7 +123,7 @@ public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
             {
                 foreach (Collider col in cols)
                 {
-                    if (col.gameObject.GetComponent<RaftWars.Pickables.Pickable>() != null)
+                    if (col.gameObject.GetComponent(typeof(IDraggableByMagnet)) != null)
                     {
                         col.transform.Translate((posToCast - col.transform.position) * Time.deltaTime);
                     }

@@ -31,4 +31,4 @@ MonoBehaviour:
   <StatIcon>k__BackingField: {fileID: 0}
   <SpRewardIllustration>k__BackingField: {fileID: 351094269, guid: 0d2ee374108cef04ab103ff494ae036d, type: 3}
   <DefaultCollectingRadius>k__BackingField: 1
-  _collectingRadiusUpgradeStep: 0.5
+  _collectingRadiusUpgradeStep: 0.2

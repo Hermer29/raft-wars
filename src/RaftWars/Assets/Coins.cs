@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Infrastructure;
 using RaftWars.Infrastructure;
+using RaftWars.Pickables;
 using UnityEngine;
 
-public class Coins : MonoBehaviour
+public class Coins : MonoBehaviour, IDraggableByMagnet
 {
 
     public int coins;
