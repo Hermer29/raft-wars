@@ -4070,8 +4070,9 @@ GameObject:
   - component: {fileID: 5491542717953757483}
   - component: {fileID: 1947468763992943501}
   - component: {fileID: 3722547778235807532}
+  - component: {fileID: 3813273568839399515}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: NewUpgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4125,7 +4126,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Upgrade
+  m_text: 'New Upgrade
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f957785adebcc4e4fbad0232fc657ea4, type: 2}
   m_sharedMaterial: {fileID: 6651639920126240641, guid: f957785adebcc4e4fbad0232fc657ea4, type: 2}
@@ -4168,7 +4171,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -4194,6 +4197,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3813273568839399515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8798245331357249142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c87b724c8ae34dff9620eea6c49ae346, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _name: 44
+  _text: {fileID: 3722547778235807532}
 --- !u!1 &8999989305495794165
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,6 +8,12 @@ namespace LanguageChanger
         [SerializeField] protected TextName _name;
         [SerializeField] protected TMP_Text _text;
         
+        private void OnValidate()
+        {
+            if(_text == null)
+                _text = GetComponent<TMP_Text>();
+        }
+
         private void Start()
         {
             var provider = FindObjectOfType<LocalizationService>();

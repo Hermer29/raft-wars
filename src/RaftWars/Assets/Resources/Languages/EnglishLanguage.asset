@@ -99,6 +99,14 @@ MonoBehaviour:
     textValue: Unlock
   - textName: 42
     textValue: Units
+  - textName: 43
+    textValue: BONUS LEVEL
+  - textName: 44
+    textValue: New Upgrade
+  - textName: 45
+    textValue: RESULT
+  - textName: 46
+    textValue: Next Time
   <Parametrized>k__BackingField:
   - Name: 27
     Value: Required level {0}

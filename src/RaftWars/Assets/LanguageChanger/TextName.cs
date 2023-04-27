@@ -49,6 +49,11 @@ namespace LanguageChanger
         
         Upgrade,
         Unlock,
-        Units
+        Units,
+        
+        BonusLevel,
+        NewUpgrade,
+        Result,
+        NextTime
     }
 }
