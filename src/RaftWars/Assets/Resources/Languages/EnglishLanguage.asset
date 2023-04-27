@@ -107,6 +107,10 @@ MonoBehaviour:
     textValue: RESULT
   - textName: 46
     textValue: Next Time
+  - textName: 47
+    textValue: Later
+  - textName: 48
+    textValue: Unlock Now
   <Parametrized>k__BackingField:
   - Name: 27
     Value: Required level {0}

@@ -54,6 +54,8 @@ namespace LanguageChanger
         BonusLevel,
         NewUpgrade,
         Result,
-        NextTime
+        NextTime,
+        Later,
+        UnlockNow
     }
 }
