@@ -636,11 +636,15 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         transform.DOKill();
         Vector3 spawnPosition = Game.MapGenerator.GetRandomSpawnPosition();
         var colliders = Physics.OverlapSphere(_beforeDeathPosition, edgesAndAngleWaves.Bounds / 2);
-
+        int iterationsLimit = 5;
+        
         while (colliders.Any(x => x.TryGetComponent(out Platform platform) && platform.isEnemy))
         {
+            if (iterationsLimit <= 0)
+                break;
+            iterationsLimit--;
             spawnPosition = Game.MapGenerator.GetRandomSpawnPosition();
-            colliders = Physics.OverlapSphere(_beforeDeathPosition, edgesAndAngleWaves.Bounds / 2);
+            colliders = Physics.OverlapSphere(_beforeDeathPosition, edgesAndAngleWaves.Bounds / 3);
         }
         transform.position = spawnPosition;
     }

@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
         hud.Revive.onClick.AddListener(Revive);
         var currentLevel = CrossLevelServices.LevelService.Level.ToString();
         hud.ShowPreviousLevel(currentLevel);
-        hud.ShowNextLevel(currentLevel + 1);
+        hud.ShowNextLevel((CrossLevelServices.LevelService.Level + 1).ToString());
         _stateMachine = stateMachine;
         _input = Game.InputService;
         _input.Disable();
