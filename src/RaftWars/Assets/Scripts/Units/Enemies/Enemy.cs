@@ -546,6 +546,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
         
     }
 
+    protected override void AddTurret(Turret turret)
+    {
+        turrets.Add(turret);
+    }
+
     public override EnemyHud GetHud()
     {
         return _statsHud;

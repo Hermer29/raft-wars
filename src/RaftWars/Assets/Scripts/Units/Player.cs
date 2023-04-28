@@ -186,7 +186,12 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         RecountStats();
         warrior.ApplyHat(_hat);
     }
-    
+
+    protected override void AddTurret(Turret turret)
+    {
+        turrets.Add(turret);
+    }
+
     public override EnemyHud GetHud()
     {
         return _enemyHud;

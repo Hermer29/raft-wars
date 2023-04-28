@@ -33,9 +33,13 @@ namespace Common
             {
                 var turret = platform.GetComponentInChildren<Turret>();
                 var stats = platform.GetComponent<StatsHolder>();
-                
+
                 if(turret != null)
+                {
+                    AddTurret(turret);
                     turret.DrawInMyColor(color);
+                }
+
                 if (stats.Platform  is ISpeedIncreasing)
                 {
                     AddSpeedForPlatformType(stats.Platform.GetType());
@@ -63,6 +67,8 @@ namespace Common
             }
             AddPlatform(platform);
         }
+
+        protected abstract void AddTurret(Turret turret);
 
         protected T FindPlatformDataWithConcreteType<T>(Type platform) where T : class
         {

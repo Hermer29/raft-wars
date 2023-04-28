@@ -65,7 +65,8 @@ public class Turret : MonoBehaviour, ICoroutineSender, IMagnetTurret
                             timer = 0;
                             if (!isFlamer)
                             {
-                                Bullet _bullet = Instantiate(bullet, shootPoint.position, Quaternion.identity).GetComponent<Bullet>();
+                                Bullet _bullet = Instantiate(bullet, shootPoint.position, Quaternion.identity)
+                                    .GetComponent<Bullet>();
                                 _bullet.MoveTowards(targetShoot);
                                 shootEffect.SetActive(true);
                                 StartCoroutine(Coroutines.WaitFor(0.7f, delegate ()
