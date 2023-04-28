@@ -53,6 +53,11 @@ namespace Interface
         public Button MoneyForAdvertisingEndMenu;
         public Button Revive;
 
+        public void ShowBonusWindow()
+        {
+            AdvertisingForStatsButton.Show();
+        }
+
         private void Start()
         {
             if(Game.FeatureFlags.DiamondsEnabledInGame == false)
@@ -104,6 +109,11 @@ namespace Interface
             {
                 tmpText.text = currentLevel;
             }
+        }
+
+        public void HideBonusWindow()
+        {
+            AdvertisingForStatsButton.Hide();
         }
     }
 }

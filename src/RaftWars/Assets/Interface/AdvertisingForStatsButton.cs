@@ -39,5 +39,15 @@ namespace Interface
             _playerService.PlayerInstance.IncreaseStats(Amount);
             _gameManager.StartGame();
         }
+
+        public void Show()
+        {
+            _rootWindow.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            _rootWindow.SetActive(false);
+        }
     }
 }

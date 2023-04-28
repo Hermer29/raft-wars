@@ -93,7 +93,7 @@ namespace Infrastructure.States
                 var uiFactory = new UiFactory(uiAssets, yandexIapService, moneyService, usingService, propertyService, _coroutineRunner);
                 Shop shop = uiFactory.CreateShop();
                 _loadingScreen.FadeOut();
-
+                Game.Hud.ShowBonusWindow();
                 ShowRewardsWindow();
             }
 
@@ -116,10 +116,12 @@ namespace Infrastructure.States
 
         private static void MakeRewardWindow()
         {
+            Game.Hud.HideBonusWindow();
             var hats = AssetLoader.LoadHatSkins().Cast<IShopProduct>();
             var colors = AssetLoader.LoadPlatformSkins().Cast<IShopProduct>();
             var allSkins = hats.Concat(colors);
-            new RewardWindowProcessing(allSkins, Game.PropertyService, Game.AdverisingService, Game.UsingService);
+            var rewardWindowProcessing = new RewardWindowProcessing(allSkins, Game.PropertyService, Game.AdverisingService, Game.UsingService);
+            rewardWindowProcessing.Hidden += Game.Hud.ShowBonusWindow;
         }
 
         private void CreateSpecialPlatforms()

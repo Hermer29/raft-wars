@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
 using DefaultNamespace.Skins;
@@ -6,7 +7,7 @@ using InputSystem;
 using Interface.RewardWindows;
 using RaftWars.Infrastructure;
 using Services;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SpecialPlatforms
 {
@@ -29,6 +30,8 @@ namespace SpecialPlatforms
 
             Setup();
         }
+        
+        public event Action Hidden;
 
         private void Setup()
         {
@@ -49,6 +52,7 @@ namespace SpecialPlatforms
         private void OnDecline()
         {
             DestroyWindow();
+           
         }
 
         private void OnAccept()
@@ -63,6 +67,7 @@ namespace SpecialPlatforms
 
         private void DestroyWindow()
         {
+            Hidden?.Invoke();
             Object.Destroy(_window.gameObject);
         }
     }
