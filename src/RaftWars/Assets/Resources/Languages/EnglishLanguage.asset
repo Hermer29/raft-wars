@@ -111,6 +111,8 @@ MonoBehaviour:
     textValue: Later
   - textName: 48
     textValue: Unlock Now
+  - textName: 49
+    textValue: Continue
   <Parametrized>k__BackingField:
   - Name: 27
     Value: Required level {0}

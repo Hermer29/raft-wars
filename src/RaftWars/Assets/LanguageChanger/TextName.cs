@@ -56,6 +56,7 @@ namespace LanguageChanger
         Result,
         NextTime,
         Later,
-        UnlockNow
+        UnlockNow,
+        LooseScreenContinue
     }
 }
