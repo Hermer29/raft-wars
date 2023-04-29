@@ -54,24 +54,30 @@ namespace Infrastructure.States
 
         private void ContinueInitialization()
         {
-            SelectPrefsImplementation();
-            _stateMachine.Enter<BootstrapState>();
+            SelectPrefsImplementation(
+                dataLoadingContinuation: ContinueServicesCreation);
         }
 
-        private void SelectPrefsImplementation()
+        private void SelectPrefsImplementation(System.Action dataLoadingContinuation)
         {
             switch(Game.FeatureFlags.PrefsImplementation)
             {
                 case PrefsOptions.YandexCloud:
-                    CrossLevelServices.PrefsService = new YandexPrefsService(_coroutineRunner);
+                    CrossLevelServices.PrefsService = new YandexPrefsService(_coroutineRunner, dataLoadingContinuation);
                     break;
                 case PrefsOptions.PlayerPrefs:
                     CrossLevelServices.PrefsService = new PlayerPrefsService(_coroutineRunner);
+                    dataLoadingContinuation.Invoke();
                     break;
             }
+        }
+
+        private void ContinueServicesCreation()
+        {
             CrossLevelServices.LevelService = new LevelService(CrossLevelServices.PrefsService);
             AllServices.Register<IPrefsService>(CrossLevelServices.PrefsService);
             AllServices.Register<LevelService>(CrossLevelServices.LevelService);
+            _stateMachine.Enter<BootstrapState>();
         }
     }
 }

@@ -12,11 +12,12 @@ namespace RaftWars.Infrastructure.Services
     {
         private Dictionary<string, string> _data;
 
-        public YandexPrefsService(ICoroutineRunner coroutineRunner)
+        public YandexPrefsService(ICoroutineRunner coroutineRunner, Action onLoaded)
         {
             PlayerAccount.GetCloudSaveData((result) =>
             {
                 InitializeService(result);
+                onLoaded?.Invoke();
                 coroutineRunner.StartCoroutine(SaveOverTime());
             });
         }
@@ -31,6 +32,12 @@ namespace RaftWars.Infrastructure.Services
             _data = JsonConvert.DeserializeObject<Dictionary<string, string>>(json, new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Include
             });
+            if(_data == null)
+                _data = new Dictionary<string, string>();
+        }
+
+        private void CreateDataIfEqualsNull()
+        {
             if(_data == null)
                 _data = new Dictionary<string, string>();
         }
@@ -52,21 +59,27 @@ namespace RaftWars.Infrastructure.Services
 
         public string GetString(string key)
         {
+            CreateDataIfEqualsNull();
+            if(HasKey(key) == false)
+                throw new InvalidOperationException();
             return _data[key];
         }
 
         public void SetString(string key, string value)
         {
+            CreateDataIfEqualsNull();
             _data[key] = value;
         }
 
         public void SetInt(string key, int value)
         {
+            CreateDataIfEqualsNull();
             _data[key] = value.ToString();
         }
 
         public int GetInt(string key, int defaultValue = 0)
         {
+            CreateDataIfEqualsNull();
             if(_data.ContainsKey(key) == false)
                 return defaultValue;
             return int.Parse(_data[key]);
@@ -74,6 +87,7 @@ namespace RaftWars.Infrastructure.Services
 
         public bool HasKey(string key)
         {
+            CreateDataIfEqualsNull();
             return _data.ContainsKey(key);
         }
     }
