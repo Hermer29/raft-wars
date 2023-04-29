@@ -53,7 +53,7 @@ const library = {
             yandexGames.isInitialized = true;
             dynCall('v', successCallbackPtr, []);
             yandexGames.sdk.features.LoadingAPI.ready();
-          }).catch(function() {throw new Error('All settled ended with error.');});
+          }).catch(function(err) {throw new Error('All settled ended with error.' + err);});
         });
       }
     },
