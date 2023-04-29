@@ -127,10 +127,12 @@ private void Update()
 
     private void Revive()
     {
-        _input.Enable();
-        hud.blackBG.SetActive(false);
-        hud.failedPanel.SetActive(false);
-        Game.PlayerService.Revive();
+        _advertising.ShowRewarded(() => {
+            _input.Enable();
+            hud.blackBG.SetActive(false);
+            hud.failedPanel.SetActive(false);
+            Game.PlayerService.Revive();
+        });
     }
 
     private void WarmupStats()
