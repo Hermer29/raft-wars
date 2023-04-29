@@ -301,7 +301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _russian: {fileID: 11400000, guid: 0d02509570e2db04b9b59c92e8f161ab, type: 2}
   _english: {fileID: 11400000, guid: cbd5de8b68c070e4db1dc852a379be31, type: 2}
-  _enableTesting: 1
+  _enableTesting: 0
   _languageOverride: ru
 --- !u!1 &870388907
 GameObject:
