@@ -168,7 +168,7 @@ Task(SendBuildNotificationEndingTask)
 {
     var handle = await tgClient.UploadFileAsync(pathToZippedBuild);
     var targetChat = GetTargetChat();
-    await tgClient.SendMediaAsync(targetChat, CreateEndingTelegramMessage(), handle);
+    var message = await tgClient.SendMediaAsync(targetChat, CreateEndingTelegramMessage(), handle);
 });
 
 ChatBase GetTargetChat()

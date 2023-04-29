@@ -1,11 +1,11 @@
 {
   "dependencies": {
     "com.agava.yandexgames": {
-      "version": "https://github.com/forcepusher/com.agava.yandexgames.git#11.2.1",
+      "version": "https://github.com/forcepusher/com.agava.yandexgames.git#13.0.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "93cd4254e13830886ba1c2b3054481844372140c"
+      "hash": "d1a5a0757dfe41561098875aa33eceeedbe3a4b3"
     },
     "com.dbrizov.naughtyattributes": {
       "version": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
