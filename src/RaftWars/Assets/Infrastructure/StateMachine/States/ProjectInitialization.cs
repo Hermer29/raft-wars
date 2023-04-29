@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine;
 using Agava.YandexGames;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
@@ -11,6 +12,8 @@ namespace Infrastructure.States
         private static CrossLevelServices _crossLevelServices;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly StateMachine _stateMachine;
+        
+        private bool _initializationCompleted;
 
         public ProjectInitialization(ICoroutineRunner coroutineRunner, StateMachine stateMachine)
         {
@@ -38,8 +41,15 @@ namespace Infrastructure.States
 
         private IEnumerator WaitForSdkInitialization()
         {
+            _coroutineRunner.StartCoroutine(PollInitializationCompletion());
             yield return _coroutineRunner.StartCoroutine(
-                YandexGamesSdk.Initialize(ContinueInitialization));
+                YandexGamesSdk.Initialize(() => _initializationCompleted = true));
+        }
+
+        private IEnumerator PollInitializationCompletion()
+        {
+            yield return new WaitWhile(() => _initializationCompleted == false);
+            ContinueInitialization();
         }
 
         private void ContinueInitialization()
