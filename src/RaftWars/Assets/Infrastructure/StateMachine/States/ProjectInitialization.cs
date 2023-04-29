@@ -30,16 +30,15 @@ namespace Infrastructure.States
             Game.FeatureFlags = AssetLoader.LoadFeatureFlags();
             if(Game.FeatureFlags.InitializeYandexGames)
             {
-                _coroutineRunner.StartCoroutine(YandexGamesWorkflow());
+                YandexGamesWorkflow();
                 return;
             }
             ContinueInitialization();
         }
 
-        private IEnumerator YandexGamesWorkflow()
+        private void YandexGamesWorkflow()
         {
-            yield return YandexGamesSdk.Initialize();
-            ContinueInitialization();
+            _coroutineRunner.StartCoroutine(YandexGamesSdk.Initialize(ContinueInitialization));
         }
 
         private void ContinueInitialization()
