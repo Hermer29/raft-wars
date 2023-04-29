@@ -31,9 +31,9 @@ namespace RaftWars.Infrastructure
             stateMachine.Enter<ProjectInitialization>();
         }
 
-        public void StartCoroutine(IEnumerator coroutine)
+        public Coroutine StartCoroutine(IEnumerator coroutine)
         {
-            base.StartCoroutine(coroutine);
+            return base.StartCoroutine(coroutine);
         }
     }
 }

@@ -28,15 +28,18 @@ namespace Infrastructure.States
         public void Enter()
         {
             Game.FeatureFlags = AssetLoader.LoadFeatureFlags();
-            if(Game.FeatureFlags.InitializeYandexGames)
+            if(Game.FeatureFlags.InitializeYandexGames && !YandexGamesSdk.IsInitialized)
             {
-                if (!YandexGamesSdk.IsInitialized)
-                {
-                    _coroutineRunner.StartCoroutine(YandexGamesSdk.Initialize(ContinueInitialization));
-                    return;
-                }
+                _coroutineRunner.StartCoroutine(WaitForSdkInitialization());
+                return;
             }
             ContinueInitialization();
+        }
+
+        private IEnumerator WaitForSdkInitialization()
+        {
+            yield return _coroutineRunner.StartCoroutine(
+                YandexGamesSdk.Initialize(ContinueInitialization));
         }
 
         private void ContinueInitialization()

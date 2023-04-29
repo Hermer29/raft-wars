@@ -1,9 +1,10 @@
 ﻿using System.Collections;
+using UnityEngine;
 
 namespace RaftWars.Infrastructure
 {
     public interface ICoroutineRunner
     {
-        void StartCoroutine(IEnumerator coroutine);
+        Coroutine StartCoroutine(IEnumerator coroutine);
     }
 }

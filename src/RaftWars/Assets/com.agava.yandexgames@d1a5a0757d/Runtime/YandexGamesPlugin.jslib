@@ -51,7 +51,7 @@ const library = {
 
           Promise.allSettled([leaderboardInitializationPromise, playerAccountInitializationPromise, billingInitializationPromise]).then(function () {
             yandexGames.isInitialized = true;
-            dynCall('v', successCallbackPtr, []);
+            Module.dynCall('v', successCallbackPtr, []);
             yandexGames.sdk.features.LoadingAPI.ready();
           }).catch(function(err) {throw new Error('All settled ended with error.' + err);});
         });
