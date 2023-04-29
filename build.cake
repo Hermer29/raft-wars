@@ -9,6 +9,7 @@ using TL;
 using FluentFTP;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 
 
@@ -32,6 +33,12 @@ Task(SendBuildNotificationStartingTask)
 {
     WriteTelegramMessage(CreateStartingTelegramMessage());
 });
+
+async void WriteTelegramMessage(string message)
+{
+    var dialog = GetTargetChat();
+    await tgClient.SendMessageAsync(dialog, message);
+}
 
 string CreateStartingTelegramMessage()
 {
@@ -102,6 +109,7 @@ Task(UploadFileTask)
     .IsDependentOn(BuildWebGlTask)
     .Does(() => 
 {
+    return;
     var client = new FtpClient(
         FtpConfig("Ftp_Host"), 
         FtpConfig("Ftp_Login"), 
@@ -126,6 +134,23 @@ string FtpConfig(string key) => key switch
 
 #endregion
 
+#region Zip-Artifacts
+
+const string ZipArtifactsTask = "Send-Build-Notification-Ending";
+string pathToZippedBuild;
+
+Task(ZipArtifactsTask)
+    .IsDependentOn(UploadFileTask)
+    .Does(() => 
+{
+    DirectoryPath artifactsDirectory = DirectoryPath.FromString(GetLastArtifactDirectory());
+    var archivePath = System.IO.Path.Combine(ArtifactsFolderPath, CreateBuildFolderName() + ".zip");
+    pathToZippedBuild = archivePath;
+    Zip(artifactsDirectory, archivePath);
+});
+
+#endregion
+
 #region Send-Build-Notification-Ending
 
 const string SendBuildNotificationEndingTask = "Send-Build-Notification-Ending";
@@ -138,17 +163,18 @@ const string TelegramPhoneNumberParameter = "Telegram_PhoneNumber";
 string TelegramSessionPath => Context.Configuration.GetValue(TelegramSessionPathParameter);
 
 Task(SendBuildNotificationEndingTask)
-    .IsDependentOn(UploadFileTask)
-    .Does(() => 
+    .IsDependentOn(ZipArtifactsTask)
+    .Does(async () => 
 {
-    WriteTelegramMessage(CreateEndingTelegramMessage());
+    var handle = await tgClient.UploadFileAsync(pathToZippedBuild);
+    var targetChat = GetTargetChat();
+    await tgClient.SendMediaAsync(targetChat, CreateEndingTelegramMessage(), handle);
 });
 
-async void WriteTelegramMessage(string message)
+ChatBase GetTargetChat()
 {
     Int64 chatId = Int64.Parse(Context.Configuration.GetValue(TelegramChatIdParameter));
-    var dialog = dialogs.chats[chatId];
-    await tgClient.SendMessageAsync(dialog, message);
+    return dialogs.chats[chatId];
 }
 
 string TelegramConfig(string what)
@@ -173,7 +199,8 @@ string CreateEndingTelegramMessage()
     var message = $"❗❗❗Новый билд по проекту {ProjectName}! " + 
         $"Произошедшие изменения: {lastCommit.Message}\n" +
         $"Демонстрационная ссылка: https://immgames.ru/Games/Wolf/{ProjectName}. "+
-        $"Внимание! После следующего обновления эта версия игры \"сгорит\" из ссылки";
+        $"Внимание! После следующего обновления эта версия игры \"сгорит\" из ссылки.\n" +
+        $"Прилагается архив с билдом:";
     return message;
 }
 #endregion
