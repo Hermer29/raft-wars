@@ -136,7 +136,7 @@ string FtpConfig(string key) => key switch
 
 #region Zip-Artifacts
 
-const string ZipArtifactsTask = "Send-Build-Notification-Ending";
+const string ZipArtifactsTask = "Zip-Artifacts";
 string pathToZippedBuild;
 
 Task(ZipArtifactsTask)
