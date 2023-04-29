@@ -61,7 +61,7 @@ namespace RaftWars.Infrastructure.Services
         {
             CreateDataIfEqualsNull();
             if(HasKey(key) == false)
-                throw new InvalidOperationException();
+                return String.Empty;
             return _data[key];
         }
 
