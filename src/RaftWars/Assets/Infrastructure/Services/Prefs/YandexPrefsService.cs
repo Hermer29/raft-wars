@@ -14,7 +14,7 @@ namespace RaftWars.Infrastructure.Services
 
         public YandexPrefsService(ICoroutineRunner coroutineRunner)
         {
-            PlayerAccount.GetPlayerData((result) =>
+            PlayerAccount.GetCloudSaveData((result) =>
             {
                 _data = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
             });
@@ -24,7 +24,7 @@ namespace RaftWars.Infrastructure.Services
         private IEnumerator SaveOverTime()
         {
             var serialized = JsonConvert.SerializeObject(_data);
-            PlayerAccount.SetPlayerData(serialized);
+            PlayerAccount.SetCloudSaveData(serialized);
             yield return new WaitForSeconds(2f);
         }
 
