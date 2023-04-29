@@ -18,6 +18,7 @@ namespace Infrastructure.States
             if (SceneManager.GetActiveScene().name != BootSceneName)
             {
                 SceneManager.LoadScene(BootSceneName);
+                return;
             }
             _stateMachine.Enter<CreateServicesState>();
         }

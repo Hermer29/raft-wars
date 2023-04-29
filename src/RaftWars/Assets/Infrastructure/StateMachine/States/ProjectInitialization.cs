@@ -38,7 +38,7 @@ namespace Infrastructure.States
 
         private IEnumerator YandexGamesWorkflow()
         {
-            yield return YandexGamesSdk.Initialize(ContinueInitialization);
+            yield return YandexGamesSdk.Initialize();
             ContinueInitialization();
         }
 
