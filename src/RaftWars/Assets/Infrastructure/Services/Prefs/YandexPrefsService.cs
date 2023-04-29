@@ -16,16 +16,34 @@ namespace RaftWars.Infrastructure.Services
         {
             PlayerAccount.GetCloudSaveData((result) =>
             {
-                _data = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
+                _data = JsonConvert.DeserializeObject<Dictionary<string, string>>(result, new JsonSerializerSettings {
+                    NullValueHandling = NullValueHandling.Include
+                });
+                if(_data == null)
+                    _data = new Dictionary<string, string>();
+                coroutineRunner.StartCoroutine(SaveOverTime());
             });
-            coroutineRunner.StartCoroutine(SaveOverTime());
         }
 
         private IEnumerator SaveOverTime()
         {
-            var serialized = JsonConvert.SerializeObject(_data);
-            PlayerAccount.SetCloudSaveData(serialized);
-            yield return new WaitForSeconds(2f);
+            while(true)
+            {
+                if(_data == null)
+                {
+                    _data = new Dictionary<string, string>();
+                    yield return null;
+                    continue;
+                }
+                if(_data.Count == 0)
+                {
+                    yield return null;
+                    continue;
+                }
+                var serialized = JsonConvert.SerializeObject(_data);
+                PlayerAccount.SetCloudSaveData(serialized);
+                yield return new WaitForSeconds(1.5f);
+            } 
         }
 
         public string GetString(string key)
