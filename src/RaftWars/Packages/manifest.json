@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.agava.yandexgames": "https://github.com/forcepusher/com.agava.yandexgames.git#13.0.0",
     "com.dbrizov.naughtyattributes": "https://github.com/dbrizov/NaughtyAttributes.git#upm",
     "com.unity.addressables": "1.19.19",
     "com.unity.cinemachine": "2.8.9",
