@@ -42,8 +42,9 @@ namespace Infrastructure.States
             Game.GameManager = GameFactory.CreateGameManager();
             Game.Hud = GameFactory.CreateHud();
             Game.InputService = new InputService(Game.Hud.Joystick);
-            Game.AdverisingService.RewardedEnded += () => Game.AudioService.SetState(true);
-            Game.AdverisingService.RewardedStarted += () => Game.AudioService.SetState(false);
+            
+            
+            
             Game.MoneyService.AmountUpdated += Game.Hud.ShowCoins;
             Game.Hud.ShowCoins(Game.MoneyService.Amount);
             Game.StatsCanvas = GameFactory.CreateStatsCanvas();
