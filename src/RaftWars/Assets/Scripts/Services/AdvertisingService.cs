@@ -46,7 +46,7 @@ namespace InputSystem
 
         private void OnOpen()
         {
-            RewardedEnded?.Invoke();
+            
         }
 
         private void OnRewardedClose()
