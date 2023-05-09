@@ -27,6 +27,8 @@ public class Shop : MonoBehaviour
     private PlayerUsingService _playerUsingService;
     private PropertyService _propertyService;
     private ICoroutineRunner _runner;
+    
+    private bool _initialized;
 
     public void Construct(UiFactory factory, YandexIAPService iapService, PlayerMoneyService playerMoneyService, PlayerUsingService playerUsingService,
         PropertyService propertyService, ICoroutineRunner runner)
@@ -38,7 +40,7 @@ public class Shop : MonoBehaviour
         _propertyService = propertyService;
         _entries = new List<ShopProductPresenter>();
         _runner = runner;
-        CreateEntries();
+        HideImmediately();
     }
 
     [field: SerializeField] public ScrollDetector Detector;
@@ -68,11 +70,15 @@ public class Shop : MonoBehaviour
         }
 
         ShowShopEntries(colors, _colorsParent);
-        HideImmediately();
     }
 
     public void ShowImmediately()
     {
+        if (_initialized == false)
+        {
+            CreateEntries();
+            _initialized = true;
+        }
         _group.alpha = 1;
         _group.interactable = true;
         _group.blocksRaycasts = true;
