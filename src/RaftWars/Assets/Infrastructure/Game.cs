@@ -27,14 +27,14 @@ namespace Infrastructure
         public static Canvas StatsCanvas;
         public static AudioService AudioService;
 
-        public Game(StateMachine stateMachine)
+        public Game(StateMachine stateMachine, ICoroutineRunner coroutineRunner)
         {
             StateMachine = stateMachine;
             CollectiblesService = new CollectiblesService();
             IAPService = new YandexIAPService();
             MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService);
             PropertyService = new PropertyService(CrossLevelServices.PrefsService);
-            AdverisingService = new AdvertisingService();
+            AdverisingService = new AdvertisingService(coroutineRunner);
             MaterialsService = new MaterialsService();
         }
     }

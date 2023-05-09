@@ -35,7 +35,7 @@ namespace Infrastructure.States
                 AllServices.GetSingle<PlatformsLoader>()));
             AllServices.Register<IEnumerable<SpecialPlatform>>(
                 AllServices.GetSingle<PlatformsFactory>().CreatePlatforms());
-            new Game(_stateMachine);
+            new Game(_stateMachine, _runner);
             var owningSequence = new OwningSequence<SpecialPlatform>(Game.PropertyService, Game.FeatureFlags);
             AllServices.Register<OwningSequence<SpecialPlatform>>(owningSequence);
             _stateMachine.Enter<LoadLevelState, int>(
