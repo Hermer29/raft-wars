@@ -41,6 +41,8 @@ public class Shop : MonoBehaviour
         _entries = new List<ShopProductPresenter>();
         _runner = runner;
         HideImmediately();
+        
+        TakeDefault();
     }
 
     [field: SerializeField] public ScrollDetector Detector;
@@ -48,28 +50,31 @@ public class Shop : MonoBehaviour
 
     private void CreateEntries()
     {
-        // Извлечение метода
+        var hats = AssetLoader.LoadHatSkins();
+        ShowShopEntries(hats, _hatsParent);
+        var platformSkins = AssetLoader.LoadPlatformSkins();
+        ShowShopEntries(platformSkins, _raftsParent);
+        var colors = AssetLoader.LoadPlayerColors();
+        ShowShopEntries(colors, _colorsParent);
+    }
+
+    private void TakeDefault()
+    {
         var hats = AssetLoader.LoadHatSkins();
         if (hats.Any(x => _playerUsingService.IsUsed(x)) == false)
         {
             _playerUsingService.Use(hats.First(x => x.OwnedByDefault));
         }
-
-        ShowShopEntries(hats, _hatsParent);
         var platformSkins = AssetLoader.LoadPlatformSkins();
         if (platformSkins.Any(x => _playerUsingService.IsUsed(x)) == false)
         {
             _playerUsingService.Use(platformSkins.First(x => x.OwnedByDefault));
         }
-
-        ShowShopEntries(platformSkins, _raftsParent);
         var colors = AssetLoader.LoadPlayerColors();
         if (colors.Any(x => _playerUsingService.IsUsed(x)) == false)
         {
             _playerUsingService.Use(colors.First(x => x.OwnedByDefault));
         }
-
-        ShowShopEntries(colors, _colorsParent);
     }
 
     public void ShowImmediately()
