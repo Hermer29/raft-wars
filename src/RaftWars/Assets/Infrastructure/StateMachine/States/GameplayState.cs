@@ -42,9 +42,6 @@ namespace Infrastructure.States
             Game.GameManager = GameFactory.CreateGameManager();
             Game.Hud = GameFactory.CreateHud();
             Game.InputService = new InputService(Game.Hud.Joystick);
-            
-            
-            
             Game.MoneyService.AmountUpdated += Game.Hud.ShowCoins;
             Game.Hud.ShowCoins(Game.MoneyService.Amount);
             Game.StatsCanvas = GameFactory.CreateStatsCanvas();

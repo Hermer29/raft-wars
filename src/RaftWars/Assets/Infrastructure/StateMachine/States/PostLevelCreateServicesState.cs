@@ -24,12 +24,12 @@ namespace Infrastructure.States
             Game.MapGenerator = Object.Instantiate(mapGenerator);
             bool previousAudioState = true;
             
-            Game.AdverisingService.RewardedStarted += () =>
+            Game.AdverisingService.AdvertisingStarted += () =>
             {
                 previousAudioState = Game.AudioService.State;
                 Game.AudioService.SetState(false);
             };
-            Game.AdverisingService.RewardedEnded += () => Game.AudioService.SetState(previousAudioState);
+            Game.AdverisingService.AdvertisingEnded += () => Game.AudioService.SetState(previousAudioState);
             
             switch (Game.FeatureFlags.SkipTo)
             {

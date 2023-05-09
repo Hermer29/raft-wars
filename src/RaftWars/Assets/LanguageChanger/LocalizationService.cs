@@ -40,7 +40,7 @@ namespace LanguageChanger
                 return _languageOverride != "ru" ? _english : _russian;
             }
             
-            string lang = Agava.YandexGames.YandexGamesSdk.Environment.i18n.lang;
+            string lang = Application.isEditor ? "ru" : Agava.YandexGames.YandexGamesSdk.Environment.i18n.lang;
             return lang != "ru" ? _english : _russian;
         }
 

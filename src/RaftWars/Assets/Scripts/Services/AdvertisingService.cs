@@ -9,8 +9,8 @@ namespace InputSystem
         private bool _previousAudioState;
         private Action _onRewarded;
 
-        public event Action RewardedStarted;
-        public event Action RewardedEnded;
+        public event Action AdvertisingStarted;
+        public event Action AdvertisingEnded;
         
         private static bool SdkNotWorking => Application.isEditor || YandexGamesSdk.IsInitialized == false;
 
@@ -18,10 +18,14 @@ namespace InputSystem
         {
             if (SdkNotWorking)
             {
-                Debug.Log("Interstitial show");
+                Debug.Log("Interstitial shown");
                 return;
             }
-            InterstitialAd.Show();        
+            InterstitialAd.Show(
+                onOpenCallback: OnOpen,
+                onCloseCallback: _ => OnAdvertisingEnded(),
+                onErrorCallback: _ => OnAdvertisingEnded(),
+                onOfflineCallback: OnAdvertisingEnded);        
         }
 
         public void ShowRewarded(Action onRewarded)
@@ -32,31 +36,25 @@ namespace InputSystem
                 onRewarded?.Invoke();
                 return;
             }
-            RewardedStarted?.Invoke();
             _onRewarded = onRewarded;
 
-            VideoAd.Show(OnOpen, OnRewarded, OnRewardedClose, OnRewardedError);
+            VideoAd.Show(
+                onOpenCallback: OnOpen, 
+                onRewardedCallback: OnRewarded, 
+                onCloseCallback: OnAdvertisingEnded, 
+                onErrorCallback: _ => OnAdvertisingEnded());
         }
+
+        private void OnAdvertisingEnded() => 
+            AdvertisingEnded?.Invoke();
 
         private void OnRewarded()
         {
             _onRewarded.Invoke();
-            RewardedEnded?.Invoke();
+            OnAdvertisingEnded();
         }
 
-        private void OnOpen()
-        {
-            
-        }
-
-        private void OnRewardedClose()
-        {
-            RewardedEnded?.Invoke();
-        }
-
-        private void OnRewardedError(string error)
-        {
-            RewardedEnded?.Invoke();
-        }
+        private void OnOpen() => 
+            AdvertisingStarted?.Invoke();
     }
 }
