@@ -10,6 +10,7 @@ using RaftWars.Infrastructure.AssetManagement;
 using Services;
 using Skins;
 using Skins.Hats;
+using Skins.Platforms;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,7 +43,7 @@ public class Shop : MonoBehaviour
         _runner = runner;
         HideImmediately();
         
-        TakeDefault();
+        TakeSavedOrDefault(AssetLoader.LoadHatSkins(), AssetLoader.LoadPlatformSkins(), AssetLoader.LoadPlayerColors());
     }
 
     [field: SerializeField] public ScrollDetector Detector;
@@ -58,23 +59,45 @@ public class Shop : MonoBehaviour
         ShowShopEntries(colors, _colorsParent);
     }
 
-    private void TakeDefault()
+    private void TakeSavedOrDefault(IEnumerable<HatSkin> hatSkins, IEnumerable<PlatformSkin> platformSkins, IEnumerable<PlayerColors> colors)
     {
-        var hats = AssetLoader.LoadHatSkins();
-        if (hats.Any(x => _playerUsingService.IsUsed(x)) == false)
+        TryUseDefaultOrUseFromSave(platformSkins);
+        TryUseDefaultOrUseFromSave(colors);
+        TryUseDefaultOrUseFromSave(hatSkins);
+    }
+
+    private void TryUseDefaultOrUseFromSave(IEnumerable<IShopProduct> platformSkins)
+    {
+        if (TryTakeDefaultIfRequired(platformSkins) == false)
         {
-            _playerUsingService.Use(hats.First(x => x.OwnedByDefault));
+            UseSavedAsUsed(platformSkins);
         }
-        var platformSkins = AssetLoader.LoadPlatformSkins();
-        if (platformSkins.Any(x => _playerUsingService.IsUsed(x)) == false)
+    }
+
+    private void UseSavedAsUsed(IEnumerable<IShopProduct> skins)
+    {
+        _playerUsingService.Use(skins.First(_playerUsingService.IsSavedUsed));
+    }
+
+    private bool TryTakeDefaultIfRequired(IEnumerable<IShopProduct> products)
+    {
+        if (IsInitialUsingRequired(products))
         {
-            _playerUsingService.Use(platformSkins.First(x => x.OwnedByDefault));
+            TakeOneRequiredByDefault(products);
+            return true;
         }
-        var colors = AssetLoader.LoadPlayerColors();
-        if (colors.Any(x => _playerUsingService.IsUsed(x)) == false)
-        {
-            _playerUsingService.Use(colors.First(x => x.OwnedByDefault));
-        }
+
+        return false;
+    }
+
+    private void TakeOneRequiredByDefault(IEnumerable<IShopProduct> products)
+    {
+        _playerUsingService.Use(products.First(x => x.OwnedByDefault));
+    }
+
+    private bool IsInitialUsingRequired(IEnumerable<IShopProduct> hatSkins)
+    {
+        return hatSkins.Any(x => _playerUsingService.IsSavedUsed(x)) == false;
     }
 
     public void ShowImmediately()

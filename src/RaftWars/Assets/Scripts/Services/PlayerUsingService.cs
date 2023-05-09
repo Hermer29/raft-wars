@@ -39,7 +39,7 @@ namespace InputSystem
             }
         }
 
-        public bool IsUsed(IShopProduct shopProduct)
+        public bool IsSavedUsed(IShopProduct shopProduct)
         {
             switch (shopProduct)
             {

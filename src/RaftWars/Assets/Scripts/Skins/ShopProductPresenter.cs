@@ -35,10 +35,9 @@ namespace Skins
 
             if (propertyService.IsOwned(_product))
             {
-                if (_usingService.IsUsed(_product))
+                if (_usingService.IsSavedUsed(_product))
                 {
                     _shopEntry.Use.interactable = false;
-                    _usingService.Use(_product);
                 }
                 MarkAsBought();
             }
