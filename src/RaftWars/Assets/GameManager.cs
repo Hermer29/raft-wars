@@ -218,6 +218,7 @@ private void Update()
         Player.instance.canPlay = true;
         _pause.ShowButton();
         map.GenerateBoss();
+        Game.AdverisingService.ShowInterstitial();
     }
 
     public void AddEnemy(Enemy enemy)

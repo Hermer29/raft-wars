@@ -15,6 +15,8 @@ using SpecialPlatforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
+using Object = System.Object;
 using Random = UnityEngine.Random;
 
 namespace Infrastructure.States
@@ -93,11 +95,20 @@ namespace Infrastructure.States
                 _loadingScreen.FadeOut();
                 Game.Hud.ShowBonusWindow();
                 ShowRewardsWindow();
+                BindAllButtonsToAdvertisingShow();
             }
 
             _coroutineRunner.StartCoroutine(WaitForSpecialPlatformsLoading(
                 pickablesLoading,
                 Continuation));
+        }
+
+        private void BindAllButtonsToAdvertisingShow()
+        {
+            foreach (var button in UnityEngine.Object.FindObjectsOfType<Button>())
+            {
+                button.onClick.AddListener(() => Game.AdverisingService.ShowInterstitial());
+            }
         }
 
         private static void ShowRewardsWindow()

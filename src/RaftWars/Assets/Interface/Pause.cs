@@ -34,6 +34,7 @@ public class Pause : MonoBehaviour
         Game.GameManager.GamePaused = true;
         _menu.gameObject.SetActive(true);
         _continue.onClick.AddListener(Hide);
+        Game.AdverisingService.ShowInterstitial();
     }
 
     private void Hide()
@@ -44,5 +45,6 @@ public class Pause : MonoBehaviour
         Game.GameManager.GamePaused = false;
         _continue.onClick.RemoveAllListeners();
         _menu.gameObject.SetActive(false);
+        Game.AdverisingService.ShowInterstitial();
     }
 }

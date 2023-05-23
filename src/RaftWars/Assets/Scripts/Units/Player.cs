@@ -365,6 +365,7 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         virtualCamera.m_LookAt = CameraGroup.transform;
         _beforeDeathPosition = transform.position;
         transform.DOMoveY(-999, .65f).SetSpeedBased(true);
+        Game.AdverisingService.ShowInterstitial();
     }
 
     private void StartExplosions(CancellationToken token)
