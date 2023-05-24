@@ -9,7 +9,7 @@ namespace InputSystem
 {
     public class YandexIAPService
     {
-        public void TryBuy(IYandexIapProduct product, Action onSuccess, Action onError)
+        public void TryBuy(IYandexIapProduct product, Action onSuccess, Action onError = null)
         {
             if(Application.isEditor == false && Game.FeatureFlags.EnableYandexIap)
             {

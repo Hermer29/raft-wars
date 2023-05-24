@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviour
         _camera = camera;
 
         hud.Replay.onClick.AddListener(RestartLevel);
-        hud.Continue.onClick.AddListener(Continue);
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
         hud.NextStage.onClick.AddListener(NextStage);

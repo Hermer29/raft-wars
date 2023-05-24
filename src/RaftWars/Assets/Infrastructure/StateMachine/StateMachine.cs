@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Infrastructure;
 using Infrastructure.States;
 
 namespace RaftWars.Infrastructure
@@ -18,7 +17,7 @@ namespace RaftWars.Infrastructure
                 [typeof(LoadLevelState)] = new LoadLevelState(this, coroutineRunner, loadingScreen),
                 [typeof(GameplayState)] = new GameplayState(this, loadingScreen, coroutineRunner),
                 [typeof(ProjectInitialization)] = new ProjectInitialization(coroutineRunner, this),
-                [typeof(TurretMinigameState)] = new TurretMinigameState(this, loadingScreen, Game.AdverisingService),
+                [typeof(TurretMinigameState)] = new TurretMinigameState(this),
                 [typeof(RewardedSpecialPlatformState)] = new RewardedSpecialPlatformState(this),
                 [typeof(CreateServicesState)] = new CreateServicesState(this, coroutineRunner),
                 [typeof(PostLevelCreateServicesState)] = new PostLevelCreateServicesState(this)

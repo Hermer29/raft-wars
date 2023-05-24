@@ -2,6 +2,7 @@
 using System.Collections;
 using Agava.YandexGames;
 using RaftWars.Infrastructure;
+using RaftWars.Infrastructure.Services;
 using UnityEngine;
 
 namespace InputSystem
@@ -9,6 +10,8 @@ namespace InputSystem
     public class AdvertisingService
     {
         private readonly ICoroutineRunner _coroutineRunner;
+        private readonly IPrefsService _prefsService;
+        
         private bool _previousAudioState;
         private Action _onRewarded;
         private bool _rewardedEnded;
@@ -18,8 +21,15 @@ namespace InputSystem
         
         private static bool SdkNotWorking => Application.isEditor || YandexGamesSdk.IsInitialized == false;
 
-        public AdvertisingService(ICoroutineRunner coroutineRunner)
+        public bool IsInterstitialPurchased
         {
+            get => _prefsService.GetInt("IsInterstitialPurchased") == 1;
+            set => _prefsService.SetInt("IsInterstitialPurchased", 1);
+        }
+
+        public AdvertisingService(ICoroutineRunner coroutineRunner, IPrefsService prefsService)
+        {
+            _prefsService = prefsService;
             _coroutineRunner = coroutineRunner;
         }
         
@@ -27,7 +37,12 @@ namespace InputSystem
         {
             if (SdkNotWorking)
             {
-                Debug.Log("Interstitial shown");
+                Debug.Log("Interstitial shown. But we're not in build");
+                return;
+            }
+            if (IsInterstitialPurchased)
+            {
+                Debug.Log("Ad block bought");
                 return;
             }
             InterstitialAd.Show(

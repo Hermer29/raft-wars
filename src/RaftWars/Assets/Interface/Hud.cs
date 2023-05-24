@@ -11,7 +11,6 @@ namespace Interface
     {
         [Header("UI")]
         public GameObject tapToPlay;
-        public GameObject winPanel;
         public GameObject failedPanel;
         public GameObject blackBG;
         public GameObject stagePanel;
@@ -38,7 +37,6 @@ namespace Interface
         public Text diamondsText;
 
         public Button Replay;
-        public Button Continue;
         public Button BuyDamage;
         public Button BuyHealth;
         public Button NextStage;

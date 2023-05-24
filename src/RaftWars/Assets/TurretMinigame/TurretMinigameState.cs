@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using InputSystem;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.Services;
 using TurretMinigame;
@@ -15,7 +14,6 @@ namespace Infrastructure.States
     public class TurretMinigameState : IState
     {
         private readonly StateMachine _stateMachine;
-        private readonly LoadingScreen _loadingScreen;
         private ICoroutineRunner _coroutineRunner;
         private IPrefsService _prefsService;
         private MinigameTurretInputService _inputService;
@@ -29,10 +27,9 @@ namespace Infrastructure.States
         private const string PlayerOwningTurret = "PlayerOwning";
         private const float CoinsPerKill = 10f;
 
-        public TurretMinigameState(StateMachine stateMachine, LoadingScreen loadingScreen, AdvertisingService advertisingService)
+        public TurretMinigameState(StateMachine stateMachine)
         {
             _stateMachine = stateMachine;
-            _loadingScreen = loadingScreen;
         }
 
         private void ParseServices()
@@ -45,13 +42,6 @@ namespace Infrastructure.States
 
         public void Enter()
         {
-            if (Game.AdverisingService == null)
-            {
-                // Происходит когда мы форсируем запуск состояния миниигры, в обход состоянию создания сервисов
-                // это необходимо потому что я совершил ошибку, состояние создания сервисов не только их создаёт, но
-                // ещё и всю игру запускает
-                Game.AdverisingService = new AdvertisingService(_coroutineRunner);
-            }
             ParseServices();
             _turretMinigameFactory = new TurretMinigameFactory(new TurretMinigameAssetLoader());
             _hud = _turretMinigameFactory.CreateTurretMinigameHud();

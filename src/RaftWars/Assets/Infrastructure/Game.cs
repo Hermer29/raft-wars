@@ -34,7 +34,7 @@ namespace Infrastructure
             IAPService = new YandexIAPService();
             MoneyService = new PlayerMoneyService(CrossLevelServices.PrefsService);
             PropertyService = new PropertyService(CrossLevelServices.PrefsService);
-            AdverisingService = new AdvertisingService(coroutineRunner);
+            AdverisingService = new AdvertisingService(coroutineRunner, CrossLevelServices.PrefsService);
             MaterialsService = new MaterialsService();
         }
     }
