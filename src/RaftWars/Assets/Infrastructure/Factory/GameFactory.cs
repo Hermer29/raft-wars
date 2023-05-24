@@ -1,11 +1,16 @@
-﻿using System;
-using System.Collections;
-using Cinemachine;
+﻿using Cinemachine;
+using Infrastructure;
 using Interface;
 using Interface.RewardWindows;
+using LanguageChanger;
+using Monetization;
+using RaftWars.Infrastructure.AssetManagement;
+using RaftWars.Pickables;
 using SpecialPlatforms.SPRewardState;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Visual;
 using static RaftWars.Infrastructure.AssetManagement.AssetLoader;
 using static UnityEngine.Object;
 
@@ -77,7 +82,22 @@ namespace RaftWars.Infrastructure
 
         public static EnemyHud CreateStatsHud()
         {
-            return Instantiate(LoadEnemyHud());
+            return Instantiate(LoadEnemyHud(), Game.StatsCanvas.transform, false);
+        }
+
+        public static PickingRaftPieceAdvertising CreateRaftPieceAdvertising(AttachablePlatform platform, TextName platformName)
+        {
+            PickingRaftPieceAdvertising element =  Instantiate(
+                original: LoadPickingRaftPieceAdvertising(), 
+                parent: Game.StatsCanvas.transform, 
+                worldPositionStays: false);
+            platform.MakeNotPickableNormally();
+            element.GetComponent<TransformBindUI>().Target = platform.transform;
+            element.Construct(platform, platformName);
+            var presenceTrigger = platform.AddComponent<PickableNearbyPresenceTrigger>();
+            presenceTrigger.Construct(element);
+            presenceTrigger.Initialize();
+            return element;
         }
 
         public static Pause CreatePauseMenu()

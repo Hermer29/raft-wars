@@ -2,6 +2,7 @@
 using Cinemachine;
 using DefaultNamespace;
 using Interface;
+using Monetization;
 using Mono.Cecil;
 using Skins;
 using Skins.Hats;
@@ -15,25 +16,13 @@ namespace RaftWars.Infrastructure.AssetManagement
 {
     public static class AssetLoader
     {
-        public static Player LoadPlayer()
-        {
-            return Resources.Load<Player>(PlayerPath);
-        }
+        public static Player LoadPlayer() => Resources.Load<Player>(PlayerPath);
 
-        public static Hud LoadHud()
-        {
-            return Resources.Load<Hud>(HudPath);
-        }
+        public static Hud LoadHud() => Resources.Load<Hud>(HudPath);
 
-        public static FeatureFlags LoadFeatureFlags()
-        {
-            return Resources.Load<FeatureFlags>(FeatureFlagsPath);
-        }
+        public static FeatureFlags LoadFeatureFlags() => Resources.Load<FeatureFlags>(FeatureFlagsPath);
 
-        public static GameObject LoadIMGUI()
-        {
-            return Resources.Load<GameObject>(IMGUIPath);
-        }
+        public static GameObject LoadIMGUI() => Resources.Load<GameObject>(IMGUIPath);
 
         public static AsyncOperationHandle<GameObject> LoadLevelGenerator(int level)
         {
@@ -42,94 +31,43 @@ namespace RaftWars.Infrastructure.AssetManagement
             return Addressables.LoadAssetAsync<GameObject>(levelPath);
         }
 
-        public static GameManager LoadGameManager()
-        {
-            return Resources.Load<GameManager>(GameManagerPath);
-        }
+        public static GameManager LoadGameManager() => Resources.Load<GameManager>(GameManagerPath);
 
-        public static LoadingScreen LoadLoadingScreen()
-        {
-            return Resources.Load<LoadingScreen>(LoadingScreenPath);
-        }
+        public static LoadingScreen LoadLoadingScreen() => Resources.Load<LoadingScreen>(LoadingScreenPath);
 
-        public static GameObject LoadPlatformEdge()
-        {
-            return Resources.Load<GameObject>(EdgeResourcesPath);
-        }
+        public static GameObject LoadPlatformEdge() => Resources.Load<GameObject>(EdgeResourcesPath);
 
-        public static ParticleSystem LoadCornerWaves()
-        {
-            return Resources.Load<ParticleSystem>(CornerWavesResourcesPath);
-        }
+        public static ParticleSystem LoadCornerWaves() => Resources.Load<ParticleSystem>(CornerWavesResourcesPath);
 
-        public static CinemachineVirtualCamera LoadPlayerVirtualCamera()
-        {
-            return Resources.Load<CinemachineVirtualCamera>(PlayerVirtualCameraPath);
-        }
+        public static CinemachineVirtualCamera LoadPlayerVirtualCamera() => Resources.Load<CinemachineVirtualCamera>(PlayerVirtualCameraPath);
 
-        public static IEnumerable<PlatformSkin> LoadPlatformSkins()
-        {
-            return Resources.LoadAll<PlatformSkin>(PlatformSkinsPath);
-        }
+        public static IEnumerable<PlatformSkin> LoadPlatformSkins() => Resources.LoadAll<PlatformSkin>(PlatformSkinsPath);
 
-        public static IEnumerable<PlayerColors> LoadPlayerColors()
-        {
-            return Resources.LoadAll<PlayerColors>(PlayerColorsPath);
-        }
+        public static IEnumerable<PlayerColors> LoadPlayerColors() => Resources.LoadAll<PlayerColors>(PlayerColorsPath);
 
-        public static IEnumerable<HatSkin> LoadHatSkins()
-        {
-            return Resources.LoadAll<HatSkin>(HatSkinsPath);
-        }
+        public static IEnumerable<HatSkin> LoadHatSkins() => Resources.LoadAll<HatSkin>(HatSkinsPath);
 
-        public static Explosion LoadExplosion()
-        {
-            return Resources.Load<Explosion>(ExplosionPath);
-        }
+        public static Explosion LoadExplosion() => Resources.Load<Explosion>(ExplosionPath);
 
-        public static EnemyHud LoadBossHud()
-        {
-            return Resources.Load<EnemyHud>(BossHudPath);
-        }
+        public static EnemyHud LoadBossHud() => Resources.Load<EnemyHud>(BossHudPath);
 
-        public static EnemyHud LoadEnemyHud()
-        {
-            return Resources.Load<EnemyHud>(EnemyHudPath);
-        }
+        public static EnemyHud LoadEnemyHud() => Resources.Load<EnemyHud>(EnemyHudPath);
 
-        public static Material LoadGreyDeathMaterial()
-        {
-            return Resources.Load<Material>(GreyDeathMaterialPath);
-        }
+        public static Material LoadGreyDeathMaterial() => Resources.Load<Material>(GreyDeathMaterialPath);
 
-        public static Pause LoadPauseMenu()
-        {
-            return Resources.Load<Pause>(PauseMenuPath);
-        }
+        public static Pause LoadPauseMenu() => Resources.Load<Pause>(PauseMenuPath);
 
-        public static Canvas LoadStatsCanvas()
-        {
-            return Resources.Load<Canvas>(StatsCanvasPath);
-        }
+        public static Canvas LoadStatsCanvas() => Resources.Load<Canvas>(StatsCanvasPath);
 
-        public static Material LoadPlayerDeathMaterial()
-        {
-            return Resources.Load<Material>(PlayerDeathMaterialPath);
-        }
+        public static Material LoadPlayerDeathMaterial() => Resources.Load<Material>(PlayerDeathMaterialPath);
 
-        public static Tutorial LoadTutorial()
-        {
-            return Resources.Load<Tutorial>(TutorialPath);
-        }
-        
-        public static AudioService LoadAudioService()
-        {
-            return Resources.Load<AudioService>(AudioServicePath);
-        }
+        public static Tutorial LoadTutorial() => Resources.Load<Tutorial>(TutorialPath);
 
-        public static People LoadPeople()
-        {
-            return Resources.Load<People>(PeoplePath);
-        }
+        public static AudioService LoadAudioService() => Resources.Load<AudioService>(AudioServicePath);
+
+        public static People LoadPeople() => Resources.Load<People>(PeoplePath);
+
+        public static PickingRaftPieceAdvertising LoadPickingRaftPieceAdvertising() 
+            => Resources.Load<PickingRaftPieceAdvertising>(PickingRaftPieceAdvertisingPath);
     }
 }

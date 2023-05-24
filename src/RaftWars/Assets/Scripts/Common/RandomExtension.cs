@@ -4,9 +4,9 @@ namespace DefaultNamespace.Common
 {
     public static class RandomExtension
     {
-        public static bool ProbabilityCheck(float probability)
+        public static bool ProbabilityCheck(float normalized)
         { 
-            return Random.Range(0, 100) < 100 * probability;
+            return Random.Range(0, 100) <= 100 * normalized;
         }
     }
 }

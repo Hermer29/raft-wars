@@ -1,5 +1,7 @@
+using System.Linq;
 using Common;
 using DefaultNamespace;
+using Services;
 using Skins.Platforms;
 using Units.Attachables;
 using UnityEngine;
@@ -18,8 +20,22 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     private Material _material;
     private PlatformSkin _skin;
     private MeshRenderer _meshRenderer;
+    private FighterRaft _relatedRaft;
+    
     public int Capacity {get; set;}
 
+    public FighterRaft RelatedRaft
+    {
+        get
+        {
+            if (_relatedRaft == null)
+            {
+                _relatedRaft = GetComponentInParent<FighterRaft>();
+            }
+            return _relatedRaft;
+        }
+    }
+    
     public Material Material
     {
         set
@@ -133,58 +149,75 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
         return FindPointOnPlatform(middle);
     }
 
+    private Vector3 CalcOutsidePoint((Vector3 position, Vector3 normal) edge) 
+        => edge.position + edge.normal * Constants.PlatformSize;
+
     private Vector3 GetSpawnPoint(Vector3 pos)
     {
+        var normals = RelatedRaft.GetOutsideNormals()
+            .Select(x => (x.position + transform.parent.position, x.normal));
+        float lastDistance = float.MaxValue;
+        Vector3 lastPoint = Vector3.zero;
+        
+        foreach ((Vector3 position, Vector3 normal) normal in normals)
+        {
+            var point = CalcOutsidePoint(normal);
+            float distance = Vector3.SqrMagnitude(point - pos);
+            if (distance < lastDistance)
+            {
+                lastDistance = distance;
+                lastPoint = point;
+            }
+        }
+        return lastPoint;
         Collider[] outCols;
         Vector3 spawnPos = transform.position;
-        Vector3 diff = pos - transform.position;
-        if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
+        Vector3 toNewPlatform = pos - transform.position;
+        if (Mathf.Abs(toNewPlatform.x) > Mathf.Abs(toNewPlatform.z))
         {
-            if (diff.x > 0)
+            if (toNewPlatform.x > 0)
                 spawnPos.x += Constants.PlatformSize;
             else
                 spawnPos.x -= Constants.PlatformSize;
         }
         else
         {
-            if (diff.z > 0)
+            if (toNewPlatform.z > 0)
                 spawnPos.z += Constants.PlatformSize;
             else
                 spawnPos.z -= Constants.PlatformSize;
         }
         outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-        if (outCols.Length != 0)
+        if (outCols.Length == 0) return spawnPos;
+        var raft = GetComponentInParent<FighterRaft>();
+        if(raft.PlatformsCount == 1)
+            return spawnPos;
+        var trials = 0; 
+        while (true)
         {
-            var raft = GetComponentInParent<FighterRaft>();
-            if(raft.PlatformsCount == 1)
-                return spawnPos;
-            var trials = 0; 
-            while (true)
+            trials++;
+            if (trials == 5)
+                break;
+            spawnPos = raft.GetAnotherPlatform().transform.position;
+            if (Mathf.Abs(toNewPlatform.x) > Mathf.Abs(toNewPlatform.z))
             {
-                trials++;
-                if (trials == 5)
-                    break;
-                spawnPos = raft.GetAnotherPlatform().transform.position;
-                if (Mathf.Abs(diff.x) > Mathf.Abs(diff.z))
-                {
-                    if (diff.x > 0)
-                        spawnPos.x += Constants.PlatformSize;
-                    else
-                        spawnPos.x -= Constants.PlatformSize;
-                }
+                if (toNewPlatform.x > 0)
+                    spawnPos.x += Constants.PlatformSize;
                 else
-                {
-                    if (diff.z > 0)
-                        spawnPos.z += Constants.PlatformSize;
-                    else
-                        spawnPos.z -= Constants.PlatformSize;
-                }
+                    spawnPos.x -= Constants.PlatformSize;
+            }
+            else
+            {
+                if (toNewPlatform.z > 0)
+                    spawnPos.z += Constants.PlatformSize;
+                else
+                    spawnPos.z -= Constants.PlatformSize;
+            }
 
-                outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-                if (outCols.Length == 0)
-                {
-                    break;
-                }
+            outCols = Physics.OverlapSphere(spawnPos, 1.2f);
+            if (outCols.Length == 0)
+            {
+                break;
             }
         }
         return spawnPos;

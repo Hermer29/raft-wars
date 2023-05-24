@@ -86,5 +86,6 @@ namespace Common
         protected abstract void AddPlatform(Platform platform);
 
         public abstract bool TryGetNotFullPlatform(out Platform platform);
+        public abstract (Vector3 position, Vector3 normal)[] GetOutsideNormals();
     }
 }

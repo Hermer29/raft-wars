@@ -176,6 +176,11 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
         return TryFindNotFullPlatform(out platform);
     }
 
+    public override (Vector3, Vector3)[] GetOutsideNormals()
+    {
+        return _edgesAndAngleWaves.GetOutOffPlatformVectors();
+    }
+
     protected override void AddDamageForPlatformType(Type data)
     {
         var platform = FindPlatformDataWithConcreteType<IDamageAmplifyer>(data);
@@ -288,7 +293,7 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
     {
         _statsHud = GameFactory.CreateStatsHud();
         _statsHud.Target = transform;
-        _statsHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
+        
 
         if (isBoss)
         {

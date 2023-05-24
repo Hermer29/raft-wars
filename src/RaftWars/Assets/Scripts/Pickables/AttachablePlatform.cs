@@ -1,12 +1,12 @@
-using System;
 using Infrastructure;
-using RaftWars.Infrastructure;
 using RaftWars.Pickables;
 using UnityEngine;
 
 public class AttachablePlatform : Pickable
 {
     public GameObject platform;
+    private bool _notPickable;
+    private ICanTakePlatform _lastTaker;
 
     private void Update()
     {
@@ -22,14 +22,29 @@ public class AttachablePlatform : Pickable
     
     protected override void TriggerEntered(Collider other)
     {
-        if (other.TryGetComponent<ICanTakePlatform>(out var otherTaker) == false || !canTake) return;
+        if (CantTakePlatform(other, out ICanTakePlatform otherTaker)) return;
+        if (_notPickable)
+        {
+            _lastTaker = otherTaker;
+            return;
+        }
+        Take(otherTaker);
+    }
+
+    private bool CantTakePlatform(Collider other, out ICanTakePlatform otherTaker) 
+        => other.TryGetComponent(out otherTaker) == false || !canTake;
+
+    internal void Take(ICanTakePlatform by)
+    {
         canTake = false;
-        if(otherTaker is Platform {isEnemy: false})
+        if (by is Platform { isEnemy: false })
         {
             Game.AudioService.PlayPlatformPickingUpSound();
         }
         GetComponent<BoxCollider>().enabled = false;
-        other.GetComponent<ICanTakePlatform>().TakePlatform(platform, transform.position);
+        by.TakePlatform(platform, transform.position);
         Destroy(gameObject);
     }
+
+    public void MakeNotPickableNormally() => _notPickable = true;
 }

@@ -32,10 +32,7 @@ public class EnemyHud : MonoBehaviour
     public bool PrioritizedShow;
     public bool NotParticipateInPrioritization;
 
-    private void Start()
-    {
-        _otherHuds.Add(this);
-    }
+    private void Start() => _otherHuds.Add(this);
 
     private void FixedUpdate()
     {

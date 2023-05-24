@@ -63,7 +63,10 @@ namespace Infrastructure.States
 
             void Continuation(IEnumerable<AsyncOperationHandle<GameObject>> result)
             {
-                Game.MapGenerator.Construct(Game.Hud.BossAppearing, ownedPickable: result.Select(x => x.Result.GetComponent<Pickable>()));
+                var pickables = result.Select(x => x.Result.GetComponent<Pickable>());
+                var metadata = pickables.Zip(ownedPlatforms, (loaded, meta) => (loaded, meta));
+                Game.MapGenerator.Construct(Game.Hud.BossAppearing, 
+                    ownedPickable: metadata);
                 Pause pause = GameFactory.CreatePauseMenu();
                 pause.Construct(Game.Hud.PauseButton, Game.FightService);
                 Game.GameManager.Construct(Game.MapGenerator, _stateMachine, Game.Hud.Arrow, Camera.main, pause);
@@ -76,7 +79,13 @@ namespace Infrastructure.States
                 {
                     if (newOwned is SpecialPlatform)
                     {
-                        _coroutineRunner.StartCoroutine(WaitForSpecialPlatformsLoading(platforms.Where(Game.PropertyService.IsOwned).Select(x => x.PickablePlatform), result => { Game.MapGenerator.SetOwnedPickables(result.Select(x => x.Result.GetComponent<Pickable>())); }));
+                        _coroutineRunner.StartCoroutine(WaitForSpecialPlatformsLoading(platforms.Where(Game.PropertyService.IsOwned).Select(x => x.PickablePlatform),
+                            result =>
+                            {
+                                var pickables = result.Select(x => x.Result.GetComponent<Pickable>());
+                                var metadata = pickables.Zip(ownedPlatforms, (loaded, meta) => (loaded, meta));
+                                Game.MapGenerator.SetOwnedPickables(metadata);
+                            }));
                     }
                 };
                 if (Game.FeatureFlags.IMGUIEnabled)

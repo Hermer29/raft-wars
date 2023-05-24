@@ -87,11 +87,12 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         edgesAndAngleWaves.Construct(this);
         platforms[0].Capacity = 2;
     }
-    
+
+    public override (Vector3 position, Vector3 normal)[] GetOutsideNormals() => edgesAndAngleWaves.GetOutOffPlatformVectors();
+
     private void Start()
     {
         _enemyHud = GameFactory.CreateStatsHud();
-        _enemyHud.transform.SetParent(Game.StatsCanvas.transform, worldPositionStays: false);
         _enemyHud.Target = center;
         _enemyHud.CannotBeReplaced = true;
         _enemyHud.WorksInFixedUpdate = true;

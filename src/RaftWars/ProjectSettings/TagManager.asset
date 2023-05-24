@@ -20,7 +20,7 @@ TagManager:
   - PlatformGround
   - MinigameEnemiesHitbox
   - MinigameEnemies
-  - 
+  - PlayerPresenceTrigger
   - 
   - 
   - 

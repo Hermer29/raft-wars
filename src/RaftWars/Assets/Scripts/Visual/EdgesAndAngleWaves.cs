@@ -188,5 +188,7 @@ namespace Visual
             EdgesDisabled = false;
             CreateEdges();
         }
+
+        public (Vector3 origin, Vector3 normal)[] GetOutOffPlatformVectors() => _edges.GetPlatformsWithNormals().ToArray();
     }
 }

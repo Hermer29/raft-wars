@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
+using DefaultNamespace.Common;
 using Infrastructure;
 using InputSystem;
 using RaftWars.Infrastructure;
@@ -67,12 +68,12 @@ public class MapGenerator : MonoBehaviour
     private BossAppearing _appearing;
     private int _counter;
     private int _offscreenGenerationCooldown;
-    private IEnumerable<Pickable> _ownedPickableSpecialPlatforms;
+    private IEnumerable<(Pickable loaded, SpecialPlatform meta)> _ownedPickableSpecialPlatforms;
     private IEnumerable<Platform> _ownedReadySpecialPlatforms;
     private AttachablePlatform _emptyPlatform;
     private int _guranteedEmptyPlatforms = 3;
 
-    public void Construct(BossAppearing appearing, IEnumerable<Pickable> ownedPickable)
+    public void Construct(BossAppearing appearing, IEnumerable<(Pickable loaded, SpecialPlatform meta)> ownedPickable)
     {
         _emptyPlatform = platformsToSpawn.First();
         _appearing = appearing;
@@ -83,18 +84,20 @@ public class MapGenerator : MonoBehaviour
         SetOwnedPickables(ownedPickable);
     }
 
-    public void SetOwnedPickables(IEnumerable<Pickable> ownedPickable)
+    public void SetOwnedPickables(IEnumerable<(Pickable loaded, SpecialPlatform meta)> ownedPickable)
     {
         _ownedPickableSpecialPlatforms = ownedPickable;
-        _ownedReadySpecialPlatforms =
-            ownedPickable.Cast<AttachablePlatform>().Select(x => x.platform.GetComponent<Platform>());
+        _ownedReadySpecialPlatforms = ownedPickable.Select(x => x.loaded)
+            .Cast<AttachablePlatform>().Select(x => x.platform.GetComponent<Platform>());
         Filter();
     }
 
     private void Filter()
     {
-        platformsToSpawn = _ownedPickableSpecialPlatforms.Cast<AttachablePlatform>()
-            .Append(_emptyPlatform).ToArray();
+        platformsToSpawn = _ownedPickableSpecialPlatforms.Select(x => x.loaded)
+            .Cast<AttachablePlatform>()
+            .Append(_emptyPlatform)
+            .ToArray();
         enemiesToSpawn1 = FilterReadyPlatforms(enemiesToSpawn1).ToArray();
         enemiesToSpawn2 = FilterReadyPlatforms(enemiesToSpawn2).ToArray();
         enemiesToSpawn3 = FilterReadyPlatforms(enemiesToSpawn3).ToArray();
@@ -129,7 +132,7 @@ public class MapGenerator : MonoBehaviour
                 yield return platform;
                 continue;
             }
-            yield return _ownedPickableSpecialPlatforms.Random();
+            yield return _ownedPickableSpecialPlatforms.Random().loaded;
         }
     }
 
@@ -178,10 +181,18 @@ public class MapGenerator : MonoBehaviour
             {
                 Debug.Log($"Spawned collectable on way");
                 Vector3 spawnPoint = hit.point + hit.normal * heightOverTheCollider;
-                var pickables = WhichOneToSpawnProbabilityCheck(ref probabilityToSpawnPlatformInPercent);
+                var pickables = WhichOneToSpawnProbabilityCheck(ref probabilityToSpawnPlatformInPercent, 
+                    out GeneratedType generatedType);
+
                 Pickable prefabToSpawn = pickables.ElementAt(Random.Range(0, pickables.Count()));
-                Pickable people = Instantiate(prefabToSpawn, spawnPoint, Quaternion.identity);
-                people.name = "GeneratedOverTime";
+                Pickable collectible = Instantiate(prefabToSpawn, spawnPoint, Quaternion.identity);
+                if (CanCreateRewardedSpecialPlatform(collectible, generatedType, out AttachablePlatform platform))
+                {
+                    var platformMeta = _ownedPickableSpecialPlatforms.First(x => x.loaded == prefabToSpawn).meta;
+                    GameFactory.CreateRaftPieceAdvertising(platform, platformMeta.LocalizedName);
+                }
+
+                collectible.name = "OffScreenGeneratedOverTime";
             }
             else
             {
@@ -197,20 +208,47 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private IEnumerable<Pickable> WhichOneToSpawnProbabilityCheck(ref int probabilityToSpawnPlatformInPercent)
+    private static bool CanCreateRewardedSpecialPlatform(Pickable pickable, GeneratedType generatedType, out AttachablePlatform platform) 
+        => pickable.TryGetComponent(out platform) && 
+           generatedType == GeneratedType.SpecialPlatform && 
+           RandomExtension.ProbabilityCheck(.3f);
+
+    private IEnumerable<Pickable> WhichOneToSpawnProbabilityCheck(ref int probabilityToSpawnPlatformInPercent, out GeneratedType generatedType)
     {
+        #region Debug
+
+        const bool AlwaysSpecialPlatforms = true;
+        if (AlwaysSpecialPlatforms)
+        {
+            generatedType = GeneratedType.SpecialPlatform;
+            return _ownedPickableSpecialPlatforms.Select(x => x.loaded);
+        }
+
+        #endregion
+
         if (Random.Range(0, 100) > ProbabilityToSpawnPlatformInPercent(probabilityToSpawnPlatformInPercent))
         {
             probabilityToSpawnPlatformInPercent = 0;
             if (_guranteedEmptyPlatforms > 0)
             {
                 _guranteedEmptyPlatforms--;
+                generatedType = GeneratedType.EmptyPlatform;
                 return Enumerable.Repeat(_emptyPlatform, 1);
             }
-            return _ownedPickableSpecialPlatforms;
+
+            generatedType = GeneratedType.SpecialPlatform;
+            return _ownedPickableSpecialPlatforms.Select(x => x.loaded);
         }
         probabilityToSpawnPlatformInPercent += 10;
+        generatedType = GeneratedType.People;
         return peopleToSpawn;
+    }
+
+    enum GeneratedType
+    {
+        EmptyPlatform,
+        SpecialPlatform,
+        People
     }
 
     private static float ProbabilityToSpawnPlatformInPercent(int probabilityToSpawnPlatformInPercent)
@@ -261,9 +299,7 @@ public class MapGenerator : MonoBehaviour
             const int checkRadius = 40;
             var intersections = Physics.OverlapSphere(posToSpawn, checkRadius);
             if(intersections.Any(x => x.transform.TryGetComponent<Platform>(out var platform) && platform.isEnemy == false))
-            {
                 continue;
-            }
             Enemy enemy = Instantiate(enemyPrefab, posToSpawn, Quaternion.identity);
             enemy.Construct(AllServices.GetSingle<IEnumerable<SpecialPlatform>>());
             var platforms = ComeUpWithPeopleAndPlatformsCount(stage, out var people, 

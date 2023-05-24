@@ -57,6 +57,8 @@ namespace LanguageChanger
         NextTime,
         Later,
         UnlockNow,
-        LooseScreenContinue
+        LooseScreenContinue,
+        GetIt,
+        GunNameOnBonusesOnMap
     }
 }

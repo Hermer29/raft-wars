@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using RaftWars.Pickables;
 using Skins;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace InputSystem
         {
             var peoplePrefab = Resources.Load<GameObject>("Prefabs/People");
             var isFound = PlayerInstance.TryFindNotFullPlatform(out var platform);
-            if(isFound == false)
+            if (isFound == false)
                 return;
             platform.TryTakePeople(peoplePrefab);
         }

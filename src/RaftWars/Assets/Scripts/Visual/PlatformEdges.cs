@@ -46,6 +46,17 @@ namespace DefaultNamespace
             }
         }
 
+        public IEnumerable<(Vector3 position, Vector3 normal)> GetPlatformsWithNormals()
+        {
+            var result = ExcludeIntersecting(_edges);
+            foreach (var edge in result)
+            {
+                var middlepoint = Vector3.Lerp(edge.corners[0], edge.corners[1], .5f);
+                middlepoint -= edge.normal * Constants.PlatformSize / 2;
+                yield return (middlepoint, edge.normal);
+            }
+        }
+
         public IEnumerable<(Vector3 a, Vector3 b)> GetEdges()
         {
             var result = ExcludeIntersecting(_edges);
