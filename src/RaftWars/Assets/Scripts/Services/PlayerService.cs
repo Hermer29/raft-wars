@@ -76,5 +76,10 @@ namespace InputSystem
             AddPeople();
             AddPeople();
         }
+
+        public void AddPlatform(GameObject selectedPlatformPlatform)
+        {
+            PlayerInstance.GetAnotherPlatform().TakePlatform(selectedPlatformPlatform, Vector3.zero);
+        }
     }
 }

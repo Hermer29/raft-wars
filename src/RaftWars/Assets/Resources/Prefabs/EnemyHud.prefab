@@ -794,6 +794,8 @@ MonoBehaviour:
   nickname: {fileID: 2293818996291332724}
   CannotBeReplaced: 0
   WorksInFixedUpdate: 0
+  PrioritizedShow: 0
+  NotParticipateInPrioritization: 0
 --- !u!225 &2498290719269179278
 CanvasGroup:
   m_ObjectHideFlags: 0

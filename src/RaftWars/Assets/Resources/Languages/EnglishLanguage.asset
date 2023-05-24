@@ -117,6 +117,8 @@ MonoBehaviour:
     textValue: '{0}!'
   - textName: 50
     textValue: Get it!
+  - textName: 52
+    textValue: GAIN POWER!
   <Parametrized>k__BackingField:
   - Name: 27
     Value: Required level {0}

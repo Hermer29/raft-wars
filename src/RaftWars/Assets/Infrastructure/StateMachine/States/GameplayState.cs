@@ -60,11 +60,11 @@ namespace Infrastructure.States
             var ownedPlatforms = platforms.Where(Game.PropertyService.IsOwned);
             var pickablesLoading = ownedPlatforms
                 .Select(x => x.PickablePlatform);
-
             void Continuation(IEnumerable<AsyncOperationHandle<GameObject>> result)
             {
                 var pickables = result.Select(x => x.Result.GetComponent<Pickable>());
                 var metadata = pickables.Zip(ownedPlatforms, (loaded, meta) => (loaded, meta));
+                AllServices.Register(pickables);
                 Game.MapGenerator.Construct(Game.Hud.BossAppearing, 
                     ownedPickable: metadata);
                 Pause pause = GameFactory.CreatePauseMenu();

@@ -59,6 +59,7 @@ namespace LanguageChanger
         UnlockNow,
         LooseScreenContinue,
         GetIt,
-        GunNameOnBonusesOnMap
+        GunNameOnBonusesOnMap,
+        GainPower
     }
 }

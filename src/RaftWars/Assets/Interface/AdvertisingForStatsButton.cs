@@ -13,7 +13,10 @@ namespace Interface
         private PlayerService _playerService;
         private GameManager _gameManager;
 
+        private bool _active;
+        
         private const int Amount = 10;
+        public bool Shown => _active;
 
         public void Construct(AdvertisingService ads, PlayerService playerService, GameManager gameManager)
         {
@@ -42,11 +45,13 @@ namespace Interface
 
         public void Show()
         {
+            _active = true;
             _rootWindow.SetActive(true);
         }
 
         public void Hide()
         {
+            _active = false;
             _rootWindow.SetActive(false);
         }
     }

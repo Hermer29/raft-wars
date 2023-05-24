@@ -2,6 +2,7 @@
 using Agava.YandexGames;
 using RaftWars.Infrastructure;
 using System;
+using DefaultNamespace;
 using Infrastructure;
 using UnityEngine;
 
@@ -22,5 +23,8 @@ namespace InputSystem
             Debug.Log("Yandex IAP disabled because we're not in build. Everything is free for yans");
             onSuccess?.Invoke();
         }
+
+        public void TryBuy(string productId, int cost, Action onSuccess, Action onError = null) 
+            => TryBuy(new SimpleProduct(productId, cost), onSuccess, onError);
     }
 }

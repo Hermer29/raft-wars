@@ -50,10 +50,11 @@ namespace Interface
         public SliderWithPercents NewSpecialPlatformProgress;
         public Button MoneyForAdvertisingEndMenu;
         public Button Revive;
-
+        public BonusMenu BonusMenu;
+        
         public void ShowBonusWindow()
         {
-            AdvertisingForStatsButton.Show();
+            BonusMenu.Show();
         }
 
         private void Start()
@@ -111,7 +112,7 @@ namespace Interface
 
         public void HideBonusWindow()
         {
-            AdvertisingForStatsButton.Hide();
+            BonusMenu.Hide();
         }
     }
 }

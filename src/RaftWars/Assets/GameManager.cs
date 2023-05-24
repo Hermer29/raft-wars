@@ -207,9 +207,9 @@ private void Update()
 
     public void StartGame()
     {
-        if(_started == true)
+        if(_started)
             return; 
-        _arrow.Construct(player, _camera, GameManager.instance.boss);
+        _arrow.Construct(player, _camera, boss);
         GameStarted?.Invoke();
         _input.Enable();
         _started = true;
@@ -217,6 +217,7 @@ private void Update()
         Player.instance.canPlay = true;
         _pause.ShowButton();
         map.GenerateBoss();
+        Game.Hud.HideBonusWindow();
         Game.AdverisingService.ShowInterstitial();
     }
 

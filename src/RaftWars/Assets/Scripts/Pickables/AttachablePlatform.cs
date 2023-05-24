@@ -34,7 +34,7 @@ public class AttachablePlatform : Pickable
     private bool CantTakePlatform(Collider other, out ICanTakePlatform otherTaker) 
         => other.TryGetComponent(out otherTaker) == false || !canTake;
 
-    internal void Take(ICanTakePlatform by)
+    internal void Take(ICanTakePlatform by, bool andDestroy = true)
     {
         canTake = false;
         if (by is Platform { isEnemy: false })
