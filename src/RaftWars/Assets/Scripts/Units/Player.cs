@@ -655,4 +655,17 @@ public class Player : FighterRaft, IPlatformsCarrier, ICanTakeBarrel, ICanTakeCo
         }
         transform.position = spawnPosition;
     }
+
+    private void OnDrawGizmos()
+    {
+        var outsideNormals = GetOutsideNormals();
+
+        foreach ((Vector3 position, Vector3 normal) outsideNormal in outsideNormals)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(outsideNormal.position + transform.position, .5f);
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(outsideNormal.position + outsideNormal.normal + transform.position, .5f);
+        }
+    }
 }

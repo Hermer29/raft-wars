@@ -26,9 +26,9 @@ namespace DefaultNamespace
             Vector3 maxXminZ = center + new Vector3(Constants.PlatformSize / 2, 0, -Constants.PlatformSize / 2);
             Vector3 maxXmaxZ = center + new Vector3(Constants.PlatformSize / 2, 0, Constants.PlatformSize / 2);
             _edges.Add((new []{minXminZ, minXmaxZ}, Vector3.left));
-            _edges.Add((new []{minXmaxZ, maxXmaxZ}, Vector3.up));
+            _edges.Add((new []{minXmaxZ, maxXmaxZ}, Vector3.forward));
             _edges.Add((new []{maxXmaxZ, maxXminZ}, Vector3.right));
-            _edges.Add((new []{maxXminZ, minXminZ}, Vector3.down));
+            _edges.Add((new []{maxXminZ, minXminZ}, Vector3.back));
         }
 
         public void Add(GameObject platform)
@@ -46,15 +46,18 @@ namespace DefaultNamespace
             }
         }
 
-        public IEnumerable<(Vector3 position, Vector3 normal)> GetPlatformsWithNormals()
+        public (Vector3 position, Vector3 normal)[] GetPlatformsWithNormals()
         {
             var result = ExcludeIntersecting(_edges);
+            var list = new List<(Vector3 position, Vector3 normal)>();
             foreach (var edge in result)
             {
-                var middlepoint = Vector3.Lerp(edge.corners[0], edge.corners[1], .5f);
-                middlepoint -= edge.normal * Constants.PlatformSize / 2;
-                yield return (middlepoint, edge.normal);
+                Vector3 position = Vector3.Lerp(edge.corners[0], edge.corners[1], .5f);
+                position -= edge.normal * Constants.PlatformSize;
+                list.Add((position, edge.normal));
             }
+
+            return list.ToArray();
         }
 
         public IEnumerable<(Vector3 a, Vector3 b)> GetEdges()

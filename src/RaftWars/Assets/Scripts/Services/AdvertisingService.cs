@@ -23,7 +23,7 @@ namespace InputSystem
 
         public bool IsInterstitialPurchased
         {
-            get => _prefsService.GetInt("IsInterstitialPurchased") == 1;
+            get => _prefsService.GetInt("IsInterstitialPurchased", 0) == 1;
             set => _prefsService.SetInt("IsInterstitialPurchased", 1);
         }
 

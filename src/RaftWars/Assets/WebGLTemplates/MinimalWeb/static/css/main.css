@@ -1,10 +1,6 @@
 ﻿.unity-container.desktop {
     height: 100%;
-    aspect-ratio: 9 / 16;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 100%;
 }
 
 .unity-container.handheld {

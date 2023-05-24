@@ -150,7 +150,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
     }
 
     private Vector3 CalcOutsidePoint((Vector3 position, Vector3 normal) edge) 
-        => edge.position + edge.normal * Constants.PlatformSize;
+        => edge.position + edge.normal * (Constants.PlatformSize * 1.5f) ;
 
     private Vector3 GetSpawnPoint(Vector3 pos)
     {
@@ -169,7 +169,7 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
                 lastPoint = point;
             }
         }
-        return lastPoint;
+        return lastPoint.SetY(0);
         Collider[] outCols;
         Vector3 spawnPos = transform.position;
         Vector3 toNewPlatform = pos - transform.position;
