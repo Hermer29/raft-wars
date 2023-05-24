@@ -28,6 +28,9 @@ namespace Services
 
         public void Own(IAcquirable acquirable)
         {
+            if (IsOwned(acquirable))
+                throw new InvalidOperationException("Product already owned");
+            
             _prefsService.SetInt(ConstructKey(acquirable), 1);
             PropertyOwned?.Invoke(acquirable);
         }

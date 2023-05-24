@@ -33,3 +33,5 @@ MonoBehaviour:
   DamageBonusUpgradeStep: 5
   <ValueType>k__BackingField: 2
   <BaseDamage>k__BackingField: 30
+  <ProductIDForUpgrade>k__BackingField: airportupgrade
+  <ProductIDForAcquirement>k__BackingField: airportbuy

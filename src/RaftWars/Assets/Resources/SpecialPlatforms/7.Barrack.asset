@@ -33,3 +33,5 @@ MonoBehaviour:
   <SpawnPeopleDefaultLimit>k__BackingField: 5
   _upgradeLimitStep: 1
   <SpawnPeopleTime>k__BackingField: 3
+  <ProductIDForUpgrade>k__BackingField: barrackupgrade
+  <ProductIDForAcquirement>k__BackingField: barrackbuy

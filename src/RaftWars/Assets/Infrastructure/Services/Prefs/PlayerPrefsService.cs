@@ -5,10 +5,7 @@ namespace RaftWars.Infrastructure.Services
 {
     public class PlayerPrefsService : IPrefsService
     {
-        public PlayerPrefsService(ICoroutineRunner coroutineRunner)
-        {
-            coroutineRunner.StartCoroutine(SaveOverTime());
-        }
+        public PlayerPrefsService(ICoroutineRunner coroutineRunner) => coroutineRunner.StartCoroutine(SaveOverTime());
 
         private static IEnumerator SaveOverTime()
         {
@@ -19,29 +16,14 @@ namespace RaftWars.Infrastructure.Services
             }
         }
         
-        public string GetString(string key)
-        {
-            return PlayerPrefs.GetString(key);
-        }
+        public string GetString(string key) => PlayerPrefs.GetString(key);
 
-        public void SetString(string key, string value)
-        {
-            PlayerPrefs.SetString(key, value);
-        }
+        public void SetString(string key, string value) => PlayerPrefs.SetString(key, value);
 
-        public void SetInt(string key, int value)
-        {
-            PlayerPrefs.SetInt(key, value);
-        }
+        public void SetInt(string key, int value) => PlayerPrefs.SetInt(key, value);
 
-        public int GetInt(string key, int defaultValue = 0)
-        {
-            return PlayerPrefs.GetInt(key, defaultValue);
-        }
+        public int GetInt(string key, int defaultValue = 0) => PlayerPrefs.GetInt(key, defaultValue);
 
-        public bool HasKey(string key)
-        {
-            return PlayerPrefs.HasKey(key);
-        }
+        public bool HasKey(string key) => PlayerPrefs.HasKey(key);
     }
 }

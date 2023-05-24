@@ -15,7 +15,8 @@ namespace SpecialPlatforms
         private readonly IPrefsService _prefsService;
 
         private readonly List<ISavableData> _data = new List<ISavableData>();
-        
+        private int _version;
+
         public SaveService(ICoroutineRunner coroutineRunner, IPrefsService prefsService)
         {
             _coroutineRunner = coroutineRunner;
@@ -39,7 +40,7 @@ namespace SpecialPlatforms
 
         private void PopulateData(ISavableData savable)
         {
-            savable.Populate(_prefsService.GetString(ConstructKey(savable)));
+            savable.Populate(GetData(savable));
         }
 
         private IEnumerator SaveOverTime()
@@ -48,11 +49,19 @@ namespace SpecialPlatforms
             {
                 foreach (ISavableData data in _data)
                 {
-                    _prefsService.SetString(ConstructKey(data), data.GetData());
+                    if (GetData(data) == data.GetData())
+                        continue;
+                    SetData(data);
                 }
                 yield return new WaitForSeconds(SaveFrequency);
             }
         }
+
+        private string GetData(ISavableData savable) 
+            => _prefsService.GetString(ConstructKey(savable));
+
+        private void SetData(ISavableData data) 
+            => _prefsService.SetString(ConstructKey(data), data.GetData());
 
         private string ConstructKey(ISavableData savableData)
         {

@@ -33,3 +33,5 @@ MonoBehaviour:
   <DefaultHealthGain>k__BackingField: 16
   HealthBonusUpgradeStep: 5
   <ValueType>k__BackingField: 2
+  <ProductIDForUpgrade>k__BackingField: towerupgrade
+  <ProductIDForAcquirement>k__BackingField: towerbuy

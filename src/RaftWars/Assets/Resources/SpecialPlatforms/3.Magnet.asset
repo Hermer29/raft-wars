@@ -32,3 +32,5 @@ MonoBehaviour:
   <SpRewardIllustration>k__BackingField: {fileID: 351094269, guid: 0d2ee374108cef04ab103ff494ae036d, type: 3}
   <DefaultCollectingRadius>k__BackingField: 1
   _collectingRadiusUpgradeStep: 0.2
+  <ProductIDForUpgrade>k__BackingField: magnetupgrade
+  <ProductIDForAcquirement>k__BackingField: magnetbuy

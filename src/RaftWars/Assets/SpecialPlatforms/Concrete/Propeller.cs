@@ -13,5 +13,8 @@ namespace SpecialPlatforms.Concrete
         public float SpeedBonus => DefaultSpeedBonus + UpgradedLevel * _speedUpgradeStep;
         public override ValueType Type => ValueType;
         public override float DefaultAmount => DefaultSpeedBonus;
+        [field: SerializeField] public override string ProductIDForUpgrade { get; protected set; }
+        [field: SerializeField] public override string ProductIDForAcquirement { get; protected set; }
+
     }
 }

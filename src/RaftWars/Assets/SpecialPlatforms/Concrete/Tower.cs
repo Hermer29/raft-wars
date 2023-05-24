@@ -12,5 +12,8 @@ namespace SpecialPlatforms.Concrete
         public float HealthValue => HealthBonusUpgradeStep * UpgradedLevel + DefaultHealthGain;
         public override ValueType Type => ValueType;
         public override float DefaultAmount => DefaultHealthGain;
+        [field: SerializeField] public override string ProductIDForUpgrade { get; protected set; }
+        [field: SerializeField] public override string ProductIDForAcquirement { get; protected set; }
+
     }
 }

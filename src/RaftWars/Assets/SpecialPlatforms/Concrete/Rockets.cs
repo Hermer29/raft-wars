@@ -13,5 +13,8 @@ namespace SpecialPlatforms.Concrete
 
         public override ValueType Type => ValueType;
         public override float DefaultAmount => BaseDamage;
+        [field: SerializeField] public override string ProductIDForUpgrade { get; protected set; }
+        [field: SerializeField] public override string ProductIDForAcquirement { get; protected set; }
+
     }
 }

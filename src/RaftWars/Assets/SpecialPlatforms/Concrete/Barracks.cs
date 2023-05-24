@@ -13,5 +13,8 @@ namespace SpecialPlatforms.Concrete
         public int SpawnPeopleLimit => SpawnPeopleDefaultLimit + _upgradeLimitStep * UpgradedLevel;
         public override ValueType Type => ValueType.NotSuitable;
         public override float DefaultAmount => SpawnPeopleDefaultLimit;
+        [field: SerializeField] public override string ProductIDForUpgrade { get; protected set; }
+        [field: SerializeField] public override string ProductIDForAcquirement { get; protected set; }
+
     }
 }

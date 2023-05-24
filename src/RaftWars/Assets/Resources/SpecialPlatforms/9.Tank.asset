@@ -33,3 +33,5 @@ MonoBehaviour:
   <BaseDamage>k__BackingField: 20
   DamageBonusUpgradeStep: 5
   <ValueType>k__BackingField: 2
+  <ProductIDForUpgrade>k__BackingField: tankupgrade
+  <ProductIDForAcquirement>k__BackingField: tankbuy

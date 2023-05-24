@@ -33,3 +33,5 @@ MonoBehaviour:
   <DefaultSpeedBonus>k__BackingField: 0.1
   _speedUpgradeStep: 0.01
   <ValueType>k__BackingField: 1
+  <ProductIDForUpgrade>k__BackingField: turbineupgrade
+  <ProductIDForAcquirement>k__BackingField: turbinebuy

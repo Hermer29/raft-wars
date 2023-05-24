@@ -14,5 +14,8 @@ namespace SpecialPlatforms.Concrete
         public float CollectingRadius => DefaultCollectingRadius + _collectingRadiusUpgradeStep * UpgradedLevel;
         public override ValueType Type => ValueType.Relative;
         public override float DefaultAmount => DefaultCollectingRadius;
+        [field: SerializeField] public override string ProductIDForUpgrade { get; protected set; }
+        [field: SerializeField] public override string ProductIDForAcquirement { get; protected set; }
+
     }
 }

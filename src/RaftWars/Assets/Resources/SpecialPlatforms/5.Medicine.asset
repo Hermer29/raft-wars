@@ -33,3 +33,5 @@ MonoBehaviour:
   <DefaultHealthGain>k__BackingField: 0.11
   HealthBonusUpgradeStep: 0.01
   <ValueType>k__BackingField: 1
+  <ProductIDForUpgrade>k__BackingField: medicineupgrade
+  <ProductIDForAcquirement>k__BackingField: medicinebuy

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Infrastructure.States;
 using RaftWars.Infrastructure.Services;
 using UnityEngine;
@@ -31,9 +32,10 @@ namespace RaftWars.Infrastructure
             stateMachine.Enter<ProjectInitialization>();
         }
 
-        public Coroutine StartCoroutine(IEnumerator coroutine)
-        {
-            return base.StartCoroutine(coroutine);
-        }
+        public Coroutine StartCoroutine(IEnumerator coroutine) 
+            => base.StartCoroutine(coroutine);
+
+        private void OnDisable() 
+            => StopAllCoroutines();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using Agava.YandexGames;
 using RaftWars.Infrastructure;
@@ -31,11 +32,15 @@ namespace Infrastructure.States
         public void Enter()
         {
             Game.FeatureFlags = AssetLoader.LoadFeatureFlags();
-            if(Game.FeatureFlags.InitializeYandexGames && !YandexGamesSdk.IsInitialized)
+            if (Application.isEditor == false)
             {
-                _coroutineRunner.StartCoroutine(WaitForSdkInitialization());
-                return;
+                if(Game.FeatureFlags.InitializeYandexGames && !YandexGamesSdk.IsInitialized)
+                {
+                    _coroutineRunner.StartCoroutine(WaitForSdkInitialization());
+                    return;
+                }
             }
+            Debug.Log("Not initializing yandex sdk, because we're not in build");
             ContinueInitialization();
         }
 
@@ -60,23 +65,35 @@ namespace Infrastructure.States
 
         private void SelectPrefsImplementation(System.Action dataLoadingContinuation)
         {
+            if (Application.isEditor)
+            {
+                SelectPlayerPrefs(dataLoadingContinuation);
+                return;
+            }
+            
             switch(Game.FeatureFlags.PrefsImplementation)
             {
                 case PrefsOptions.YandexCloud:
                     CrossLevelServices.PrefsService = new YandexPrefsService(_coroutineRunner, dataLoadingContinuation);
                     break;
                 case PrefsOptions.PlayerPrefs:
-                    CrossLevelServices.PrefsService = new PlayerPrefsService(_coroutineRunner);
-                    dataLoadingContinuation.Invoke();
+                    SelectPlayerPrefs(dataLoadingContinuation);
                     break;
             }
+        }
+
+        private void SelectPlayerPrefs(Action dataLoadingContinuation)
+        {
+            Debug.Log("Selected player prefs implementation because we're not in build");
+            CrossLevelServices.PrefsService = new PlayerPrefsService(_coroutineRunner);
+            dataLoadingContinuation.Invoke();
         }
 
         private void ContinueServicesCreation()
         {
             CrossLevelServices.LevelService = new LevelService(CrossLevelServices.PrefsService);
-            AllServices.Register<IPrefsService>(CrossLevelServices.PrefsService);
-            AllServices.Register<LevelService>(CrossLevelServices.LevelService);
+            AllServices.Register(CrossLevelServices.PrefsService);
+            AllServices.Register(CrossLevelServices.LevelService);
             _stateMachine.Enter<BootstrapState>();
         }
     }
