@@ -2413,6 +2413,7 @@ GameObject:
   - component: {fileID: 4101901239740661906}
   - component: {fileID: 6051012603212854402}
   - component: {fileID: 832884609908962308}
+  - component: {fileID: 5117142231022916534}
   m_Layer: 5
   m_Name: GetForAd
   m_TagString: Untagged
@@ -2522,6 +2523,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5117142231022916534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120523427430523644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2142259671640113923
 GameObject:
   m_ObjectHideFlags: 0
@@ -2686,6 +2699,7 @@ GameObject:
   - component: {fileID: 2945073578508795508}
   - component: {fileID: 9176305268528070212}
   - component: {fileID: 5358560212658383031}
+  - component: {fileID: 2572207572997127677}
   m_Layer: 5
   m_Name: GetForAd
   m_TagString: Untagged
@@ -2795,6 +2809,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2572207572997127677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2258879512418236970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2551757165120950680
 GameObject:
   m_ObjectHideFlags: 0
@@ -3632,6 +3658,7 @@ GameObject:
   - component: {fileID: 3337448395002468050}
   - component: {fileID: 144396798160345780}
   - component: {fileID: 4213124326373700950}
+  - component: {fileID: 3077189532196612914}
   m_Layer: 5
   m_Name: ShowAd
   m_TagString: Untagged
@@ -3771,6 +3798,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rootWindow: {fileID: 6832245569501773779}
+--- !u!114 &3077189532196612914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3526639842572138025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3533341303899378923
 GameObject:
   m_ObjectHideFlags: 0
@@ -4269,6 +4308,7 @@ GameObject:
   - component: {fileID: 2240661779740572321}
   - component: {fileID: 2092791130449199354}
   - component: {fileID: 3726582731646415269}
+  - component: {fileID: 7715676687272122210}
   m_Layer: 5
   m_Name: BuyForYans
   m_TagString: Untagged
@@ -4421,6 +4461,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0.5529412, g: 0.46274513, b: 0.1254902, a: 1}
   m_EffectDistance: {x: 1, y: -8}
   m_UseGraphicAlpha: 1
+--- !u!114 &7715676687272122210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3921655130026180368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3991347669095438336
 GameObject:
   m_ObjectHideFlags: 0
@@ -7919,6 +7971,7 @@ GameObject:
   - component: {fileID: 8305903277654708906}
   - component: {fileID: 2769495594846906186}
   - component: {fileID: 1555571740096878760}
+  - component: {fileID: 735729967595140236}
   m_Layer: 5
   m_Name: SoundsButton
   m_TagString: Untagged
@@ -8038,6 +8091,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 347c6b01cde4495b907d562b07a48f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &735729967595140236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8361870940776828089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8385219870927136553
@@ -8813,6 +8878,7 @@ GameObject:
   - component: {fileID: 8247308861777289218}
   - component: {fileID: 2877599329911090590}
   - component: {fileID: 425138819825224503}
+  - component: {fileID: 4261729690417016806}
   m_Layer: 5
   m_Name: BuyForYans
   m_TagString: Untagged
@@ -8965,6 +9031,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0.5529412, g: 0.46274513, b: 0.1254902, a: 1}
   m_EffectDistance: {x: 1, y: -8}
   m_UseGraphicAlpha: 1
+--- !u!114 &4261729690417016806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9092505555445324396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9115562189886839731
 GameObject:
   m_ObjectHideFlags: 0

@@ -886,6 +886,7 @@ GameObject:
   - component: {fileID: 7959275542946913186}
   - component: {fileID: 5293287014324945764}
   - component: {fileID: 8228928631310554028}
+  - component: {fileID: 5336447685084315689}
   m_Layer: 5
   m_Name: moreRewardForAd
   m_TagString: Untagged
@@ -1011,6 +1012,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0.23529412, g: 0.72156864, b: 0.24705882, a: 0.5}
   m_EffectDistance: {x: 1, y: -8.89}
   m_UseGraphicAlpha: 1
+--- !u!114 &5336447685084315689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267996663989115750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1987200456462277100
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ using Cinemachine;
 using DefaultNamespace.Skins;
 using Infrastructure.Platforms;
 using InputSystem;
+using Interface;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.AssetManagement;
 using RaftWars.Infrastructure.Services;
@@ -114,7 +115,8 @@ namespace Infrastructure.States
 
         private void BindAllButtonsToAdvertisingShow()
         {
-            foreach (var button in UnityEngine.Object.FindObjectsOfType<Button>())
+            foreach (var button in UnityEngine.Object.FindObjectsOfType<Button>()
+                         .Where(x => x.GetComponent<IgnoreInterstitialButtonMarker>() == null))
             {
                 button.onClick.AddListener(() => Game.AdverisingService.ShowInterstitial());
             }

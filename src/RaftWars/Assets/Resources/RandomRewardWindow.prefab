@@ -313,6 +313,7 @@ GameObject:
   - component: {fileID: 1969828712732540253}
   - component: {fileID: 1969828712732540252}
   - component: {fileID: 1969828712732540255}
+  - component: {fileID: 1063884601125744040}
   m_Layer: 5
   m_Name: unlock
   m_TagString: Untagged
@@ -439,6 +440,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0.085835285, g: 0.608, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -7}
   m_UseGraphicAlpha: 1
+--- !u!114 &1063884601125744040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969828712732540065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1969828712882384824
 GameObject:
   m_ObjectHideFlags: 0
