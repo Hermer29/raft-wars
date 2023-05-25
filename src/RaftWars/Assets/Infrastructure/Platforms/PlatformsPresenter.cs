@@ -1,5 +1,4 @@
 ﻿using System;
-using DefaultNamespace;
 using DefaultNamespace.Skins;
 using InputSystem;
 using RaftWars.Infrastructure.Services;
@@ -17,19 +16,15 @@ namespace Infrastructure.Platforms
         private readonly OwningSequence<SpecialPlatform> _sequence;
         private readonly LevelService _levelService;
         private readonly PlayerMoneyService _moneyService;
-        private readonly YandexIAPService _iapService;
 
         private const int UpgradeLevelLimit = 6;
         private const int UpgradeLevelAdvertisingOnlyLimit = 4;
-        private const bool UntilUpgradeLimitUpgradableOnlyByAdvertising = false;
-
+        
         public PlatformsPresenter(PlatformEntry entry, SpecialPlatform platform, AdvertisingService advertisingService, 
-            PropertyService propertyService, OwningSequence<SpecialPlatform> sequence, LevelService levelService, PlayerMoneyService moneyService,
-            YandexIAPService iapService)
+            PropertyService propertyService, OwningSequence<SpecialPlatform> sequence, LevelService levelService, PlayerMoneyService moneyService)
         {
             _levelService = levelService;
             _moneyService = moneyService;
-            _iapService = iapService;
             _propertyService = propertyService;
             _entry = entry;
             _platform = platform;
@@ -37,149 +32,126 @@ namespace Infrastructure.Platforms
             _sequence = sequence;
             _propertyService.PropertyOwned += OnAcquiredOtherPlatform;
             
-            UpdateView(platform);
+            Initialize(platform);
         }
 
-        private void UpdateView(SpecialPlatform specialPlatform)
+        private void Initialize(SpecialPlatform specialPlatform)
         {
             _entry.WritePositionName(specialPlatform.Illustration, specialPlatform.LocalizedName);
 
-            if (IsOwned(specialPlatform))
+            if (_propertyService.IsOwned(specialPlatform))
             {
-                if (TryClaimThatMaxUpgrade(specialPlatform))
+                if (specialPlatform.UpgradedLevel >= UpgradeLevelLimit)
+                {
+                    _entry.InformThatMaximumUpgrade(specialPlatform.UpgradedLevel);
                     return;
-                
-                if (HasLimitOfUpgradesByCoins(specialPlatform))
+                }
+                if (specialPlatform.UpgradedLevel >= UpgradeLevelAdvertisingOnlyLimit)
+                {
+                    _entry.ShowUpgradableByAdvertising(specialPlatform.UpgradedLevel);
+                    _entry.UpgradeForAdvertising.onClick.RemoveAllListeners();
+                    _entry.UpgradeForAdvertising.onClick.AddListener(UpgradeForAdvertising);
                     return;
-                
+                }
                 ShowAcquiredAndUpgradable();
                 return;
             }
 
             if (_sequence.IsCanBeOwned(specialPlatform))
             {
-                ShowNotAcquired();
+                if (EnsureThatRequiredLevelCompleted(specialPlatform))
+                {
+                    MakeAcquirableByAdvertising();
+                    return;
+                }
+                InformThatLevelMustBeCompleted(specialPlatform.RequiredLevel);
                 return;
             }
             InformThatPreviousPlatformMustBeOwnedBefore();
         }
 
-        private bool IsOwned(SpecialPlatform specialPlatform) 
-            => _propertyService.IsOwned(specialPlatform);
-
-        private bool HasLimitOfUpgradesByCoins(SpecialPlatform specialPlatform)
+        private void UpgradeForAdvertising()
         {
-            return UntilUpgradeLimitUpgradableOnlyByAdvertising && TryMakeUpgradableByAdvertising(specialPlatform);
+            _advertisingService.ShowRewarded(ExecuteUpgrade);
         }
 
-        private bool TryClaimThatMaxUpgrade(SpecialPlatform specialPlatform)
+        private bool EnsureThatRequiredLevelCompleted(SpecialPlatform specialPlatform)
         {
-            bool condition = specialPlatform.UpgradedLevel >= UpgradeLevelLimit;
-            if (condition == false)
-                return false;
-            
-            _entry.InformThatMaximumUpgrade(specialPlatform.UpgradedLevel);
-            
-            _entry.Upgrade.onClick.RemoveAllListeners();
-            _entry.PurchaseForYans.onClick.RemoveAllListeners();
-            _entry.PurchaseByAdvertising.onClick.RemoveAllListeners();
-            
-            _entry.PurchaseByAdvertising.interactable = false;
-            _entry.PurchaseForYans.interactable = false;
-            _entry.Upgrade.interactable = false;
-            return true;
+            return specialPlatform.RequiredLevel < _levelService.Level;
         }
 
-        private bool TryMakeUpgradableByAdvertising(SpecialPlatform specialPlatform)
+        private void InformThatPreviousPlatformMustBeOwnedBefore()
         {
-            var condition = specialPlatform.UpgradedLevel >= UpgradeLevelAdvertisingOnlyLimit;
-            if (condition == false)
-                return false;
-            UnsubAllButtons();
-            
-            _entry.ShowUpgradableByAdvertising(specialPlatform.UpgradedLevel);
-            _entry.PurchaseByAdvertising.onClick.AddListener(UpgradeByAdvertising);
-            return true;
+            _entry.InformThatPreviousPlatformMustBeOwnedBefore();
         }
 
-        private void InformThatPreviousPlatformMustBeOwnedBefore() 
-            => _entry.InformThatPreviousPlatformMustBeOwnedBefore();
-
-        private void OnAcquiredOtherPlatform(IAcquirable acquirable) 
-            => UpdateView(_platform);
-
-        private void ShowNotAcquired()
+        private void OnAcquiredOtherPlatform(IAcquirable acquirable)
         {
-            UnsubAllButtons();
-            
-            _entry.ShowAcquirable();
-            _entry.SetCost(2);
-            _entry.PurchaseByAdvertising.onClick.AddListener(UnlockByAdvertising);
-            _entry.PurchaseByAdvertising.interactable = true;
-            _entry.PurchaseForYans.onClick.AddListener(UnlockByYans);
-            _entry.PurchaseForYans.interactable = true;
+            Initialize(_platform);
+        }
+
+        private void InformThatLevelMustBeCompleted(int requiredLevel)
+        {
+            _entry.InformThatLevelMustBeCompleted(level: requiredLevel);
+        }
+
+        private void MakeAcquirableByAdvertising()
+        {
+            _entry.ShowAcquirableByAdvertising();
+            _entry.OpenForAdvertising.onClick.RemoveAllListeners();
+            _entry.OpenForAdvertising.onClick.AddListener(AcquireByAdvertising);
         }
 
         private void ShowAcquiredAndUpgradable()
         {
-            UnsubAllButtons();
-
             _entry.ShowUpgradableByMoney(
                 cost: _platform.UpgradeCost, 
                 upgradedLevel: _platform.UpgradedLevel);
-            _entry.SetCost(1);
-            
-            _entry.Upgrade.onClick.AddListener(UpgradeByCoins);
-            _entry.PurchaseByAdvertising.onClick.AddListener(UpgradeByAdvertising);
-            _entry.PurchaseForYans.onClick.AddListener(UpgradeByYans);
+            _entry.Upgrade.onClick.RemoveAllListeners();
+            _entry.Upgrade.onClick.AddListener(Upgrade);
         }
 
-        private void UnlockByYans()
+        private void AcquireByAdvertising()
         {
-            var product = new SimpleProduct(_platform.ProductIDForAcquirement, 2);
-            _iapService.TryBuy(product, onSuccess: Unlock, null);
-        }
-
-        private void UnlockByAdvertising() 
-            => _advertisingService.ShowRewarded(Unlock);
-
-        private void UpgradeByAdvertising() 
-            => _advertisingService.ShowRewarded(Upgrade);
-
-        private void UpgradeByYans()
-        {
-            var product = new SimpleProduct(_platform.ProductIDForUpgrade, 1);
-            _iapService.TryBuy(product, Upgrade, null);
-        }
-
-        private void UpgradeByCoins()
-        {
-            if (_moneyService.TrySpendCoins(_platform.UpgradeCost))
-                Upgrade();
+            _advertisingService.ShowRewarded(() =>
+            {
+                _entry.OpenForAdvertising.onClick.RemoveAllListeners();
+                _platform.IncrementUpgradeLevel();
+                ShowAcquiredAndUpgradable();
+                _propertyService.Own(_platform);
+            });
         }
 
         private void Upgrade()
         {
-            UnsubAllButtons();
+            if (_moneyService.TrySpendCoins(_platform.UpgradeCost))
+                ExecuteUpgrade();
+        }
+
+        private void ExecuteUpgrade()
+        {
             _platform.IncrementUpgradeLevel();
-            UpdateView(_platform);
+            Initialize(_platform);
+            return; //В ситуации если требуется оптмизация, что обновления оказались слишком тяжелыми
+                    //(врядли это случится)
+            
+            if (_platform.UpgradedLevel > UpgradeLevelLimit)
+            {
+                _entry.InformThatMaximumUpgrade(_platform.UpgradedLevel);
+                return;
+            }
+            if (_platform.UpgradedLevel > UpgradeLevelAdvertisingOnlyLimit)
+            {
+                _entry.SetUpgradeOnlyForAdvertising(_platform.UpgradedLevel);
+                return;
+            }
+
+            _entry.ShowUpgradableByMoney(_platform.UpgradeCost, _platform.UpgradedLevel);
         }
 
-        private void Unlock()
+        public void Dispose()
         {
-            UnsubAllButtons();
-            _propertyService.Own(_platform);
-            UpdateView(_platform);
+            _propertyService.PropertyOwned -= OnAcquiredOtherPlatform;
         }
-
-        private void UnsubAllButtons()
-        {
-            _entry.Upgrade.onClick.RemoveAllListeners();
-            _entry.PurchaseForYans.onClick.RemoveAllListeners();
-            _entry.PurchaseByAdvertising.onClick.RemoveAllListeners();
-        }
-
-        public void Dispose() 
-            => _propertyService.PropertyOwned -= OnAcquiredOtherPlatform;
     }
 }

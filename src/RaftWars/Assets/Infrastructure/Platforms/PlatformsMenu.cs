@@ -48,8 +48,7 @@ namespace Infrastructure.Platforms
                     _propertyService,
                     _owningSequence,
                     _levelService,
-                    _moneyService,
-                    Game.IAPService);
+                    _moneyService);
                 _presenters.Add(presenter);
             }
         }
@@ -70,8 +69,10 @@ namespace Infrastructure.Platforms
 
         private void OnDestroy()
         {
-            foreach (PlatformsPresenter platformsPresenter in _presenters) 
+            foreach (PlatformsPresenter platformsPresenter in _presenters)
+            {
                 platformsPresenter.Dispose();
+            }
         }
     }
 }
