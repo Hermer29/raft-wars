@@ -20,10 +20,11 @@ namespace Infrastructure.Platforms
         [SerializeField] private TMP_Text _platformName;
         [Space(10)] 
         [SerializeField] private GameObject _maximumUpgradeRoot;
-
-        [field: SerializeField] public Button UpgradeForAdvertising { get; private set; }
+        [SerializeField] private TMP_Text _cost;
+        
+        [field: SerializeField] public Button PurchaseByAdvertising { get; private set; }
         [field: SerializeField] public Button Upgrade { get; private set; }
-        [field: SerializeField] public Button OpenForAdvertising { get; private set; }
+        [field: SerializeField] public Button PurchaseForYans { get; private set; }
 
         private LocalizationService _provider;
         
@@ -36,54 +37,45 @@ namespace Infrastructure.Platforms
         {
             _illustration.sprite = platformIllustration;
             _platformName.text = _provider[platformName];
-            HideMaxNotificationLimit();
+            HideMaxUpgrade();
         }
 
         public void InformThatPreviousPlatformMustBeOwnedBefore()
         {
             WriteLockExplanation(TextName.PreviousPlatformMustBeOwnedBefore);
-            HideMaxNotificationLimit();
+            HideMaxUpgrade();
             HideUpgradeForAdvertising();
         }
 
-        public void InformThatLevelMustBeCompleted(int level)
+        public void ShowAcquirable()
         {
-            InformAboutAcquisitionLevelConstraint(level);
-            HideMaxNotificationLimit();
-            HideUpgradeForAdvertising();
-        }
-
-        public void ShowAcquirableByAdvertising()
-        {
-            MakeAcquirableByAdvertising();
+            EnableYansButton();
+            EnableAdvertisingButton();
             HideLockExplanation();
             HideUpgrade();
             SetCurrentUpgradeLevelAsZero();
-            HideMaxNotificationLimit();
+            HideMaxUpgrade();
             ShowLocked();
-            HideUpgradeForAdvertising();
         }
 
         public void ShowUpgradableByAdvertising(int level)
         {
-            UpgradeForAdvertising.gameObject.SetActive(true);
+            EnableAdvertisingButton();
             HideLockExplanation();
             HideUpgrade();
             HideLockTint();
             HideAcquisitionByAdvertising();
-            HideMaxNotificationLimit();
+            HideMaxUpgrade();
             ShowCurrentUpgradeLevel(level);
         }
 
         public void ShowUpgradableByMoney(int cost, int upgradedLevel)
         {
-            HideAcquisitionByAdvertising();
             ShowUpgradeForAdvertising();
             HideLockExplanation();
             ShowCurrentUpgradeLevel(upgradedLevel);
             ShowUpgradeCost(cost);
-            HideMaxNotificationLimit();
-            HideUpgradeForAdvertising();
+            HideMaxUpgrade();
         }
 
         public void InformThatMaximumUpgrade(int upgradedLevel)
@@ -93,18 +85,17 @@ namespace Infrastructure.Platforms
             HideLockExplanation();
             ShowCurrentUpgradeLevel(upgradedLevel);
             ShowMaximumUpgrade();
-            UpgradeForAdvertising.gameObject.SetActive(false);
+            HideAdvertisingButton();
         }
 
-        public void SetUpgradeOnlyForAdvertising(int platformUpgradedLevel)
+        public void SetCost(int cost)
         {
-            _currentUpgradedLevel.text = platformUpgradedLevel.ToString();
-            UpgradeForAdvertising.gameObject.SetActive(true);
-            OpenForAdvertising.gameObject.SetActive(false);
-            Upgrade.gameObject.SetActive(false);
-            _tintAndLock.gameObject.SetActive(false);
-            _lockExplanationRoot.SetActive(false);
-            _maximumUpgradeRoot.SetActive(false);
+            _cost.text = cost.ToString();
+        }
+
+        private void HideAdvertisingButton()
+        {
+            PurchaseByAdvertising.gameObject.SetActive(false);
         }
 
         private void ShowMaximumUpgrade()
@@ -117,6 +108,11 @@ namespace Infrastructure.Platforms
             _costText.text = cost.ToString();
         }
 
+        private void EnableAdvertisingButton()
+        {
+            PurchaseByAdvertising.gameObject.SetActive(true);
+        }
+
         private void ShowCurrentUpgradeLevel(int upgradedLevel)
         {
             _currentUpgradedLevel.text = upgradedLevel.ToString();
@@ -127,9 +123,9 @@ namespace Infrastructure.Platforms
             _currentUpgradedLevel.text = 0.ToString();
         }
 
-        private void MakeAcquirableByAdvertising()
+        private void EnableYansButton()
         {
-            OpenForAdvertising.gameObject.SetActive(true);
+            PurchaseForYans.gameObject.SetActive(true);
         }
 
         private void HideLockTint()
@@ -137,7 +133,7 @@ namespace Infrastructure.Platforms
             _tintAndLock.gameObject.SetActive(false);
         }
 
-        private void HideMaxNotificationLimit()
+        private void HideMaxUpgrade()
         {
             _maximumUpgradeRoot.SetActive(false);
         }
@@ -149,7 +145,7 @@ namespace Infrastructure.Platforms
 
         private void HideAcquisitionByAdvertising()
         {
-            OpenForAdvertising.gameObject.SetActive(false);
+            PurchaseForYans.gameObject.SetActive(false);
         }
 
         private void HideLockExplanation()
@@ -184,7 +180,7 @@ namespace Infrastructure.Platforms
 
         private void HideUpgradeForAdvertising()
         {
-            UpgradeForAdvertising.gameObject.SetActive(false);
+            PurchaseByAdvertising.gameObject.SetActive(false);
         }
     }
 }
