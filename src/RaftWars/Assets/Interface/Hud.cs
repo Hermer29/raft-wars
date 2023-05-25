@@ -9,7 +9,9 @@ namespace Interface
 {
     public class Hud : MonoBehaviour
     {
-        [Header("UI")]
+        [Header("UI")] 
+        public GameObject stageStats;
+        public GameObject buttonGroup;
         public GameObject tapToPlay;
         public GameObject failedPanel;
         public GameObject blackBG;

@@ -180,6 +180,7 @@ private void Update()
 
     private void WinTheGame()
     {
+        hud.buttonGroup.gameObject.SetActive(false);
         hud.stagePanel.SetActive(true);
         hud.blackBG.SetActive(true);
         _input.Disable();
@@ -188,8 +189,6 @@ private void Update()
         {
             hud._nextLevelImage.sprite = hud._completedStageSprite;
         });
-        hud.BuyDamage.gameObject.SetActive(false);
-        hud.BuyHealth.gameObject.SetActive(false);
         hud.MoneyForAdvertisingEndMenu.gameObject.SetActive(true);
         hud.MoneyForAdvertisingEndMenu.onClick.AddListener(() =>
         {

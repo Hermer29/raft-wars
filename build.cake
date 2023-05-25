@@ -109,7 +109,6 @@ Task(UploadFileTask)
     .IsDependentOn(BuildWebGlTask)
     .Does(() => 
 {
-    return;
     var client = new FtpClient(
         FtpConfig("Ftp_Host"), 
         FtpConfig("Ftp_Login"), 
