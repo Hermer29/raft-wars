@@ -10,17 +10,17 @@ namespace RaftWars.Infrastructure.Services
 
     public class YandexPrefsService : IPrefsService
     {
+        private readonly ICoroutineRunner _coroutineRunner;
         private Dictionary<string, string> _data;
 
-        public YandexPrefsService(ICoroutineRunner coroutineRunner, Action onLoaded)
+        public YandexPrefsService(ICoroutineRunner coroutineRunner)
         {
-            PlayerAccount.GetCloudSaveData((result) =>
-            {
-                InitializeService(result);
-                onLoaded?.Invoke();
-                coroutineRunner.StartCoroutine(SaveOverTime());
-            });
+            _coroutineRunner = coroutineRunner;
+            
+            coroutineRunner.StartCoroutine(Worker());
         }
+
+        private void Initialize() => PlayerAccount.GetCloudSaveData(InitializeService);
 
         private void InitializeService(string json)
         {
@@ -42,8 +42,9 @@ namespace RaftWars.Infrastructure.Services
                 _data = new Dictionary<string, string>();
         }
 
-        private IEnumerator SaveOverTime()
+        private IEnumerator Worker()
         {
+            Initialize();
             while(true)
             {
                 if(_data.Count == 0)

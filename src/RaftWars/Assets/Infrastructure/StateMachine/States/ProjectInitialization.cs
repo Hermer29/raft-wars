@@ -46,14 +46,8 @@ namespace Infrastructure.States
 
         private IEnumerator WaitForSdkInitialization()
         {
-            _coroutineRunner.StartCoroutine(PollInitializationCompletion());
-            yield return _coroutineRunner.StartCoroutine(
-                YandexGamesSdk.Initialize(() => _initializationCompleted = true));
-        }
-
-        private IEnumerator PollInitializationCompletion()
-        {
-            yield return new WaitWhile(() => _initializationCompleted == false);
+            yield return YandexGamesSdk.Initialize();
+            yield return new WaitForSeconds(1f);
             ContinueInitialization();
         }
 
@@ -74,12 +68,13 @@ namespace Infrastructure.States
             switch(Game.FeatureFlags.PrefsImplementation)
             {
                 case PrefsOptions.YandexCloud:
-                    CrossLevelServices.PrefsService = new YandexPrefsService(_coroutineRunner, dataLoadingContinuation);
+                    CrossLevelServices.PrefsService = new YandexPrefsService(_coroutineRunner);
                     break;
                 case PrefsOptions.PlayerPrefs:
                     SelectPlayerPrefs(dataLoadingContinuation);
                     break;
             }
+            dataLoadingContinuation.Invoke();
         }
 
         private void SelectPlayerPrefs(Action dataLoadingContinuation)
