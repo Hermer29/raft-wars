@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
         hud.NextStage.onClick.AddListener(NextStage);
-        hud.MoneyForAdvertisingEndMenu.gameObject.SetActive(false);
+        hud.MoneyForAdvertisingEndMenu.transform.parent.gameObject.SetActive(false);
         hud.Revive.onClick.AddListener(Revive);
         var currentLevel = CrossLevelServices.LevelService.Level.ToString();
         hud.ShowPreviousLevel(currentLevel);
@@ -189,7 +189,7 @@ private void Update()
         {
             hud._nextLevelImage.sprite = hud._completedStageSprite;
         });
-        hud.MoneyForAdvertisingEndMenu.gameObject.SetActive(true);
+        hud.MoneyForAdvertisingEndMenu.transform.parent.gameObject.SetActive(true);
         hud.MoneyForAdvertisingEndMenu.onClick.AddListener(() =>
         {
             _advertising.ShowRewarded(() =>
