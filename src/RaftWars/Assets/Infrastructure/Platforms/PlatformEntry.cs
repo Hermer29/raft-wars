@@ -50,12 +50,17 @@ namespace Infrastructure.Platforms
         public void ShowAcquirable()
         {
             EnableYansButton();
-            EnableAdvertisingButton();
+            DisableAdvertisingButton();
             HideLockExplanation();
             HideUpgrade();
             SetCurrentUpgradeLevelAsZero();
             HideMaxUpgrade();
             ShowLocked();
+        }
+
+        private void DisableAdvertisingButton()
+        {
+            PurchaseByAdvertising.gameObject.SetActive(false);
         }
 
         public void ShowUpgradableByAdvertising(int level)
@@ -71,7 +76,8 @@ namespace Infrastructure.Platforms
 
         public void ShowUpgradableByMoney(int cost, int upgradedLevel)
         {
-            ShowUpgradeForAdvertising();
+            EnableAdvertisingButton();
+            ShowUpgradableByCoins();
             HideLockExplanation();
             ShowCurrentUpgradeLevel(upgradedLevel);
             ShowUpgradeCost(cost);
@@ -138,7 +144,7 @@ namespace Infrastructure.Platforms
             _maximumUpgradeRoot.SetActive(false);
         }
 
-        private void ShowUpgradeForAdvertising()
+        private void ShowUpgradableByCoins()
         {
             Upgrade.gameObject.SetActive(true);
         }
@@ -170,7 +176,7 @@ namespace Infrastructure.Platforms
             _lockExplanation.text = _provider[explanation];
         }
 
-        private void InformAboutAcquisitionLevelConstraint(int level)
+        public void InformAboutAcquisitionLevelConstraint(int level)
         {
             _lockExplanationRoot.SetActive(true);
             ParametrizedLocalizableString parametrizedLocaleString = _provider.GetParametrized(TextName.LevelRequired);

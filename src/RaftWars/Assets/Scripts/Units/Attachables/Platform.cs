@@ -170,57 +170,6 @@ public class Platform : MonoBehaviour, ICanTakePeople, ICanTakePlatform, ICanTak
             }
         }
         return lastPoint.SetY(0);
-        Collider[] outCols;
-        Vector3 spawnPos = transform.position;
-        Vector3 toNewPlatform = pos - transform.position;
-        if (Mathf.Abs(toNewPlatform.x) > Mathf.Abs(toNewPlatform.z))
-        {
-            if (toNewPlatform.x > 0)
-                spawnPos.x += Constants.PlatformSize;
-            else
-                spawnPos.x -= Constants.PlatformSize;
-        }
-        else
-        {
-            if (toNewPlatform.z > 0)
-                spawnPos.z += Constants.PlatformSize;
-            else
-                spawnPos.z -= Constants.PlatformSize;
-        }
-        outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-        if (outCols.Length == 0) return spawnPos;
-        var raft = GetComponentInParent<FighterRaft>();
-        if(raft.PlatformsCount == 1)
-            return spawnPos;
-        var trials = 0; 
-        while (true)
-        {
-            trials++;
-            if (trials == 5)
-                break;
-            spawnPos = raft.GetAnotherPlatform().transform.position;
-            if (Mathf.Abs(toNewPlatform.x) > Mathf.Abs(toNewPlatform.z))
-            {
-                if (toNewPlatform.x > 0)
-                    spawnPos.x += Constants.PlatformSize;
-                else
-                    spawnPos.x -= Constants.PlatformSize;
-            }
-            else
-            {
-                if (toNewPlatform.z > 0)
-                    spawnPos.z += Constants.PlatformSize;
-                else
-                    spawnPos.z -= Constants.PlatformSize;
-            }
-
-            outCols = Physics.OverlapSphere(spawnPos, 1.2f);
-            if (outCols.Length == 0)
-            {
-                break;
-            }
-        }
-        return spawnPos;
     }
 
     public void TakePlatform(GameObject platformPrefab, Vector3 pos)

@@ -45,6 +45,11 @@ namespace Interface
 
         private void Subscribe()
         {
+            _showAdvertisingForAdditionalPlatform.onClick.RemoveAllListeners();
+            _showAdvertisingForAdditionalStats.onClick.RemoveAllListeners();
+            _buyForYansAdditionalPlatforms.onClick.RemoveAllListeners();
+            _buyForYansAdditionalStats.onClick.RemoveAllListeners();
+            
             _showAdvertisingForAdditionalPlatform.onClick.AddListener(
                 () => _advertising.ShowRewarded(GiveAdditionalPlatform));
 

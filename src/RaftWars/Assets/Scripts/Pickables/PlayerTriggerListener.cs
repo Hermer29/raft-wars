@@ -33,9 +33,11 @@ namespace RaftWars.Pickables
 
         private void ProcessTriggerEnd()
         {
-            if (!_triggered) return;
-            TriggerExitPlayer?.Invoke();
-            _triggered = false;
+            if (_triggered)
+            {
+                _triggered = false;
+                TriggerExitPlayer?.Invoke();
+            }
         }
 
         private void ProcessTriggerStart()
@@ -49,7 +51,7 @@ namespace RaftWars.Pickables
 
         private bool OverlapsPlayer()
         {
-            int overlapAmount = Physics.OverlapBoxNonAlloc(transform.position + _collider.center, _collider.size,
+            int overlapAmount = Physics.OverlapBoxNonAlloc(transform.position + _collider.center, _collider.size / 2,
                 _overlapResults);
             if (overlapAmount == 0)
                 return false;
@@ -57,7 +59,12 @@ namespace RaftWars.Pickables
                 x =>
                     x != null &&
                     x.TryGetComponent(out Platform platform) && 
-                    platform.isEnemy == false);
+                    platform.isEnemy == false && LayerBelongsToPlayer(x));
+        }
+
+        private static bool LayerBelongsToPlayer(Collider x)
+        {
+            return 1 << x.gameObject.layer == LayerMask.GetMask("Player");
         }
     }
 }

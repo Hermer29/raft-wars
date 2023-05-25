@@ -21,7 +21,7 @@ namespace Infrastructure.Platforms
 
         private const int UpgradeLevelLimit = 6;
         private const int UpgradeLevelAdvertisingOnlyLimit = 4;
-        private const bool UntilUpgradeLimitUpgradableOnlyByAdvertising = false;
+        private const bool UntilUpgradeLimitUpgradableOnlyByAdvertising = true;
 
         public PlatformsPresenter(PlatformEntry entry, SpecialPlatform platform, AdvertisingService advertisingService, 
             PropertyService propertyService, OwningSequence<SpecialPlatform> sequence, LevelService levelService, PlayerMoneyService moneyService,
@@ -58,19 +58,46 @@ namespace Infrastructure.Platforms
 
             if (_sequence.IsCanBeOwned(specialPlatform))
             {
-                ShowNotAcquired();
+                if (EnsureThatRequiredLevelCompleted(specialPlatform))
+                {
+                    ShowAcquirable();
+                    return;
+                }
+                ShowNotAcquirableBecauseOfLevel();
                 return;
             }
             InformThatPreviousPlatformMustBeOwnedBefore();
         }
 
+        private void ShowAcquirable()
+        {
+            UnsubAllButtons();
+            
+            _entry.ShowAcquirable();
+            _entry.SetCost(2);
+            _entry.PurchaseByAdvertising.gameObject.SetActive(true);
+            _entry.PurchaseByAdvertising.onClick.AddListener(UnlockByAdvertising);
+            _entry.PurchaseForYans.interactable = true;
+            _entry.PurchaseForYans.onClick.AddListener(UnlockByYans);
+        }
+
+        private bool EnsureThatRequiredLevelCompleted(SpecialPlatform specialPlatform)
+        {
+            var condition = specialPlatform.RequiredLevel < _levelService.Level;
+            if (condition == false)
+                return false;
+            UnsubAllButtons();
+            
+            _entry.ShowUpgradableByAdvertising(specialPlatform.UpgradedLevel);
+            _entry.PurchaseByAdvertising.onClick.AddListener(UpgradeByAdvertising);
+            return true;
+        }
+        
         private bool IsOwned(SpecialPlatform specialPlatform) 
             => _propertyService.IsOwned(specialPlatform);
 
-        private bool HasLimitOfUpgradesByCoins(SpecialPlatform specialPlatform)
-        {
-            return UntilUpgradeLimitUpgradableOnlyByAdvertising && TryMakeUpgradableByAdvertising(specialPlatform);
-        }
+        private bool HasLimitOfUpgradesByCoins(SpecialPlatform specialPlatform) 
+            => UntilUpgradeLimitUpgradableOnlyByAdvertising && TryMakeUpgradableByAdvertising(specialPlatform);
 
         private bool TryClaimThatMaxUpgrade(SpecialPlatform specialPlatform)
         {
@@ -95,8 +122,8 @@ namespace Infrastructure.Platforms
             var condition = specialPlatform.UpgradedLevel >= UpgradeLevelAdvertisingOnlyLimit;
             if (condition == false)
                 return false;
-            UnsubAllButtons();
             
+            UnsubAllButtons();
             _entry.ShowUpgradableByAdvertising(specialPlatform.UpgradedLevel);
             _entry.PurchaseByAdvertising.onClick.AddListener(UpgradeByAdvertising);
             return true;
@@ -108,15 +135,15 @@ namespace Infrastructure.Platforms
         private void OnAcquiredOtherPlatform(IAcquirable acquirable) 
             => UpdateView(_platform);
 
-        private void ShowNotAcquired()
+        private void ShowNotAcquirableBecauseOfLevel()
         {
             UnsubAllButtons();
             
-            _entry.ShowAcquirable();
+            _entry.InformAboutAcquisitionLevelConstraint(_platform.RequiredLevel);
             _entry.SetCost(2);
-            _entry.PurchaseByAdvertising.onClick.AddListener(UnlockByAdvertising);
-            _entry.PurchaseByAdvertising.interactable = true;
+            _entry.PurchaseByAdvertising.gameObject.SetActive(false);
             _entry.PurchaseForYans.onClick.AddListener(UnlockByYans);
+            _entry.PurchaseForYans.gameObject.SetActive(true);
             _entry.PurchaseForYans.interactable = true;
         }
 

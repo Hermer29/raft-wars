@@ -36,7 +36,6 @@ namespace RaftWars.Pickables
             presenceTrigger.center = referenceCollider.center;
             var scale = referenceCollider.transform.localScale;
             scale.Scale(referenceCollider.size);
-            scale *= 1.3f;
             presenceTrigger.size = scale;
             presenceTrigger.isTrigger = true;
             return presenceTrigger;

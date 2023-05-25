@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c836a4807b345e3ad58313b80f208b0, type: 3}
   m_Name: LevelSelector
   m_EditorClassIdentifier: 
-  _level: 10
+  _level: 2

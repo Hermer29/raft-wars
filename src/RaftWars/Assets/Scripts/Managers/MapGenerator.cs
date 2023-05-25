@@ -211,13 +211,13 @@ public class MapGenerator : MonoBehaviour
     private static bool CanCreateRewardedSpecialPlatform(Pickable pickable, GeneratedType generatedType, out AttachablePlatform platform) 
         => pickable.TryGetComponent(out platform) && 
            generatedType == GeneratedType.SpecialPlatform && 
-           RandomExtension.ProbabilityCheck(.3f);
+           RandomExtension.ProbabilityCheck(.5f);
 
     private IEnumerable<Pickable> WhichOneToSpawnProbabilityCheck(ref int probabilityToSpawnPlatformInPercent, out GeneratedType generatedType)
     {
         #region Debug
 
-        const bool AlwaysSpecialPlatforms = true;
+        const bool AlwaysSpecialPlatforms = false;
         if (AlwaysSpecialPlatforms)
         {
             generatedType = GeneratedType.SpecialPlatform;
