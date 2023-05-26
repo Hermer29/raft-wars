@@ -23,8 +23,16 @@ const library = {
       }
       yandexGames.isInitializeCalled = true;
 
-      document.addEventListener('DOMContentLoaded', function () {
-        const sdkScript = document.createElement('script');
+      if(document.readyState == "loading")
+      {
+        document.addEventListener('DOMContentLoaded', yandexGames.initializationContinuation);
+        return;
+      }
+      yandexGames.initializationContinuation();
+    },
+    
+    initializationContinuation: function () {
+      const sdkScript = document.createElement('script');
         sdkScript.src = 'https://yandex.ru/games/sdk/v2';
         document.head.appendChild(sdkScript);
 
@@ -67,7 +75,7 @@ const library = {
             throw new Error('SDK init failed. ' + e.message);
           });
         }
-      });
+        
     },
 
     throwIfSdkNotInitialized: function () {
