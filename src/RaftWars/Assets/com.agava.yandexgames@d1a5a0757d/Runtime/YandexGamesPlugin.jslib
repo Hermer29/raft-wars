@@ -33,40 +33,40 @@ const library = {
 
             // The { scopes: false } ensures personal data permission request window won't pop up,
             const playerAccountInitializationPromise = sdk.getPlayer({scopes: false}).then(function (playerAccount) {
-                  if (playerAccount.getMode() !== 'lite') {
-                    yandexGames.isAuthorized = true;
-                  }
+              if (playerAccount.getMode() !== 'lite') {
+                yandexGames.isAuthorized = true;
+              }
 
-                  // Always contains permission info. Contains personal data as well if permissions were granted before.
-                  yandexGames.playerAccount = playerAccount;
-                }).catch(function (e) {
-                  throw new Error('PlayerAccount failed to initialize. ' + e.message);
-                });
+              // Always contains permission info. Contains personal data as well if permissions were granted before.
+              yandexGames.playerAccount = playerAccount;
+            }).catch(function (e) {
+              throw new Error('PlayerAccount failed to initialize. ' + e.message);
+            });
 
-                const leaderboardInitializationPromise = sdk.getLeaderboards().then(function (leaderboard) {
-                  yandexGames.leaderboard = leaderboard;
-                }).catch(function () {
-                  throw new Error('Leaderboard failed to initialize.');
-                });
+            const leaderboardInitializationPromise = sdk.getLeaderboards().then(function (leaderboard) {
+              yandexGames.leaderboard = leaderboard;
+            }).catch(function () {
+              throw new Error('Leaderboard failed to initialize.');
+            });
 
-                const billingInitializationPromise = sdk.getPayments({signed: true}).then(function (billing) {
-                  yandexGames.billing = billing;
-                }).catch(function (e) {
-                  throw new Error('Billing failed to initialize. ' + e.message);
-                });
+            const billingInitializationPromise = sdk.getPayments({signed: true}).then(function (billing) {
+              yandexGames.billing = billing;
+            }).catch(function (e) {
+              throw new Error('Billing failed to initialize. ' + e.message);
+            });
 
-                Promise.all([leaderboardInitializationPromise, playerAccountInitializationPromise, billingInitializationPromise]).then(function () {
-                  yandexGames.isInitialized = true;
-                  yandexGames.sdk.features.LoadingAPI.ready();
-                  dynCall('v', successCallbackPtr, []);
-                }).catch(function (e) {
-                  throw new Error('All promises failed to settle. ' + e.message);
-                });
-              }).catch(function (e) {
-                throw new Error('SDK init failed. ' + e.message);
-              });
-            };
-
+            Promise.all([leaderboardInitializationPromise, playerAccountInitializationPromise, billingInitializationPromise]).then(function () {
+              yandexGames.isInitialized = true;
+              yandexGames.sdk.features.LoadingAPI.ready();
+              dynCall('v', successCallbackPtr, []);
+            }).catch(function (e) {
+              throw new Error('All promises failed to settle. ' + e.message);
+            });
+          }).catch(function (e) {
+            throw new Error('SDK init failed. ' + e.message);
+          });
+        };
+      }
       if(document.readyState == "loading")
       {
         document.addEventListener('DOMContentLoaded', initializationProcess);
@@ -74,7 +74,7 @@ const library = {
       }
       initializationProcess();
     },
-          
+
     throwIfSdkNotInitialized: function () {
       if (!yandexGames.isInitialized) {
         throw new Error('SDK is not initialized. Invoke YandexGamesSdk.Initialize() coroutine and wait for it to finish.');
@@ -130,7 +130,7 @@ const library = {
           return 3;
         default:
           console.error('Unexpected ysdk.deviceInfo response from Yandex. Assuming that it is desktop. deviceType = '
-            + JSON.stringify(deviceType));
+              + JSON.stringify(deviceType));
           return 0;
       }
     },
@@ -171,7 +171,7 @@ const library = {
           return true;
         default:
           console.error('Unexpected response from Yandex. Assuming profile data permissions were not granted. playerAccount = '
-            + JSON.stringify(yandexGames.playerAccount));
+              + JSON.stringify(yandexGames.playerAccount));
           return false;
       }
     },
