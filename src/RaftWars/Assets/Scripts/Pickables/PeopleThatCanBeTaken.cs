@@ -5,7 +5,7 @@ using RaftWars.Pickables;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class PeopleThatCanBeTaken : Pickable
+public class PeopleThatCanBeTaken : Pickable, IDraggableByMagnet
 {
     public GameObject warrior;
     [FormerlySerializedAs("explosion")] public GameObject explosionPrefab;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RaftWars.Pickables
 {
-    public abstract class Pickable : MonoBehaviour, IDraggableByMagnet
+    public abstract class Pickable : MonoBehaviour
     {
         private AttachablePlatform _attachable;
         private CollectiblesService _collectibles;

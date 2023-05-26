@@ -5,7 +5,7 @@ using RaftWars.Infrastructure;
 using RaftWars.Pickables;
 using UnityEngine;
 
-public class Coins : MonoBehaviour, IDraggableByMagnet
+public class Coins : MonoBehaviour
 {
 
     public int coins;
