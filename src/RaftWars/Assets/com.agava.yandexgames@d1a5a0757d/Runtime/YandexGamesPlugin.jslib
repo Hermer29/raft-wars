@@ -41,7 +41,7 @@ const library = {
             yandexGames.sdk = sdk;
 
             // The { scopes: false } ensures personal data permission request window won't pop up,
-            const playerAccountInitializationPromise = sdk.getPlayer({ scopes: false }).then(function (playerAccount) {
+            const playerAccountInitializationPromise = sdk.getPlayer({scopes: false}).then(function (playerAccount) {
               if (playerAccount.getMode() !== 'lite') {
                 yandexGames.isAuthorized = true;
               }
@@ -58,7 +58,7 @@ const library = {
               throw new Error('Leaderboard failed to initialize.');
             });
 
-            const billingInitializationPromise = sdk.payments.getPayments({ signed: true }).then(function (billing) {
+            const billingInitializationPromise = sdk.getPayments({signed: true}).then(function (billing) {
               yandexGames.billing = billing;
             }).catch(function (e) {
               throw new Error('Billing failed to initialize. ' + e.message);
@@ -75,7 +75,6 @@ const library = {
             throw new Error('SDK init failed. ' + e.message);
           });
         }
-        
     },
 
     throwIfSdkNotInitialized: function () {
