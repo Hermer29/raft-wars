@@ -30,6 +30,7 @@ namespace Interface
         private void GameStarted()
         {
             _rootWindow.SetActive(false);
+            _active = false;
         }
 
         private void ShowAds()
