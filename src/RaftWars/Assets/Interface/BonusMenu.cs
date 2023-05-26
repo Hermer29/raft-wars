@@ -87,8 +87,7 @@ namespace Interface
             if (_prefsService.GetInt("FirstStart_BonusMenu", 0) == 1)
             {
                 _prefsService.SetInt("FirstStart_BonusMenu", 1);
-                gameObject.SetActive(false);
-                FirstStart.Show();
+                Hide();
                 return;
             }
             FirstStart.Hide();
