@@ -10,6 +10,7 @@ using RaftWars.Infrastructure.Services;
 using RaftWars.Pickables;
 using SpecialPlatforms;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -90,7 +91,7 @@ namespace Interface
         {
             _continuation = continuation;
             _platforms = AllServices.GetSingle<IEnumerable<Pickable>>();
-            if (_prefsService.GetInt("FirstStart_BonusMenu", 0) == 1)
+            if (_prefsService.GetInt("FirstStart_BonusMenu", 0) == 0)
             {
                 _prefsService.SetInt("FirstStart_BonusMenu", 1);
                 gameObject.SetActive(false);
