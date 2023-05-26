@@ -23,39 +23,51 @@ const library = {
       }
       yandexGames.isInitializeCalled = true;
 
-      const sdkScript = document.createElement('script');
-      sdkScript.src = 'https://yandex.ru/games/sdk/v2';
-      document.head.appendChild(sdkScript);
+      document.addEventListener('DOMContentLoaded', function () {
+        const sdkScript = document.createElement('script');
+        sdkScript.src = 'https://yandex.ru/games/sdk/v2';
+        document.head.appendChild(sdkScript);
 
-      sdkScript.onload = function () {
-        window['YaGames'].init().then(function (sdk) {
-          yandexGames.sdk = sdk;
+        sdkScript.onload = function () {
+          window['YaGames'].init().then(function (sdk) {
+            yandexGames.sdk = sdk;
 
-          // The { scopes: false } ensures personal data permission request window won't pop up,
-          const playerAccountInitializationPromise = sdk.getPlayer({ scopes: false }).then(function (playerAccount) {
-            if (playerAccount.getMode() !== 'lite') {
-              yandexGames.isAuthorized = true;
-            }
+            // The { scopes: false } ensures personal data permission request window won't pop up,
+            const playerAccountInitializationPromise = sdk.getPlayer({ scopes: false }).then(function (playerAccount) {
+              if (playerAccount.getMode() !== 'lite') {
+                yandexGames.isAuthorized = true;
+              }
 
-            // Always contains permission info. Contains personal data as well if permissions were granted before.
-            yandexGames.playerAccount = playerAccount;
-          }).catch(function () { throw new Error('PlayerAccount failed to initialize.'); });
+              // Always contains permission info. Contains personal data as well if permissions were granted before.
+              yandexGames.playerAccount = playerAccount;
+            }).catch(function (e) {
+              throw new Error('PlayerAccount failed to initialize. ' + e.message);
+            });
 
-          const leaderboardInitializationPromise = sdk.getLeaderboards().then(function (leaderboard) {
-            yandexGames.leaderboard = leaderboard;
-          }).catch(function () { throw new Error('Leaderboard failed to initialize.'); });
+            const leaderboardInitializationPromise = sdk.getLeaderboards().then(function (leaderboard) {
+              yandexGames.leaderboard = leaderboard;
+            }).catch(function () {
+              throw new Error('Leaderboard failed to initialize.');
+            });
 
-          const billingInitializationPromise = sdk.getPayments({ signed: true }).then(function (billing) {
-            yandexGames.billing = billing;
-          }).catch(function () { throw new Error('Billing failed to initialize.'); });
+            const billingInitializationPromise = sdk.payments.getPayments({ signed: true }).then(function (billing) {
+              yandexGames.billing = billing;
+            }).catch(function (e) {
+              throw new Error('Billing failed to initialize. ' + e.message);
+            });
 
-          Promise.allSettled([leaderboardInitializationPromise, playerAccountInitializationPromise, billingInitializationPromise]).then(function () {
-            yandexGames.isInitialized = true;
-            yandexGames.sdk.features.LoadingAPI.ready();
-            dynCall('v', successCallbackPtr, []);
-          }).catch(function(err) {throw new Error('All settled ended with error.' + err);});
-        });
-      }
+            Promise.all([leaderboardInitializationPromise, playerAccountInitializationPromise, billingInitializationPromise]).then(function () {
+              yandexGames.isInitialized = true;
+              yandexGames.sdk.features.LoadingAPI.ready();
+              dynCall('v', successCallbackPtr, []);
+            }).catch(function (e) {
+              throw new Error('All promises failed to settle. ' + e.message);
+            });
+          }).catch(function (e) {
+            throw new Error('SDK init failed. ' + e.message);
+          });
+        }
+      });
     },
 
     throwIfSdkNotInitialized: function () {
