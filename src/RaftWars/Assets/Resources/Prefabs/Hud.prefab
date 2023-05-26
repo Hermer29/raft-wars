@@ -6326,6 +6326,7 @@ GameObject:
   - component: {fileID: 6502206315686591042}
   - component: {fileID: 2145327587996638289}
   - component: {fileID: 1204298104483442688}
+  - component: {fileID: 4695323879203543156}
   m_Layer: 5
   m_Name: Revive
   m_TagString: Untagged
@@ -6449,6 +6450,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4695323879203543156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5892398574782975779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5948149360261446312
 GameObject:
   m_ObjectHideFlags: 0
