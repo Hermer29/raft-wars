@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba0b5ec9efb2fd43a90dd61702dd855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ClickDetector: {fileID: 8161298976033581060}
   map: {fileID: 0}
   boss: {fileID: 0}
   GamePaused: 0
@@ -238,4 +239,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b20287299134a90b3fec3bab66a5d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameManager: {fileID: 1422388279254755201}

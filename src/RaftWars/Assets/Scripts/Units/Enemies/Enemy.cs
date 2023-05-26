@@ -171,10 +171,8 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
         _edgesAndAngleWaves?.UpdateVisual();
     }
 
-    public override bool TryGetNotFullPlatform(out Platform platform)
-    {
-        return TryFindNotFullPlatform(out platform);
-    }
+    public override bool TryGetNotFullPlatform(out Platform platform) 
+        => TryFindNotFullPlatform(out platform);
 
     public override (Vector3, Vector3)[] GetOutsideNormals()
     {
@@ -221,21 +219,24 @@ public class Enemy : FighterRaft, IPlatformsCarrier, ICanTakePeople, ITargetable
 
     private void Update()
     {
-        if (hasShield)
-        {
-            for(var i = 0; i < enemiesToKill.Count; i++)
-            {
-                if (enemiesToKill[i] == null)
-                    enemiesToKill.RemoveAt(i);
-                if (enemiesToKill.Count != 0) continue;
-                shieldToOff.SetActive(false);
-                hasShield = false;
-            }
-        }
+        HandleShield();
 
         if (player != null && !player.isDead) return;
         battle = false;
         timer = 0;
+    }
+
+    private void HandleShield()
+    {
+        if (!hasShield) return;
+        for (var i = 0; i < enemiesToKill.Count; i++)
+        {
+            if (enemiesToKill[i] == null)
+                enemiesToKill.RemoveAt(i);
+            if (enemiesToKill.Count != 0) continue;
+            shieldToOff.SetActive(false);
+            hasShield = false;
+        }
     }
 
     public override Platform GetAnotherPlatform()

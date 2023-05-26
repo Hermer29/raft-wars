@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Interface
 {
     public class ClickDetector : MonoBehaviour, IPointerClickHandler
     {
-        [SerializeField] private GameManager _gameManager;
+        public event Action Clicked;
         
         public virtual void OnPointerClick(PointerEventData eventData)
         {
-            _gameManager.StartGame();
-            Destroy(gameObject);
+            Clicked?.Invoke();
         }
     }
 }

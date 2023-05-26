@@ -173,14 +173,16 @@ public class EnemyHud : MonoBehaviour
 
     private Vector3 ClampScreenPoint(Vector3 screenPoint)
     {
+        var aspectRatioWidthToHeight = Screen.width / Screen.height;
+        var aspectRatioHeightToWidth = Screen.height / Screen.width;
         var viewportBoundsXMin = .25f;
         var viewportBoundsXMax = .8f;
         var viewportBoundsYMin = .1f;
         var viewportBoundsYMax = .85f;
-        var screenBoundsXMin = Screen.width * viewportBoundsXMin;
-        var screenBoundsXMax = Screen.width * viewportBoundsXMax;
-        var screenBoundsYMin = Screen.height * viewportBoundsYMin;
-        var screenBoundsYMax = Screen.height * viewportBoundsYMax;
+        var screenBoundsXMin = 100;
+        var screenBoundsXMax = Screen.width - 100;
+        var screenBoundsYMin = 100;
+        var screenBoundsYMax = Screen.height - 100;
         var x = Mathf.Clamp(screenPoint.x, screenBoundsXMin, screenBoundsXMax);
         var y = Mathf.Clamp(screenPoint.y, screenBoundsYMin, screenBoundsYMax);
         var clamped = new Vector3(x, y);

@@ -4,10 +4,12 @@ using System.Linq;
 using DefaultNamespace;
 using Infrastructure;
 using InputSystem;
+using LanguageChanger;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.Services;
 using RaftWars.Pickables;
 using SpecialPlatforms;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,9 +28,11 @@ namespace Interface
         [SerializeField] private Button _buyForYansAdditionalPlatforms;
         [SerializeField] private Button _buyForYansAdditionalStats;
         [SerializeField] private Image _specialPlatformIllustration;
-
-        private AttachablePlatform _selectedPlatform;
+        [SerializeField] private TMP_Text _specialPlatformName;
         
+        private AttachablePlatform _selectedPlatform;
+        private Action _continuation;
+
         private void Awake()
         {
             _advertising = Game.AdverisingService;
@@ -39,8 +43,9 @@ namespace Interface
         private void SelectPlatform()
         {
             _selectedPlatform = (AttachablePlatform)_platforms.Random();
-            _specialPlatformIllustration.sprite = _selectedPlatform.platform.GetComponent<StatsHolder>()
-                .Platform.SpRewardIllustration;
+            var stats = _selectedPlatform.platform.GetComponent<StatsHolder>().Platform;
+            _specialPlatformName.text = FindObjectOfType<LocalizationService>()[stats.LocalizedName];
+            _specialPlatformIllustration.sprite = stats.SpRewardIllustration;
         }
 
         private void Subscribe()
@@ -77,12 +82,13 @@ namespace Interface
 
         private void Continuation()
         {
-            Game.GameManager.StartGame();
+            _continuation.Invoke();
             Hide();
         }
 
-        public void Show()
+        public void Show(Action continuation)
         {
+            _continuation = continuation;
             _platforms = AllServices.GetSingle<IEnumerable<Pickable>>();
             if (_prefsService.GetInt("FirstStart_BonusMenu", 0) == 1)
             {

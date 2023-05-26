@@ -12,6 +12,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public ClickDetector ClickDetector;
     private bool _started;
     
     private int platformsCountOnStart = 1;
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviour
         _arrow = arrow;
         _camera = camera;
 
+        ClickDetector.Clicked += StartGame;
         hud.Replay.onClick.AddListener(RestartLevel);
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
@@ -218,6 +220,7 @@ private void Update()
         map.GenerateBoss();
         Game.Hud.HideBonusWindow();
         Game.AdverisingService.ShowInterstitial();
+        ClickDetector.Clicked -= StartGame;
     }
 
     public void AddEnemy(Enemy enemy)
@@ -227,13 +230,23 @@ private void Update()
 
     public void NextStage()
     {
+        hud.blackBG.SetActive(false);
+        hud.stagePanel.SetActive(false);
+        hud.BonusMenu.Show(LaunchNextStage);
+        ClickDetector.Clicked += () =>
+        {
+            hud.BonusMenu.Hide();
+            LaunchNextStage();
+        };
+    }
+
+    private void LaunchNextStage()
+    {
         _input.Enable();
         hud.progressText.text = _stage + "/5";
         map.Generate(_stage);
         Player.instance.canPlay = true;
-        hud.blackBG.SetActive(false);
-        hud.stagePanel.SetActive(false);
-        
+        Game.AdverisingService.ShowInterstitial();
         map.GenerateBoss();
     }
 
@@ -326,6 +339,7 @@ private void Update()
             });
             return;
         }
+        Game.AdverisingService.ShowInterstitial();
         
         if (IsNotEnoughCoinsToAmplifyDamage()) return;
         

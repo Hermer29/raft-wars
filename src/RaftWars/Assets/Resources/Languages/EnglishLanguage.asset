@@ -119,6 +119,10 @@ MonoBehaviour:
     textValue: Get it!
   - textName: 52
     textValue: GAIN POWER!
+  - textName: 53
+    textValue: Without Bonuses
+  - textName: 54
+    textValue: Select Bonus
   <Parametrized>k__BackingField:
   - Name: 27
     Value: Required level {0}

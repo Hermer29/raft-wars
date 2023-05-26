@@ -1,4 +1,5 @@
-﻿using Infrastructure;
+﻿using System;
+using Infrastructure;
 using UnityEngine;
 using UnityEngine.UI;
 using RaftWars.Infrastructure;
@@ -54,10 +55,8 @@ namespace Interface
         public Button Revive;
         public BonusMenu BonusMenu;
         
-        public void ShowBonusWindow()
-        {
-            BonusMenu.Show();
-        }
+        public void ShowBonusWindow(Action continuation) 
+            => BonusMenu.Show(continuation);
 
         private void Start()
         {

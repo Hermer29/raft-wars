@@ -1,4 +1,5 @@
 ﻿using System;
+using Infrastructure;
 using InputSystem;
 using RaftWars.Infrastructure;
 using Services;
@@ -49,9 +50,7 @@ public class DrivingEnemy : MonoBehaviour
 
     public void TryMoveEnemy(float deltaTime)
     {
-        if(_relatedEnemy.boss5Stage)
-            return;
-        if (_relatedEnemy.InBattle)
+        if (_relatedEnemy.InBattle && _relatedEnemy.boss5Stage)
             return;
         if (_relatedEnemy.IsDead)
         {
@@ -62,50 +61,61 @@ public class DrivingEnemy : MonoBehaviour
         if (_relatedEnemy.isDead)
             return;
 
-        if (Bounds.IsInBounds(transform) == false)
+        if (Bounds.IsInBounds(transform))
+            MoveEnemy();
+        else
         {
             _moveDirection = (Bounds.VectorToCenter(transform.position) +
                               new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5))).normalized;
         }
-        else
-        {
-            if (_moveDirection == null)
-            {
-                MoveInRandomDirection(_relatedEnemy);
-            }
-
-            float sqrMagnitudeToPlayer = (_player.Position - transform.position).sqrMagnitude;
-            Vector3 escapeVector = -(_player.Position - transform.position).normalized;
-
-            if (sqrMagnitudeToPlayer < ExclusionSqrDistanceToPlayer)
-            {
-                if (_player.ExistsEnemyThatAlreadyInExclusionZone && _player.EnemyInExclusionZone != _relatedEnemy)
-                {
-                    _moveDirection = escapeVector;
-                }
-                else
-                {
-                    _player.RegisterAsEnemyInExclusionZone(_relatedEnemy);
-                }
-            }
-            else if (_player.EnemyInExclusionZone == this)
-            {
-                _player.UnregisterEnemyInExclusionZone();
-            }
-
-            if (_player.IsDead)
-            {
-            }
-            else if (sqrMagnitudeToPlayer < SqrMagnitudeDistanceToReactOnPlayer)
-            {
-                bool playerSuperior = _player.PlayerStatsSum >= _relatedEnemy.StatsSum;
-                _moveDirection = playerSuperior ? escapeVector : (_player.Position - transform.position).normalized;
-            }
-        }
 
         if (GameManager.instance.GamePaused)
             return;
+        if (_moveDirection == null)
+            return;
         transform.position += _moveDirection.Value * (deltaTime * _relatedEnemy.Speed);
+    }
+
+    private void MoveEnemy()
+    {
+        if (_moveDirection == null)
+        {
+            MoveInRandomDirection(_relatedEnemy);
+        }
+
+        float sqrMagnitudeToPlayer = (_player.Position - transform.position).sqrMagnitude;
+        Vector3 escapeVector = -(_player.Position - transform.position).normalized;
+
+        if(Game.FeatureFlags.EnemiesExclusionZoneEnabled)
+            TakeExclusionZoneIntoAccount(sqrMagnitudeToPlayer, escapeVector);
+
+        if (_player.IsDead)
+        {
+        }
+        else if (sqrMagnitudeToPlayer < SqrMagnitudeDistanceToReactOnPlayer)
+        {
+            bool playerSuperior = _player.PlayerStatsSum >= _relatedEnemy.StatsSum;
+            _moveDirection = playerSuperior ? escapeVector : (_player.Position - transform.position).normalized;
+        }
+    }
+
+    private void TakeExclusionZoneIntoAccount(float sqrMagnitudeToPlayer, Vector3 escapeVector)
+    {
+        if (sqrMagnitudeToPlayer < ExclusionSqrDistanceToPlayer)
+        {
+            if (_player.ExistsEnemyThatAlreadyInExclusionZone && _player.EnemyInExclusionZone != _relatedEnemy)
+            {
+                _moveDirection = escapeVector;
+            }
+            else
+            {
+                _player.RegisterAsEnemyInExclusionZone(_relatedEnemy);
+            }
+        }
+        else if (_player.EnemyInExclusionZone == this)
+        {
+            _player.UnregisterEnemyInExclusionZone();
+        }
     }
 
     private Vector3 GetNearestPointOnBound()

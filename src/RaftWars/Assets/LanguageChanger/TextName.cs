@@ -60,6 +60,8 @@ namespace LanguageChanger
         LooseScreenContinue,
         GetIt,
         GunNameOnBonusesOnMap,
-        GainPower
+        GainPower,
+        NoBonuses,
+        SelectBonus
     }
 }

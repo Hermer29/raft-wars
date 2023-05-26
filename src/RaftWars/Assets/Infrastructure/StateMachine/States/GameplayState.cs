@@ -103,7 +103,7 @@ namespace Infrastructure.States
                 var uiFactory = new UiFactory(uiAssets, yandexIapService, moneyService, usingService, propertyService, _coroutineRunner);
                 Shop shop = uiFactory.CreateShop();
                 _loadingScreen.FadeOut();
-                Game.Hud.ShowBonusWindow();
+                Game.Hud.ShowBonusWindow(() => Game.GameManager.StartGame());
                 ShowRewardsWindow();
                 BindAllButtonsToAdvertisingShow();
             }
@@ -115,7 +115,7 @@ namespace Infrastructure.States
 
         private void BindAllButtonsToAdvertisingShow()
         {
-            foreach (var button in UnityEngine.Object.FindObjectsOfType<Button>()
+            foreach (var button in UnityEngine.Object.FindObjectsOfType<Button>(true)
                          .Where(x => x.GetComponent<IgnoreInterstitialButtonMarker>() == null))
             {
                 button.onClick.AddListener(() => Game.AdverisingService.ShowInterstitial());
@@ -141,7 +141,7 @@ namespace Infrastructure.States
             var colors = AssetLoader.LoadPlatformSkins().Cast<IShopProduct>();
             var allSkins = hats.Concat(colors);
             var rewardWindowProcessing = new RewardWindowProcessing(allSkins, Game.PropertyService, Game.AdverisingService, Game.UsingService);
-            rewardWindowProcessing.Hidden += Game.Hud.ShowBonusWindow;
+            rewardWindowProcessing.Hidden += () => Game.Hud.ShowBonusWindow(() => Game.GameManager.StartGame());
         }
 
         private void CreateSpecialPlatforms()

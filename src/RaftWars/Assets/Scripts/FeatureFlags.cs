@@ -18,6 +18,9 @@ namespace DefaultNamespace
         [field: SerializeField] public float TimeoutBeforeBossSpawn { get; private set; } = 20;
         [field: SerializeField] public SkipTo SkipTo { get; private set; }
         [field: SerializeField] public float PlayerSpeedIncreasingPerPlatform {get; private set;}
+        [field: SerializeField] public bool EnemiesExclusionZoneEnabled { get; private set; }
+        
+
         [FormerlySerializedAs("OwningPropertyDefinition")] [field: SerializeField] public bool OwningOrderDefinition;
     }
 
