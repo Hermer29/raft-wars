@@ -95,10 +95,12 @@ namespace Interface
                 _prefsService.SetInt("FirstStart_BonusMenu", 1);
                 gameObject.SetActive(false);
                 Hide();
+                Game.Hud.tapToPlay.gameObject.SetActive(true);
                 return;
             }
             FirstStart.Hide();
             gameObject.SetActive(true);
+            Game.Hud.tapToPlay.gameObject.SetActive(false);
             SelectPlatform();
             Subscribe();
         }
