@@ -33,6 +33,7 @@ namespace Interface
         
         private AttachablePlatform _selectedPlatform;
         private Action _continuation;
+        [field: SerializeField] public Button DeclineBonusesPicking { get; set; }
 
         private void Awake()
         {
@@ -91,17 +92,7 @@ namespace Interface
         {
             _continuation = continuation;
             _platforms = AllServices.GetSingle<IEnumerable<Pickable>>();
-            if (_prefsService.GetInt("FirstStart_BonusMenu", 0) == 0)
-            {
-                _prefsService.SetInt("FirstStart_BonusMenu", 1);
-                gameObject.SetActive(false);
-                Hide();
-                Game.Hud.tapToPlay.gameObject.SetActive(true);
-                return;
-            }
-            FirstStart.Hide();
             gameObject.SetActive(true);
-            Game.Hud.tapToPlay.gameObject.SetActive(false);
             SelectPlatform();
             Subscribe();
         }

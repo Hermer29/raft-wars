@@ -7,6 +7,7 @@ using Infrastructure.States;
 using InputSystem;
 using Interface;
 using RaftWars.Infrastructure;
+using RaftWars.Infrastructure.Services;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -48,8 +49,8 @@ public class GameManager : MonoBehaviour
         player = Game.PlayerService;
         _arrow = arrow;
         _camera = camera;
-
-        ClickDetector.Clicked += StartGame;
+        
+        HandleBonusMenu();
         hud.Replay.onClick.AddListener(RestartLevel);
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
@@ -74,9 +75,27 @@ public class GameManager : MonoBehaviour
         }
         
         map.Generate(_stage);
+        
     }
 
-private bool _wonTheGame;
+    public void HandleBonusMenu()
+    {
+        IPrefsService prefsService = CrossLevelServices.PrefsService;
+        if (prefsService.GetInt("FirstStart_BonusMenu", 0) == 0)
+        {
+            prefsService.SetInt("FirstStart_BonusMenu", 1);
+            hud.BonusMenu.Hide();
+            Game.Hud.tapToPlay.gameObject.SetActive(true);
+            ClickDetector.Clicked += StartGame;
+            return;
+        }
+
+        hud.BonusMenu.Show(StartGame);
+        Game.Hud.tapToPlay.gameObject.SetActive(false);
+        Game.Hud.BonusMenu.DeclineBonusesPicking.onClick.AddListener(StartGame);
+    }
+
+    private bool _wonTheGame;
 public bool GamePaused;
 private Pause _pause;
 private BossAppearing _appearing;
@@ -233,11 +252,12 @@ private void Update()
         hud.blackBG.SetActive(false);
         hud.stagePanel.SetActive(false);
         hud.BonusMenu.Show(LaunchNextStage);
-        ClickDetector.Clicked += () =>
+        hud.BonusMenu.DeclineBonusesPicking.onClick.RemoveAllListeners();
+        hud.BonusMenu.DeclineBonusesPicking.onClick.AddListener(() =>
         {
             hud.BonusMenu.Hide();
             LaunchNextStage();
-        };
+        }); 
     }
 
     private void LaunchNextStage()
