@@ -14,7 +14,6 @@ namespace Visual
         private void Update()
         {
             var aspectRatio = Screen.width / Screen.height;
-            Debug.Log(aspectRatio);
             if (aspectRatio < _borderingAspectRatio)
             {
                 _layoutGroup.padding.top = _paddingTop;

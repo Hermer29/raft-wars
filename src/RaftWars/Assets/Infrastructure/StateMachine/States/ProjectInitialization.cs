@@ -41,27 +41,25 @@ namespace Infrastructure.States
                 }
             }
             Debug.Log("Not initializing yandex sdk, because we're not in build");
-            ContinueInitialization();
+            SelectPrefsImplementation();
+            ContinueServicesCreation();
         }
 
         private IEnumerator WaitForSdkInitialization()
         {
             yield return YandexGamesSdk.Initialize();
             yield return new WaitForSeconds(1f);
-            ContinueInitialization();
+            SelectPrefsImplementation();
+            
+            yield return new WaitWhile(() => CrossLevelServices.PrefsService.IsDataLoaded);
+            ContinueServicesCreation();
         }
 
-        private void ContinueInitialization()
-        {
-            SelectPrefsImplementation(
-                dataLoadingContinuation: ContinueServicesCreation);
-        }
-
-        private void SelectPrefsImplementation(System.Action dataLoadingContinuation)
+        private void SelectPrefsImplementation()
         {
             if (Application.isEditor)
             {
-                SelectPlayerPrefs(dataLoadingContinuation);
+                SelectPlayerPrefs();
                 return;
             }
             
@@ -71,17 +69,15 @@ namespace Infrastructure.States
                     CrossLevelServices.PrefsService = new YandexPrefsService(_coroutineRunner);
                     break;
                 case PrefsOptions.PlayerPrefs:
-                    SelectPlayerPrefs(dataLoadingContinuation);
+                    SelectPlayerPrefs();
                     break;
             }
-            dataLoadingContinuation.Invoke();
         }
 
-        private void SelectPlayerPrefs(Action dataLoadingContinuation)
+        private void SelectPlayerPrefs()
         {
             Debug.Log("Selected player prefs implementation because we're not in build");
             CrossLevelServices.PrefsService = new PlayerPrefsService(_coroutineRunner);
-            dataLoadingContinuation.Invoke();
         }
 
         private void ContinueServicesCreation()

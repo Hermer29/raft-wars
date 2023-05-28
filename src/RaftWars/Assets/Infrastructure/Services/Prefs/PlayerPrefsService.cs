@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace RaftWars.Infrastructure.Services
@@ -15,7 +16,9 @@ namespace RaftWars.Infrastructure.Services
                 PlayerPrefs.Save();
             }
         }
-        
+
+        public bool IsDataLoaded => true;
+        public event Action DataJustLoaded;
         public string GetString(string key) => PlayerPrefs.GetString(key);
 
         public void SetString(string key, string value) => PlayerPrefs.SetString(key, value);
