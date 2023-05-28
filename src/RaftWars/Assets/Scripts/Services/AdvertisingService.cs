@@ -14,7 +14,7 @@ namespace InputSystem
         
         private bool _previousAudioState;
         private Action _onRewarded;
-        private bool _rewardedEnded;
+        private bool _rewarded;
 
         public event Action AdvertisingStarted;
         public event Action AdvertisingEnded;
@@ -47,9 +47,9 @@ namespace InputSystem
             }
             InterstitialAd.Show(
                 onOpenCallback: OnOpen,
-                onCloseCallback: _ => OnAdvertisingEnded(),
-                onErrorCallback: _ => OnAdvertisingEnded(),
-                onOfflineCallback: OnAdvertisingEnded);    
+                onCloseCallback: _ => OnClosed(),
+                onErrorCallback: _ => OnClosed(),
+                onOfflineCallback: OnClosed);    
         }
 
         public void ShowRewarded(Action onRewarded)
@@ -62,32 +62,23 @@ namespace InputSystem
             }
             
             _onRewarded = onRewarded;
-            _coroutineRunner.StartCoroutine(WaitWhileAdIsNotEnded());
             
             VideoAd.Show(
                 onOpenCallback: OnOpen, 
                 onRewardedCallback: OnRewarded, 
-                onCloseCallback: OnAdvertisingEnded, 
-                onErrorCallback: _ => OnAdvertisingEnded());
+                onCloseCallback: OnClosed, 
+                onErrorCallback: _ => OnClosed());
         }
 
-        private IEnumerator WaitWhileAdIsNotEnded()
+        private void OnClosed()
         {
-            yield return new WaitWhile(() => _rewardedEnded == false);
-            _onRewarded?.Invoke();
-            OnAdvertisingEnded();
-            _rewardedEnded = false;
-        }
-
-        private void OnAdvertisingEnded() => 
+            if (_rewarded) _onRewarded?.Invoke();
+            _rewarded = false;
             AdvertisingEnded?.Invoke();
-
-        private void OnRewarded()
-        {
-            _rewardedEnded = true;
         }
+        
+        private void OnRewarded() => _rewarded = true;
 
-        private void OnOpen() => 
-            AdvertisingStarted?.Invoke();
+        private void OnOpen() => AdvertisingStarted?.Invoke();
     }
 }

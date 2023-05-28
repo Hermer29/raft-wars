@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using RaftWars.Infrastructure;
 using TMPro;
+using Unity.VisualScripting;
 using Visual;
 
 namespace Interface
@@ -85,15 +86,9 @@ namespace Interface
             }
         }
 
-        public void ShowCoins(int coins)
-        {
-            coinsText.text = coins.ToString();
-        }
+        public void ShowCoins(int coins) => coinsText.text = coins.ToString();
 
-        public void ShowGems(int gems)
-        {
-            diamondsText.text = gems.ToString();
-        }
+        public void ShowGems(int gems) => diamondsText.text = gems.ToString();
 
         public void ShowPreviousLevel(string currentLevel)
         {
@@ -111,9 +106,10 @@ namespace Interface
             }
         }
 
-        public void HideBonusWindow()
-        {
-            BonusMenu.Hide();
-        }
+        public void HideBonusWindow() => BonusMenu.Hide();
+
+        public void HidePauseButton() => PauseButton.gameObject.SetActive(false);
+
+        public void ShowPauseButton() => PauseButton.gameObject.SetActive(true);
     }
 }

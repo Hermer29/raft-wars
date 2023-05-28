@@ -12,6 +12,7 @@ namespace RaftWars.Infrastructure.Services
     {
         private readonly ICoroutineRunner _coroutineRunner;
         private Dictionary<string, string> _data;
+        private int _version;
 
         public YandexPrefsService(ICoroutineRunner coroutineRunner)
         {
@@ -45,6 +46,7 @@ namespace RaftWars.Infrastructure.Services
         private IEnumerator Worker()
         {
             Initialize();
+            var version = _version;
             while(true)
             {
                 if(_data.Count == 0)
@@ -52,7 +54,15 @@ namespace RaftWars.Infrastructure.Services
                     yield return null;
                     continue;
                 }
-                var serialized = JsonConvert.SerializeObject(_data);
+
+                if (_version == version)
+                {
+                    yield return null;
+                    continue;
+                }
+
+                version = _version;
+                string serialized = JsonConvert.SerializeObject(_data);
                 PlayerAccount.SetCloudSaveData(serialized);
                 yield return new WaitForSeconds(1.5f);
             } 
@@ -70,12 +80,14 @@ namespace RaftWars.Infrastructure.Services
         {
             CreateDataIfEqualsNull();
             _data[key] = value;
+            _version++;
         }
 
         public void SetInt(string key, int value)
         {
             CreateDataIfEqualsNull();
             _data[key] = value.ToString();
+            _version++;
         }
 
         public int GetInt(string key, int defaultValue = 0)

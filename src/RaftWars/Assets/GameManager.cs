@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
         hud.NextStage.onClick.AddListener(NextStage);
         hud.MoneyForAdvertisingEndMenu.transform.parent.gameObject.SetActive(false);
-        hud.Revive.onClick.AddListener(Revive);
+        hud.Revive.onClick.AddListener(QueryRevive);
         var currentLevel = CrossLevelServices.LevelService.Level.ToString();
         hud.ShowPreviousLevel(currentLevel);
         hud.ShowNextLevel((CrossLevelServices.LevelService.Level + 1).ToString());
@@ -145,14 +145,18 @@ private void Update()
         _stage++;
     }
 
-    private void Revive()
+    private void QueryRevive()
     {
-        _advertising.ShowRewarded(() => {
-            _input.Enable();
-            hud.blackBG.SetActive(false);
-            hud.failedPanel.SetActive(false);
-            Game.PlayerService.Revive();
-        });
+        _advertising.ShowRewarded(ExecuteRevive);
+    }
+
+    private void ExecuteRevive()
+    {
+        _input.Enable();
+        hud.blackBG.SetActive(false);
+        hud.failedPanel.SetActive(false);
+        Game.PlayerService.Revive();
+        hud.ShowPauseButton();
     }
 
     private void WarmupStats()
@@ -287,6 +291,7 @@ private void Update()
         hud.failedPanel.SetActive(true);
         _input.Disable();
         Game.AudioService.PlayLooseSound();
+        hud.HidePauseButton();
     }
 
     public void IncreaseHealth()

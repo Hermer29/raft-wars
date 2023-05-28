@@ -10,7 +10,6 @@ using RaftWars.Infrastructure.Services;
 using RaftWars.Pickables;
 using SpecialPlatforms;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,8 +20,6 @@ namespace Interface
         private AdvertisingService _advertising;
         private YandexIAPService _iap;
         private IEnumerable<Pickable> _platforms;
-        private IPrefsService _prefsService;
-        public AdvertisingForStatsButton FirstStart;
 
         [SerializeField] private Button _showAdvertisingForAdditionalPlatform;
         [SerializeField] private Button _showAdvertisingForAdditionalStats;
@@ -39,7 +36,6 @@ namespace Interface
         {
             _advertising = Game.AdverisingService;
             _iap = Game.IAPService;
-            _prefsService = CrossLevelServices.PrefsService;
         }
 
         private void SelectPlatform()
@@ -99,7 +95,6 @@ namespace Interface
 
         public void Hide()
         {
-            FirstStart.Hide();
             gameObject.SetActive(false);
         }
     }
