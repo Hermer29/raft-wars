@@ -205,6 +205,7 @@ private void Update()
 
     private void WinTheGame()
     {
+        hud.HidePauseButton();
         hud.buttonGroup.gameObject.SetActive(false);
         hud.stagePanel.SetActive(true);
         hud.blackBG.SetActive(true);
@@ -253,6 +254,7 @@ private void Update()
 
     public void NextStage()
     {
+        hud.HidePauseButton();
         hud.blackBG.SetActive(false);
         hud.stagePanel.SetActive(false);
         hud.BonusMenu.Show(LaunchNextStage);
@@ -266,6 +268,7 @@ private void Update()
 
     private void LaunchNextStage()
     {
+        hud.ShowPauseButton();
         _input.Enable();
         hud.progressText.text = _stage + "/5";
         map.Generate(_stage);
