@@ -10,12 +10,14 @@ namespace RaftWars.Infrastructure.Services
 
     public class YandexPrefsService : IPrefsService
     {
+        private readonly ICoroutineRunner _coroutineRunner;
+        
         private Dictionary<string, string> _data = new();
         private int _version;
 
         public YandexPrefsService(ICoroutineRunner coroutineRunner)
         {
-            coroutineRunner.StartCoroutine(Worker());
+            _coroutineRunner = coroutineRunner;
             Initialize();
         }
 
@@ -31,6 +33,7 @@ namespace RaftWars.Infrastructure.Services
                     NullValueHandling = NullValueHandling.Include
                 });
             IsDataLoaded = true;
+            _coroutineRunner.StartCoroutine(Worker());
             DataJustLoaded?.Invoke();
         }
 
