@@ -1171,6 +1171,7 @@ GameObject:
   - component: {fileID: 3101466035391898504}
   - component: {fileID: 270762286058929835}
   - component: {fileID: 407500991180817082}
+  - component: {fileID: 3960622390596560414}
   m_Layer: 5
   m_Name: btn-upgradeForAds
   m_TagString: Untagged
@@ -1311,6 +1312,18 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
+--- !u!114 &3960622390596560414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4594469000127983568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 675b2f5008354d889c5ef78a3349aef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4782281336412711157
 GameObject:
   m_ObjectHideFlags: 0
