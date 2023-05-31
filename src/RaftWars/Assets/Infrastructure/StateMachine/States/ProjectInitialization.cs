@@ -51,7 +51,7 @@ namespace Infrastructure.States
             yield return new WaitForSeconds(1f);
             SelectPrefsImplementation();
             
-            yield return new WaitWhile(() => CrossLevelServices.PrefsService.IsDataLoaded);
+            yield return new WaitWhile(() => CrossLevelServices.PrefsService.IsDataLoaded == false);
             ContinueServicesCreation();
         }
 

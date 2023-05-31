@@ -58,6 +58,7 @@ namespace RaftWars.Infrastructure.Services
 
         public string GetString(string key)
         {
+            ThrowIfDataNotLoaded();
             if(HasKey(key) == false)
                 return String.Empty;
             return _data[key];
@@ -65,6 +66,7 @@ namespace RaftWars.Infrastructure.Services
 
         public void SetString(string key, string value)
         {
+            ThrowIfDataNotLoaded();
             if (_data[key] == value)
                 return;
             _data[key] = value;
@@ -73,19 +75,31 @@ namespace RaftWars.Infrastructure.Services
 
         public void SetInt(string key, int value)
         {
+            ThrowIfDataNotLoaded();
             if (_data[key] == value.ToString())
                 return;
             _data[key] = value.ToString();
             _version++;
         }
 
+        private void ThrowIfDataNotLoaded()
+        {
+            if (IsDataLoaded == false)
+                throw new InvalidOperationException();
+        }
+
         public int GetInt(string key, int defaultValue = 0)
         {
+            ThrowIfDataNotLoaded();
             if(_data.ContainsKey(key) == false)
                 return defaultValue;
             return int.Parse(_data[key]);
         }
 
-        public bool HasKey(string key) => _data.ContainsKey(key);
+        public bool HasKey(string key)
+        {
+            ThrowIfDataNotLoaded();
+            return _data.ContainsKey(key);
+        }
     }
 }
