@@ -48,21 +48,18 @@ namespace SpecialPlatforms
 
         public void IncrementUpgradeLevel() => UpgradedLevel++;
 
-        string ISavableData.GetData()
-        {
-            var data = new Dictionary<string, string>()
-            {
-                {"upgradeLevel", UpgradedLevel.ToString()}
-            };
-            return JsonConvert.SerializeObject(data);
-        }
+        string ISavableData.GetData() 
+            => JsonConvert.SerializeObject(new { upgradeLevel = UpgradedLevel.ToString() });
 
         string ISavableData.Key() => Guid;
 
         void ISavableData.Populate(string data)
         {
-            var result = JsonConvert.DeserializeAnonymousType(data,
-                new { upgradeLevel = 0 });
+            var result = JsonConvert.DeserializeAnonymousType(data, new { upgradeLevel = 0 });
+            if (result == null)
+            {
+                return;
+            }
             UpgradedLevel = result.upgradeLevel;
         }
     }

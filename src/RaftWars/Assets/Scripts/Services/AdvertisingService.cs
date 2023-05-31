@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Agava.YandexGames;
+using Infrastructure;
 using RaftWars.Infrastructure;
 using RaftWars.Infrastructure.Services;
 using UnityEngine;
@@ -54,6 +55,7 @@ namespace InputSystem
 
         public void ShowRewarded(Action onRewarded)
         {
+            GameManager.instance.GamePaused = true;
             if (SdkNotWorking)
             {
                 Debug.Log("Rewarded shown");
@@ -72,6 +74,7 @@ namespace InputSystem
 
         private void OnClosed()
         {
+            GameManager.instance.GamePaused = false;
             if (_rewarded) _onRewarded?.Invoke();
             _rewarded = false;
             AdvertisingEnded?.Invoke();
@@ -79,6 +82,10 @@ namespace InputSystem
         
         private void OnRewarded() => _rewarded = true;
 
-        private void OnOpen() => AdvertisingStarted?.Invoke();
+        private void OnOpen()
+        {
+            GameManager.instance.GamePaused = true;
+            AdvertisingStarted?.Invoke();
+        }
     }
 }

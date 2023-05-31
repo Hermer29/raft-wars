@@ -51,6 +51,7 @@ namespace SpecialPlatforms
                 {
                     if (GetData(data) == data.GetData())
                         continue;
+                    Debug.Log($"[SAVESERVICE] Saving data {data.GetData()}. Previous: {GetData(data)}");
                     SetData(data);
                 }
                 yield return new WaitForSeconds(SaveFrequency);

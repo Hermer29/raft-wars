@@ -97,10 +97,7 @@ namespace Services
             } while (IsParticipantsAlive());
         }
 
-        public float CalculatePlayerSuperiority()
-        {
-            return _player.PlayerInstance.damage - _currentFightEnemy.damage;
-        }
+        public float CalculatePlayerSuperiority() => _player.PlayerInstance.damage - _currentFightEnemy.damage;
 
         private float CalculateAttackFrequency(float superiority)
         {
