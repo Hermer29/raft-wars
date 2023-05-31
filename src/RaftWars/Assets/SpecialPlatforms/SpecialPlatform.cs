@@ -2,6 +2,7 @@
 using Infrastructure.Platforms;
 using LanguageChanger;
 using Newtonsoft.Json;
+using RaftWars.Infrastructure.Services;
 using Units;
 using UnityEditor;
 using UnityEngine;
@@ -46,7 +47,11 @@ namespace SpecialPlatforms
 #endif
         }
 
-        public void IncrementUpgradeLevel() => UpgradedLevel++;
+        public void IncrementUpgradeLevel()
+        {
+            UpgradedLevel++;
+            AllServices.GetSingle<SaveService>().Save();
+        }
 
         string ISavableData.GetData() 
             => JsonConvert.SerializeObject(new { upgradeLevel = UpgradedLevel.ToString() });

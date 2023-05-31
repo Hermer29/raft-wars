@@ -65,12 +65,16 @@ namespace RaftWars.Infrastructure.Services
 
         public void SetString(string key, string value)
         {
+            if (_data[key] == value)
+                return;
             _data[key] = value;
             _version++;
         }
 
         public void SetInt(string key, int value)
         {
+            if (_data[key] == value.ToString())
+                return;
             _data[key] = value.ToString();
             _version++;
         }

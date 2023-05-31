@@ -14,15 +14,13 @@ namespace SpecialPlatforms
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly IPrefsService _prefsService;
 
-        private readonly List<ISavableData> _data = new List<ISavableData>();
+        private readonly List<ISavableData> _data = new();
         private int _version;
 
         public SaveService(ICoroutineRunner coroutineRunner, IPrefsService prefsService)
         {
             _coroutineRunner = coroutineRunner;
             _prefsService = prefsService;
-            
-            _coroutineRunner.StartCoroutine(SaveOverTime());
         }
 
         public void Bind(ISavableData savableData)
@@ -43,18 +41,12 @@ namespace SpecialPlatforms
             savable.Populate(GetData(savable));
         }
 
-        private IEnumerator SaveOverTime()
+        public void Save()
         {
-            while (true)
+            foreach (ISavableData data in _data)
             {
-                foreach (ISavableData data in _data)
-                {
-                    if (GetData(data) == data.GetData())
-                        continue;
-                    Debug.Log($"[SAVESERVICE] Saving data {data.GetData()}. Previous: {GetData(data)}");
-                    SetData(data);
-                }
-                yield return new WaitForSeconds(SaveFrequency);
+                Debug.Log($"[SAVESERVICE] Saving data {data.GetData()}. Previous: {GetData(data)}");
+                SetData(data);
             }
         }
 
