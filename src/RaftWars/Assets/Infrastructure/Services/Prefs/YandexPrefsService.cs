@@ -76,6 +76,11 @@ namespace RaftWars.Infrastructure.Services
         public void SetInt(string key, int value)
         {
             ThrowIfDataNotLoaded();
+            if (HasKey(key) == false)
+            {
+                _data.Add(key, value.ToString());
+                return;
+            }
             if (_data[key] == value.ToString())
                 return;
             _data[key] = value.ToString();
