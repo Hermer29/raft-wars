@@ -67,6 +67,11 @@ namespace RaftWars.Infrastructure.Services
         public void SetString(string key, string value)
         {
             ThrowIfDataNotLoaded();
+            if (HasKey(key) == false)
+            {
+                _data.Add(key, value);
+                return;
+            }
             if (_data[key] == value)
                 return;
             _data[key] = value;
