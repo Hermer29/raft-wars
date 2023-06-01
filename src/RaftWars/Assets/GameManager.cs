@@ -126,6 +126,7 @@ private void Update()
 
     private void IncrementStage()
     {
+        hud.HidePauseButton();
         _input.Disable();
         Player.instance.canPlay = false;
         hud.blackBG.SetActive(true);
@@ -254,7 +255,6 @@ private void Update()
 
     public void NextStage()
     {
-        hud.HidePauseButton();
         hud.blackBG.SetActive(false);
         hud.stagePanel.SetActive(false);
         hud.BonusMenu.Show(LaunchNextStage);
