@@ -52,7 +52,7 @@ MonoBehaviour:
   <OwnedByDefault>k__BackingField: 0
   <Guid>k__BackingField: d70b6ae6-1266-4e22-ba07-0dd779075304
   <OverrideEntryDeltaSize>k__BackingField: {x: 0, y: 0}
-  <ProductId>k__BackingField: platformskin3
+  <ProductId>k__BackingField: platformskin2
 --- !u!1001 &4929904870927316247
 PrefabInstance:
   m_ObjectHideFlags: 0
