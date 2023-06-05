@@ -55,7 +55,8 @@ namespace Interface
         public Button MoneyForAdvertisingEndMenu;
         public Button Revive;
         public BonusMenu BonusMenu;
-        
+        private bool _tapToPlayDisabled;
+
         public void ShowBonusWindow(Action continuation) 
             => BonusMenu.Show(continuation);
 
@@ -111,5 +112,18 @@ namespace Interface
         public void HidePauseButton() => PauseButton.gameObject.SetActive(false);
 
         public void ShowPauseButton() => PauseButton.gameObject.SetActive(true);
+
+        public void DisableTapToPlay()
+        {
+            tapToPlay.SetActive(false);
+            _tapToPlayDisabled = true;
+        }
+
+        public void SetActiveTapToPlay(bool isActive)
+        {
+            if (_tapToPlayDisabled)
+                return;
+            tapToPlay.SetActive(isActive);
+        }
     }
 }

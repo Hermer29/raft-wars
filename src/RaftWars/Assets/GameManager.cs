@@ -49,8 +49,7 @@ public class GameManager : MonoBehaviour
         player = Game.PlayerService;
         _arrow = arrow;
         _camera = camera;
-        
-        HandleBonusMenu();
+        hud.SetActiveTapToPlay(false);
         hud.Replay.onClick.AddListener(RestartLevel);
         hud.BuyHealth.onClick.AddListener(IncreaseHealth);
         hud.BuyDamage.onClick.AddListener(IncreaseDamage);
@@ -75,30 +74,47 @@ public class GameManager : MonoBehaviour
         }
         
         map.Generate(_stage);
-        
     }
 
-    public void HandleBonusMenu()
+    public void EnableBonusMenu()
     {
-        IPrefsService prefsService = CrossLevelServices.PrefsService;
-        if (prefsService.GetInt("FirstStart_BonusMenu", 0) == 0)
-        {
-            prefsService.SetInt("FirstStart_BonusMenu", 1);
-            hud.BonusMenu.Hide();
-            Game.Hud.tapToPlay.gameObject.SetActive(true);
-            ClickDetector.Clicked += StartGame;
-            return;
-        }
-
+        Debug.Log($"{nameof(GameManager)}.{nameof(EnableBonusMenu)} bonus menu enabled scenario");
         hud.BonusMenu.Show(StartGame);
-        Game.Hud.tapToPlay.gameObject.SetActive(false);
+        Game.Hud.DisableTapToPlay();
         Game.Hud.BonusMenu.DeclineBonusesPicking.onClick.AddListener(StartGame);
+    }
+
+    public void DisableBonusMenu(bool andTapToStart = false)
+    {
+        hud.BonusMenu.Hide();
+        ClickDetector.Clicked += StartGame;
+        if(andTapToStart)
+            Game.Hud.DisableTapToPlay();
+        Debug.Log($"{nameof(GameManager)}.{nameof(DisableBonusMenu)} bonus menu disabled scenario");
     }
 
     private bool _wonTheGame;
 public bool GamePaused;
 private Pause _pause;
 private BossAppearing _appearing;
+
+public void StartGame()
+{
+    Debug.Log($"{nameof(GameManager)}.{nameof(StartGame)} called. Started: {_started}");
+    if(_started)
+        return; 
+    _arrow.Construct(player, _camera, boss);
+    GameStarted?.Invoke();
+    _input.Enable();
+    _started = true;
+    hud.tapToPlay.SetActive(false);
+    Player.instance.canPlay = true;
+    _pause.ShowButton();
+    map.GenerateBoss();
+    Game.Hud.HideBonusWindow();
+    Game.AdverisingService.ShowInterstitial();
+    ClickDetector.Clicked -= StartGame;
+}
 
 private void Update()
     {
@@ -124,7 +140,7 @@ private void Update()
         }
     }
 
-    private void IncrementStage()
+private void IncrementStage()
     {
         hud.HidePauseButton();
         _input.Disable();
@@ -146,7 +162,7 @@ private void Update()
         _stage++;
     }
 
-    private void QueryRevive()
+private void QueryRevive()
     {
         _advertising.ShowRewarded(ExecuteRevive);
     }
@@ -229,23 +245,6 @@ private void Update()
         hud.NextStage.onClick.RemoveAllListeners();
         hud.NextStage.onClick.AddListener(Continue);
         hud.NewSpecialPlatformProgress.SetValue(1f);
-    }
-
-    public void StartGame()
-    {
-        if(_started)
-            return; 
-        _arrow.Construct(player, _camera, boss);
-        GameStarted?.Invoke();
-        _input.Enable();
-        _started = true;
-        hud.tapToPlay.SetActive(false);
-        Player.instance.canPlay = true;
-        _pause.ShowButton();
-        map.GenerateBoss();
-        Game.Hud.HideBonusWindow();
-        Game.AdverisingService.ShowInterstitial();
-        ClickDetector.Clicked -= StartGame;
     }
 
     public void AddEnemy(Enemy enemy)

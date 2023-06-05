@@ -70,18 +70,18 @@ namespace Interface
             {
                 case WindowType.Fight:
                     _shop.HideImmediately();
-                    _hud.tapToPlay.SetActive(true);
+                    _hud.SetActiveTapToPlay(true);
                     _platformsMenu.HideImmediately();
                     break;
                 case WindowType.Platforms:
                     _platformsMenu.ShowImmediately();
                     _shop.HideImmediately();
-                    _hud.tapToPlay.SetActive(false);
+                    _hud.SetActiveTapToPlay(false);
                     break;
                 case WindowType.Shop:
                     _shop.ShowImmediately();
                     _platformsMenu.HideImmediately();
-                    _hud.tapToPlay.SetActive(false);
+                    _hud.SetActiveTapToPlay(false);
                     break;
             }
         }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1.Default
   m_EditorClassIdentifier: 
   <Color>k__BackingField: {fileID: 2100000, guid: aa4154366f62d574083cf33364cf7988, type: 2}
-  <ShopImage>k__BackingField: {fileID: 21300000, guid: 4876886f91c6c7d48863ec59aa02a8fe, type: 3}
+  <ShopImage>k__BackingField: {fileID: 21300000, guid: c82fd854f8b53d34e8e2f58c4938d020, type: 3}
   <CoinsCost>k__BackingField: 0
   <YansCost>k__BackingField: 0
   <OwnedByDefault>k__BackingField: 1

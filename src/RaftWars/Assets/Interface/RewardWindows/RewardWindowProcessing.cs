@@ -31,7 +31,9 @@ namespace SpecialPlatforms
             Setup();
         }
         
-        public event Action Hidden;
+        public bool ContinuationCalled { get; private set; }
+        
+        public event Action Continuation;
 
         private void Setup()
         {
@@ -39,7 +41,12 @@ namespace SpecialPlatforms
                 .Where(x => _propertyService.IsOwned(x) == false);
             var shopProducts = possible as IShopProduct[] ?? possible.ToArray();
             if (shopProducts.Any() == false)
+            {
+                ContinuationCalled = true;
+                Continuation?.Invoke();
                 return;
+            }
+
             _shownOne = shopProducts.Random();
 
             _window = GameFactory.CreateRewardWindow();
@@ -67,7 +74,8 @@ namespace SpecialPlatforms
 
         private void DestroyWindow()
         {
-            Hidden?.Invoke();
+            ContinuationCalled = true;
+            Continuation?.Invoke();
             Object.Destroy(_window.gameObject);
         }
     }

@@ -125,22 +125,47 @@ namespace Infrastructure.States
         {
             const string firstPlayKey = "FirstStart_RewardsWindow";
             var isFirstStart = CrossLevelServices.PrefsService.GetInt(firstPlayKey, 0) == 0;
-            if (isFirstStart == false)
-            {
-                if (Random.Range(0, 100) > 10)
-                    MakeRewardWindow();
-            }
+
+            if (isFirstStart)
+                DisableBonusMenu();
+            else
+                ExecuteBonusMenu();
+
             CrossLevelServices.PrefsService.SetInt(firstPlayKey, 1);
+        }
+
+        private static void DisableBonusMenu()
+        {
+            Debug.Log($"{nameof(GameplayState)}.{nameof(ShowRewardsWindow)} show bonus menu");
+            Game.GameManager.DisableBonusMenu();
+        }
+
+        private static void ExecuteBonusMenu()
+        {
+            Debug.Log($"{nameof(GameplayState)}.{nameof(ShowRewardsWindow)} starting first start scenario");
+            if (Random.Range(0, 100) > 10)
+            {
+                Debug.Log($"{nameof(GameplayState)}.{nameof(ShowRewardsWindow)} showing reward window");
+                MakeRewardWindow();
+                return;
+            }
+
+            Game.GameManager.EnableBonusMenu();
         }
 
         private static void MakeRewardWindow()
         {
-            Game.Hud.HideBonusWindow();
+            Game.GameManager.DisableBonusMenu(andTapToStart: true);
             var hats = AssetLoader.LoadHatSkins().Cast<IShopProduct>();
             var colors = AssetLoader.LoadPlatformSkins().Cast<IShopProduct>();
             var allSkins = hats.Concat(colors);
             var rewardWindowProcessing = new RewardWindowProcessing(allSkins, Game.PropertyService, Game.AdverisingService, Game.UsingService);
-            rewardWindowProcessing.Hidden += () => Game.GameManager.HandleBonusMenu();
+            if (rewardWindowProcessing.ContinuationCalled == false)
+            {
+                rewardWindowProcessing.Continuation += () => Game.GameManager.EnableBonusMenu();
+                return;
+            }
+            Game.GameManager.EnableBonusMenu();
         }
 
         private void CreateSpecialPlatforms()
