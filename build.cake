@@ -10,17 +10,16 @@ using FluentFTP;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
-
-
+using System.Globalization;
 
 const string ProjectName = "RaftWars";
 const string ArtifactsFolderPath = "./artifacts";
-
 
 var opened = System.IO.File.Open(TelegramSessionPath, FileMode.OpenOrCreate);
 var tgClient = new WTelegram.Client(TelegramConfig, opened);
 var account = await tgClient.LoginUserIfNeeded();
 var dialogs = await tgClient.Channels_GetAdminedPublicChannels();
+var lastCommit = GitLog(new DirectoryPath("."), 1).First();
 
 var target = Argument("target", SendBuildNotificationEndingTask);
 
@@ -42,7 +41,6 @@ async void WriteTelegramMessage(string message)
 
 string CreateStartingTelegramMessage()
 {
-    var lastCommit = GitLog(new DirectoryPath("."), 1).First();
     var message = $"❗❗❗Начат билд по проекту {ProjectName}! " + 
         $"Произошедшие изменения: {lastCommit.Message}\n";
     return message;
@@ -64,6 +62,7 @@ Task(CleanArtifactsTask)
 #region Build-WebGl
 
 const string BuildWebGlTask = "Build-WebGL";
+string UnityPath = @"C:/Program Files/Unity/Hub/Editor/2021.3.26f1/Editor/Unity.exe";
 const string UnityBuildMethod = "Editor.Builder.BuildWebGl";
 const string ProjectFolderPath = $"./src/{ProjectName}";
 
@@ -71,7 +70,7 @@ Task(BuildWebGlTask)
     .IsDependentOn(CleanArtifactsTask)
     .Does(() => 
 {
-    UnityEditor(
+    UnityEditor(UnityPath,
         CreateUnityEditorArguments(),
         new UnityEditorSettings 
         {
@@ -94,7 +93,10 @@ UnityEditorArguments CreateUnityEditorArguments()
 
 string CreateBuildFolderName()
 {
-    return $"{DateTime.Today:d}_{ProjectName}_{DateTime.Now.Hour}_{DateTime.Now.Minute}";
+    var now = DateTime.Now;
+    var culture = new CultureInfo("ru-RU");
+    
+    return $"{now.ToString("dd.MM.yyyy", culture)}_{ProjectName}_{now.ToString("hh.mm", culture)}";
 }
 
 #endregion
@@ -102,7 +104,7 @@ string CreateBuildFolderName()
 #region Upload-File
 
 const string UploadFileTask = "Upload-File";
-const string SearchingBuildFolderPattern = @"^.{0,}_" + ProjectName + "_.{0,}$";
+const string SearchingBuildFolderPattern = @"^.{0,}" + ProjectName + ".{0,}$";
 
 Task(UploadFileTask)
     .IsDependentOn(BuildWebGlTask)
