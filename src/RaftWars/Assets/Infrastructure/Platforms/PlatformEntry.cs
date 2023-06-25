@@ -9,7 +9,9 @@ namespace Infrastructure.Platforms
     {
         [SerializeField] private Image _illustration;
         [SerializeField] private TMP_Text _currentUpgradedLevel;
-        
+
+        [field: SerializeField] public Button OpenModal { get; private set; }
+
         [Header("Acquired")]
         [SerializeField] private TMP_Text _costText;
 
