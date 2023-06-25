@@ -29,26 +29,35 @@ namespace Skins
             _usingService = usingService;
             _propertyService = propertyService;
 
-            _shopEntry.Use.onClick.AddListener(OnUseClicked);
-            _shopEntry.BuyForCoins.onClick.AddListener(OnBuyWithCoins);
-            _shopEntry.BuyForYans.onClick.AddListener(OnBuyWithYans);
+            _shopEntry.Use?.onClick.AddListener(OnUseClicked);
+            _shopEntry.BuyForCoins?.onClick.AddListener(OnBuyWithCoins);
+            _shopEntry.BuyForYans?.onClick.AddListener(OnBuyWithYans);
+            _shopEntry.Reward?.onClick.AddListener(OnGetWithReward);
 
             if (propertyService.IsOwned(_product))
             {
                 if (_usingService.IsSavedUsed(_product))
-                {
-                    _shopEntry.Use.interactable = false;
-                }
-                MarkAsBought();
+                    shopEntry.SetEntryState(ShopEntry.EntryState.selected);
+                
+                else
+                    shopEntry.SetEntryState(ShopEntry.EntryState.owned);
+                
             }
             else
             {
-                MarkAsUnbought();
+                shopEntry.SetEntryState(ShopEntry.EntryState.closed);
             }
 
             _propertyService.PropertyOwned += UpdateRequested;
             _shopEntry.ApplyPositionDeltaSize(_product.OverrideEntryDeltaSize);
             _usingService.Used += UpdateRequested;
+        }
+
+        private void OnGetWithReward()
+        {
+            var _ads = Game.AdverisingService;
+
+            _ads.ShowRewarded(OwnProduct);
         }
 
         private void OnUse()
@@ -57,7 +66,7 @@ namespace Skins
                 throw new InvalidOperationException("Trying to use item, when it is not bought");
             
             _usingService.Use(_product);
-            _shopEntry.Use.interactable = false;
+            _shopEntry.SetEntryState(ShopEntry.EntryState.selected);
         }
 
         private void OnUseClicked()
@@ -70,17 +79,25 @@ namespace Skins
         {
             if (obj.Guid == _product.Guid)
             {
-                MarkAsBought();
+                _shopEntry.SetEntryState(ShopEntry.EntryState.owned);
             }
         }
 
         private void UpdateRequested((EquippedType, IShopProduct) product)
         {
             bool sameType = _product.GetType() == product.Item2.GetType();
-            if (sameType && _shopEntry.Use.gameObject.activeInHierarchy)
+            if(sameType && _shopEntry.State != ShopEntry.EntryState.closed)
             {
-                _shopEntry.Use.interactable = product.Item2 != _product;
+                //_shopEntry.SetEntryState(
+                //    _shopEntry.State == ShopEntry.EntryState.selected ?
+                //    ShopEntry.EntryState.owned :
+                //    ShopEntry.EntryState.selected);
+                _shopEntry.SetEntryState(ShopEntry.EntryState.owned);
             }
+            //if (sameType && _shopEntry.Use.gameObject.activeInHierarchy)
+            //{
+            //    _shopEntry.Use.interactable = product.Item2 != _product;
+            //}
         }
 
         private void OnBuyWithYans()
@@ -94,22 +111,11 @@ namespace Skins
         private void OwnProduct()
         {
             _propertyService.Own(_product);
-            MarkAsBought();
             OnUse();
             Game.AudioService.PlayShopBuyButtonOnClick();
         }
 
-        private void MarkAsBought()
-        {
-            _shopEntry.SetActiveBuyingBlock(false);
-            _shopEntry.SetActiveUsingBlock(true);
-        }
-
-        private void MarkAsUnbought()
-        {
-            _shopEntry.SetActiveBuyingBlock(true);
-            _shopEntry.SetActiveUsingBlock(false);
-        }
+   
 
         private void OnBuyWithCoins()
         {

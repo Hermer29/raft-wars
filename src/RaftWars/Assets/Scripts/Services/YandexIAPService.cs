@@ -20,6 +20,7 @@ namespace InputSystem
                 return;
             }
 
+
             Debug.Log("Yandex IAP disabled because we're not in build. Everything is free for yans");
             onSuccess?.Invoke();
         }

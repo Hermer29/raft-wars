@@ -6,6 +6,7 @@ using RaftWars.Infrastructure.Services;
 using Services;
 using SpecialPlatforms;
 using SpecialPlatforms.SPRewardState;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Infrastructure.States
@@ -33,6 +34,7 @@ namespace Infrastructure.States
 
         public void Enter()
         {
+            Debug.Log("RewardedSpecialPlatformState enter!");
             if(Game.Hud != null)
                 Game.Hud.gameObject.SetActive(false);
             

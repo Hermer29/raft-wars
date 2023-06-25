@@ -131,5 +131,9 @@ namespace RaftWars.Infrastructure
         {
             return Instantiate(Resources.Load<RandomRewardWindow>("RandomRewardWindow"));
         }
+        public static VIPOfferWindow CreateVIPOfferWindow()
+        {
+            return Instantiate(Resources.Load<VIPOfferWindow>("Prefabs/UI/VIPOfferPopUp"));
+        }
     }
 }

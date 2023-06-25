@@ -180,7 +180,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
+  - {fileID: 2100000, guid: 0b193d60fd069874ebe79949f3df0552, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -228,6 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canTake: 1
+  notExcludable: 0
   platform: {fileID: 4799856444384544929, guid: d7cfc1ffe6fa6124a91e2b7c884f9379, type: 3}
 --- !u!54 &6238134487923615029
 Rigidbody:
@@ -521,14 +522,6 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: -3719890868415375542, guid: 3d5cbf1bdcaffc346aeeb74ad70ee8bf, type: 3}
-    - target: {fileID: 5118217282086413265, guid: 2be9076effbe87341ba7d1e66fb2405a, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
-    - target: {fileID: 5273531404866966190, guid: 2be9076effbe87341ba7d1e66fb2405a, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     - target: {fileID: 9102983941137937411, guid: 2be9076effbe87341ba7d1e66fb2405a, type: 3}
       propertyPath: m_Name
       value: Turret2

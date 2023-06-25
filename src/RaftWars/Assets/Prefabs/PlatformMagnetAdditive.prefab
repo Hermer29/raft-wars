@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0b193d60fd069874ebe79949f3df0552, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -116,6 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canTake: 1
+  notExcludable: 0
   platform: {fileID: 1597723061605727238, guid: c187dd1eebd75d34693bb50971b15a80, type: 3}
 --- !u!54 &8631322427437249581
 Rigidbody:
@@ -277,10 +278,6 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: cd0da74841a7f934fa4a4cf40e40a070, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     - target: {fileID: 919132149155446097, guid: cd0da74841a7f934fa4a4cf40e40a070, type: 3}
       propertyPath: m_Name
       value: MultifunctionalTower_Armored
@@ -445,10 +442,6 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 74e092edb7ce44941939618a6dd8a27a, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     - target: {fileID: 919132149155446097, guid: 74e092edb7ce44941939618a6dd8a27a, type: 3}
       propertyPath: m_Name
       value: MultifunctionalTower
@@ -600,14 +593,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -4683669308469848369, guid: ccdc54c4e67a2ad48bb967a506dde181, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
-    - target: {fileID: -1461304994638716399, guid: ccdc54c4e67a2ad48bb967a506dde181, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     - target: {fileID: 919132149155446097, guid: ccdc54c4e67a2ad48bb967a506dde181, type: 3}
       propertyPath: m_Name
       value: Magnet
