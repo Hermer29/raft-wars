@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "ToonWat\u0435rBorders"
+  m_Name: ToonWaterBorders
   m_Shader: {fileID: 4800000, guid: f24809d953f26f64b9c352c89807da80, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

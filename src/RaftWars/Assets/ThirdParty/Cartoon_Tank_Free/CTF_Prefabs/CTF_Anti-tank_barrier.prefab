@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1514579716130452824}
   - component: {fileID: 7438492368356644746}
   m_Layer: 0
-  m_Name: "\u0421TF_Anti-tank_barrier"
+  m_Name: CTF_Anti-tank_barrier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
