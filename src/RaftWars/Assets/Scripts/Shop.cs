@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace.Skins;
+using Infrastructure;
 using InputSystem;
 using Interface;
 using RaftWars.Infrastructure;
@@ -16,6 +17,7 @@ using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
+    [SerializeField] private Button _vipButton;
     [SerializeField] private Transform _colorsParent;
     [SerializeField] private Transform _raftsParent;
     [SerializeField] private Transform _hatsParent;
@@ -27,6 +29,7 @@ public class Shop : MonoBehaviour
     private PlayerMoneyService _playerMoneyService;
     private PlayerUsingService _playerUsingService;
     private PropertyService _propertyService;
+    private VIPOfferPresenter vip;
     private ICoroutineRunner _runner;
     
     private bool _initialized;
@@ -41,9 +44,29 @@ public class Shop : MonoBehaviour
         _propertyService = propertyService;
         _entries = new List<ShopProductPresenter>();
         _runner = runner;
+
+        vip = new VIPOfferPresenter(iapService, _playerMoneyService, propertyService,Game.AdverisingService);
+
+        
+        if(vip.IsOwned)
+        {
+            Destroy(_vipButton.gameObject);
+        }
+        else
+        {
+            _vipButton.onClick.AddListener(()=>vip.Show());
+            vip.PurchaseSucces += Vip_PurchaseSucces;
+        }
+
         HideImmediately();
         
         TakeSavedOrDefault(AssetLoader.LoadHatSkins(), AssetLoader.LoadPlatformSkins(), AssetLoader.LoadPlayerColors());
+    }
+
+    private void Vip_PurchaseSucces()
+    {
+        Destroy(_vipButton.gameObject);
+        vip.PurchaseSucces -= Vip_PurchaseSucces;
     }
 
     [field: SerializeField] public ScrollDetector Detector;

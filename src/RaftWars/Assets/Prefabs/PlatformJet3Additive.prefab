@@ -530,7 +530,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0b193d60fd069874ebe79949f3df0552, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -578,6 +578,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canTake: 1
+  notExcludable: 0
   platform: {fileID: 7538808152205769159, guid: 0758201d9bc762e45bcbfeb1b286d8d9, type: 3}
 --- !u!54 &18361272520135128
 Rigidbody:
@@ -748,10 +749,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scout_Boat
       objectReference: {fileID: 0}
-    - target: {fileID: 5997162889880428916, guid: 3d9d4bacfc8405d499551cf7af3a3c41, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     m_RemovedComponents:
     - {fileID: 8156423218013365297, guid: 3d9d4bacfc8405d499551cf7af3a3c41, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3d9d4bacfc8405d499551cf7af3a3c41, type: 3}

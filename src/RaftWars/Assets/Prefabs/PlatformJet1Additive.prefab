@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
+  - {fileID: 2100000, guid: 0b193d60fd069874ebe79949f3df0552, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -114,6 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canTake: 1
+  notExcludable: 0
   platform: {fileID: 7020485212298801947, guid: c764d629a318f0a41809032351bb3d60, type: 3}
 --- !u!54 &8634613256351400101
 Rigidbody:
@@ -198,10 +199,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: KayakV2
       objectReference: {fileID: 0}
-    - target: {fileID: 4027068396647625794, guid: aa74771a7ece56c4ea7d62dba54848b3, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     m_RemovedComponents:
     - {fileID: 2506432139712081689, guid: aa74771a7ece56c4ea7d62dba54848b3, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: aa74771a7ece56c4ea7d62dba54848b3, type: 3}

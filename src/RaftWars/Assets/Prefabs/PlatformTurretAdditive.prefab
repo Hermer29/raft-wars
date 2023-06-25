@@ -98,7 +98,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
+  - {fileID: 2100000, guid: 0b193d60fd069874ebe79949f3df0552, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -146,6 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canTake: 1
+  notExcludable: 0
   platform: {fileID: 6519269586158161365, guid: 103158b57eaa5d5449f4d94362397405, type: 3}
 --- !u!54 &3988130933567786608
 Rigidbody:
@@ -5052,7 +5053,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
+  - {fileID: 2100000, guid: 18ec5123ab1b37446998bf1b1228a0c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5081,10 +5082,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2954817511042930652}
     m_Modifications:
-    - target: {fileID: 38389865730643794, guid: 705e8cde3833f3f42bd5af0a14a2728a, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     - target: {fileID: 2406278036919411684, guid: 705e8cde3833f3f42bd5af0a14a2728a, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -5141,10 +5138,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6669606009866994750, guid: 705e8cde3833f3f42bd5af0a14a2728a, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1e6add393f03d7a4ba361df8fdcff1db, type: 2}
     - target: {fileID: 7367677921933277914, guid: 705e8cde3833f3f42bd5af0a14a2728a, type: 3}
       propertyPath: m_Name
       value: Turret1
